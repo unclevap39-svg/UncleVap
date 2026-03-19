@@ -7,7 +7,7 @@
       {%- assign img_key = 'cat_' | append: i | append: '_image' -%}
 
       <a href="{{ section.settings[link_key] | default: routes.collections_url }}" class="category-card">
-        <div class="category-circle">
+        <div class="category-circle{% if section.settings[img_key] != blank %} category-circle--has-image{% endif %}">
           {%- if section.settings[img_key] != blank -%}
             <img
               src="{{ section.settings[img_key] | image_url: width: 300 }}"
