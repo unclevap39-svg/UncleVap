@@ -1,3 +1,4 @@
+{%- assign overlay = section.settings.overlay_opacity | divided_by: 100.0 -%}
 <section class="hero-banner{% if section.settings.hero_bg_image != blank %} hero-banner--has-bg-image{% endif %}" aria-label="Hero banner">
 
   {%- if section.settings.hero_bg_image != blank -%}
@@ -18,6 +19,7 @@
       width="1920"
       height="640"
     >
+    <div class="hero-bg-overlay" style="--hero-overlay: {{ overlay }};"></div>
   {%- else -%}
     <!-- Cosmic background particles -->
     <div class="hero-bg" aria-hidden="true">
@@ -125,6 +127,20 @@
       "type": "url",
       "id": "cta_link",
       "label": "Lien du bouton CTA"
+    },
+    {
+      "type": "header",
+      "content": "Overlay de l'image de fond"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacité de l'overlay sombre",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 30,
+      "unit": "%"
     }
   ],
   "presets": [

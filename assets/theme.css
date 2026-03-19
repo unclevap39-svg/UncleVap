@@ -532,6 +532,14 @@ button {
 }
 
 /* Hero — background image mode */
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(0, 3, 0, var(--hero-overlay, 0));
+}
+
 .hero-bg-img {
   position: absolute;
   inset: 0;
