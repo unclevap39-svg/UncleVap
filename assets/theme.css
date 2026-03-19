@@ -2368,3 +2368,158 @@ button {
   white-space: nowrap;
   border: 0;
 }
+
+
+/* ============================================================
+   CBD INTENSITY SECTION
+   ============================================================ */
+.cbd-intensity {
+  padding: 72px 20px;
+  background: linear-gradient(180deg, var(--bg) 0%, #071a07 50%, var(--bg) 100%);
+  border-bottom: 1px solid rgba(46, 168, 46, 0.12);
+}
+
+.cbd-intensity-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cbd-intensity-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.cbd-intensity-eyebrow {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--green);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.cbd-intensity-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 5vw, 44px);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.cbd-intensity-subtitle {
+  color: var(--text-muted);
+  font-size: 15px;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.cbd-intensity-empty {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 40px 0;
+}
+
+/* Molecule grid */
+.cbd-molecule-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.cbd-molecule-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 168, 46, 0.15);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.cbd-molecule-card:hover {
+  border-color: rgba(46, 168, 46, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cbd-molecule-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cbd-molecule-info {
+  min-width: 0;
+}
+
+.cbd-molecule-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.cbd-molecule-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Intensity bar */
+.cbd-molecule-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 180px;
+  flex-shrink: 0;
+}
+
+.cbd-molecule-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.cbd-molecule-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+.cbd-molecule-pct {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 36px;
+  text-align: right;
+}
+
+@media (max-width: 599px) {
+  .cbd-molecule-card {
+    grid-template-columns: 36px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .cbd-molecule-bar-wrap {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+@media (min-width: 600px) {
+  .cbd-molecule-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cbd-molecule-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

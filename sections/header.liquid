@@ -2,13 +2,15 @@
   <div class="header-inner">
 
     <!-- Logo -->
+    {%- assign logo_w = section.settings.logo_size | default: 80 -%}
     <a href="{{ routes.root_url }}" class="header-logo" aria-label="{{ shop.name }}">
       {%- if section.settings.logo != blank -%}
         <img
-          src="{{ section.settings.logo | image_url: width: 160 }}"
+          src="{{ section.settings.logo | image_url: width: 320 }}"
           alt="{{ shop.name }}"
-          width="80"
-          height="80"
+          width="{{ logo_w }}"
+          height="{{ logo_w }}"
+          style="width: {{ logo_w }}px; height: auto; max-height: {{ logo_w }}px;"
           loading="eager"
         >
       {%- else -%}
@@ -101,6 +103,16 @@
       "type": "image_picker",
       "id": "logo",
       "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "Taille du logo",
+      "min": 40,
+      "max": 160,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
     },
     {
       "type": "link_list",

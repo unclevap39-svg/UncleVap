@@ -1,0 +1,158 @@
+<section class="cbd-intensity" aria-label="Intensité des molécules CBD">
+  <div class="cbd-intensity-inner">
+
+    <div class="cbd-intensity-header">
+      <p class="cbd-intensity-eyebrow">{{ section.settings.eyebrow | default: 'Guide des molécules' }}</p>
+      <h2 class="cbd-intensity-title">{{ section.settings.title | default: "L'intensité de nos molécules" }}</h2>
+      {%- if section.settings.subtitle != blank -%}
+        <p class="cbd-intensity-subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="cbd-molecule-grid">
+        {%- for block in section.blocks -%}
+          {%- assign intensity = block.settings.intensity | default: 50 -%}
+          {%- assign color = block.settings.bar_color | default: '#2ea82e' -%}
+          <div class="cbd-molecule-card" {{ block.shopify_attributes }}>
+
+            <div class="cbd-molecule-icon" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Hexagon molecular ring -->
+                <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" stroke="{{ color }}" stroke-width="1.5" fill="none" opacity="0.6"/>
+                <circle cx="18" cy="10.5" r="2" fill="{{ color }}" opacity="0.8"/>
+                <circle cx="27" cy="15.75" r="2" fill="{{ color }}" opacity="0.8"/>
+                <circle cx="27" cy="25.25" r="2" fill="{{ color }}" opacity="0.8"/>
+                <circle cx="18" cy="25.5" r="2" fill="{{ color }}" opacity="0.8"/>
+                <circle cx="9" cy="25.25" r="2" fill="{{ color }}" opacity="0.8"/>
+                <circle cx="9" cy="15.75" r="2" fill="{{ color }}" opacity="0.8"/>
+                <circle cx="18" cy="18" r="3.5" fill="{{ color }}" opacity="0.4"/>
+              </svg>
+            </div>
+
+            <div class="cbd-molecule-info">
+              <h3 class="cbd-molecule-name">{{ block.settings.name | default: 'Molécule' }}</h3>
+              {%- if block.settings.description != blank -%}
+                <p class="cbd-molecule-desc">{{ block.settings.description }}</p>
+              {%- endif -%}
+            </div>
+
+            <div class="cbd-molecule-bar-wrap" aria-label="Intensité : {{ intensity }}%">
+              <div class="cbd-molecule-bar-track">
+                <div
+                  class="cbd-molecule-bar-fill"
+                  style="width: {{ intensity }}%; background: linear-gradient(90deg, {{ color }}99, {{ color }});"
+                  role="progressbar"
+                  aria-valuenow="{{ intensity }}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <span class="cbd-molecule-pct" style="color: {{ color }};">{{ intensity }}%</span>
+            </div>
+
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="cbd-intensity-empty">Ajoutez des molécules depuis l'éditeur de thème.</p>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Intensité CBD",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Étiquette au-dessus du titre",
+      "default": "Guide des molécules"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "L'intensité de nos molécules"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "molecule",
+      "name": "Molécule",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Nom de la molécule",
+          "default": "CBD"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description courte",
+          "default": "Cannabidiol — bien-être et relaxation"
+        },
+        {
+          "type": "range",
+          "id": "intensity",
+          "label": "Intensité",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "default": 70,
+          "unit": "%"
+        },
+        {
+          "type": "color",
+          "id": "bar_color",
+          "label": "Couleur de la barre",
+          "default": "#2ea82e"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Intensité CBD",
+      "blocks": [
+        {
+          "type": "molecule",
+          "settings": {
+            "name": "CBD",
+            "description": "Cannabidiol — bien-être et relaxation",
+            "intensity": 80,
+            "bar_color": "#2ea82e"
+          }
+        },
+        {
+          "type": "molecule",
+          "settings": {
+            "name": "CBG",
+            "description": "Cannabigérol — énergie et clarté mentale",
+            "intensity": 55,
+            "bar_color": "#3dbe3d"
+          }
+        },
+        {
+          "type": "molecule",
+          "settings": {
+            "name": "CBN",
+            "description": "Cannabinol — sommeil et récupération",
+            "intensity": 40,
+            "bar_color": "#1d7a1d"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
