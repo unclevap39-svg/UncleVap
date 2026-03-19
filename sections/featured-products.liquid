@@ -1,4 +1,12 @@
-<section class="featured-products" aria-label="Produits vedettes">
+{%- liquid
+  assign bg_image = section.settings.bg_image
+  assign overlay  = section.settings.overlay_opacity | divided_by: 100.0
+-%}
+<section class="featured-products{% if bg_image != blank %} section--has-bg{% endif %}" aria-label="Produits vedettes">
+  {%- if bg_image != blank -%}
+    <img class="section-bg-img" src="{{ bg_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="600">
+    <div class="section-bg-overlay" style="--section-overlay: {{ overlay }};"></div>
+  {%- endif -%}
   {%- if section.settings.title != blank -%}
     <div class="section-heading">
       <h2 class="section-title">{{ section.settings.title }}</h2>
@@ -108,6 +116,25 @@
       "max": 12,
       "step": 1,
       "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Arrière-plan de la section"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Image de fond"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacité de l'overlay sombre",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 40,
+      "unit": "%"
     }
   ],
   "presets": [

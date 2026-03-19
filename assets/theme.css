@@ -1843,3 +1843,67 @@ button {
     padding: 80px 40px;
   }
 }
+
+/* ============================================================
+   SECTION BACKGROUND IMAGE — utilitaire partagé
+   Applicable à toutes les sections via la classe .section--has-bg
+   ============================================================ */
+.section--has-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Image de fond plein format */
+.section-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  display: block;
+  /* Transition douce au chargement */
+  transition: opacity 0.4s ease;
+}
+
+/* Overlay sombre semi-transparent pour assurer la lisibilité du texte */
+.section-bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(0,3,0, var(--section-overlay, 0));
+}
+
+/* Tous les conteneurs internes flottent au-dessus de l'image */
+.section--has-bg .categories-inner,
+.section--has-bg .section-heading,
+.section--has-bg .products-slider-wrap,
+.section--has-bg .why-us-inner,
+.section--has-bg .testimonials-inner,
+.section--has-bg .testimonials .section-header,
+.section--has-bg .blog-posts-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* Stats counter : particules au-dessus de l'overlay, contenu au-dessus des particules */
+.stats-counter.section--has-bg .stats-particles {
+  z-index: 2;
+}
+
+.stats-counter.section--has-bg .stats-inner {
+  z-index: 3;
+}
+
+/* Lorsqu'une image de fond est présente, retire le gradient CSS natif
+   pour ne pas superposer deux fonds */
+.featured-categories.section--has-bg,
+.featured-products.section--has-bg,
+.why-us.section--has-bg,
+.testimonials.section--has-bg,
+.stats-counter.section--has-bg,
+.blog-posts.section--has-bg {
+  background: transparent;
+}

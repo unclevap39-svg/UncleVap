@@ -1,4 +1,12 @@
-<section class="why-us" id="why-us-{{ section.id }}">
+{%- liquid
+  assign bg_image = section.settings.bg_image
+  assign overlay  = section.settings.overlay_opacity | divided_by: 100.0
+-%}
+<section class="why-us{% if bg_image != blank %} section--has-bg{% endif %}" id="why-us-{{ section.id }}">
+  {%- if bg_image != blank -%}
+    <img class="section-bg-img" src="{{ bg_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="600">
+    <div class="section-bg-overlay" style="--section-overlay: {{ overlay }};"></div>
+  {%- endif -%}
   <div class="why-us-inner">
     <div class="section-header">
       <h2 class="section-title">{{ section.settings.title | default: 'POURQUOI UNCLE VAP ?' }}</h2>
@@ -95,6 +103,25 @@
       "id": "subtitle",
       "label": "Sous-titre",
       "default": "La galaxie CBD mérite une escale de confiance."
+    }
+    {
+      "type": "header",
+      "content": "Arrière-plan de la section"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Image de fond"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacité de l'overlay sombre",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 50,
+      "unit": "%"
     }
   ],
   "presets": [
