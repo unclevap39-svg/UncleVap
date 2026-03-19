@@ -1,0 +1,45 @@
+<div class="search-page">
+  <h1 class="search-title">
+    {%- if search.performed -%}
+      Résultats pour "{{ search.terms }}"
+    {%- else -%}
+      Recherche
+    {%- endif -%}
+  </h1>
+
+  <form action="{{ routes.search_url }}" method="get" class="search-form search-form--page" role="search">
+    <input type="hidden" name="type" value="product">
+    <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Rechercher..." class="search-input" aria-label="Rechercher">
+    <button type="submit" class="search-submit" aria-label="Lancer la recherche">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </button>
+  </form>
+
+  {%- if search.performed -%}
+    {%- if search.results_count == 0 -%}
+      <p class="search-no-results">Aucun résultat pour "{{ search.terms }}".</p>
+    {%- else -%}
+      <p class="search-count">{{ search.results_count }} résultat(s)</p>
+      <div class="collection-grid">
+        {%- for result in search.results -%}
+          {%- if result.object_type == 'product' -%}
+            {%- render 'product-card', product: result -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+<style>
+.search-page { max-width: 1200px; margin: 0 auto; padding: 40px 16px; }
+.search-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(24px, 5vw, 42px); letter-spacing: 2px; margin-bottom: 24px; }
+.search-form--page { max-width: 600px; margin-bottom: 32px; }
+.search-count { color: var(--text-muted); margin-bottom: 24px; font-size: 14px; }
+.search-no-results { color: var(--text-muted); font-size: 16px; margin-top: 24px; }
+.collection-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (min-width: 640px) { .collection-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .collection-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
+</style>

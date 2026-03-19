@@ -1,0 +1,17 @@
+<div class="page-content">
+  <h1 class="page-title">{{ page.title }}</h1>
+  <div class="page-body rte">{{ page.content }}</div>
+</div>
+
+<style>
+.page-content { max-width: 900px; margin: 0 auto; padding: 40px 16px; }
+.page-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 6vw, 48px);
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+}
+.page-body { color: var(--text-muted); line-height: 1.8; }
+.rte a { color: var(--green-lt); }
+.rte h2, .rte h3 { font-family: 'Bebas Neue', sans-serif; color: var(--text); margin: 24px 0 12px; letter-spacing: 1px; }
+</style>
