@@ -531,6 +531,100 @@ button {
   box-shadow: 0 0 40px rgba(46,168,46,0.5);
 }
 
+/* Hero — background image mode */
+.hero-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 22% center; /* mobile: keep character visible on left */
+  z-index: 0;
+  display: block;
+}
+
+/* Gradient overlay: transparent over character (left), darker on text area (right) */
+.hero-banner--has-bg-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.05) 45%,
+    rgba(0,10,0,0.72) 70%,
+    rgba(0,8,0,0.82) 100%
+  );
+}
+
+/* Push text to bottom when bg image is active (mobile-first) */
+.hero-banner--has-bg-image .hero-inner {
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 48px;
+}
+
+.hero-banner--has-bg-image .hero-content {
+  text-align: center;
+  align-items: center;
+  max-width: 100%;
+}
+
+@media (min-width: 750px) {
+  .hero-bg-img {
+    object-position: 30% center;
+  }
+
+  .hero-banner--has-bg-image::after {
+    background: linear-gradient(
+      to right,
+      rgba(0,0,0,0.05) 0%,
+      rgba(0,0,0,0.05) 35%,
+      rgba(0,12,0,0.55) 60%,
+      rgba(0,8,0,0.68) 100%
+    );
+  }
+
+  .hero-banner--has-bg-image .hero-inner {
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 0;
+    padding-right: 60px;
+  }
+
+  .hero-banner--has-bg-image .hero-content {
+    text-align: left;
+    align-items: flex-start;
+    max-width: 460px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hero-bg-img {
+    object-position: center center;
+  }
+
+  .hero-banner--has-bg-image::after {
+    background: linear-gradient(
+      to right,
+      rgba(0,0,0,0.02) 0%,
+      rgba(0,0,0,0.02) 40%,
+      rgba(0,12,0,0.50) 62%,
+      rgba(0,8,0,0.65) 100%
+    );
+  }
+
+  .hero-banner--has-bg-image .hero-inner {
+    padding-right: 80px;
+  }
+
+  .hero-banner--has-bg-image .hero-content {
+    max-width: 520px;
+  }
+}
+
 /* ============================================================
    FEATURED CATEGORIES
    ============================================================ */

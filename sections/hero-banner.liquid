@@ -1,36 +1,58 @@
-<section class="hero-banner" aria-label="Hero banner">
-  <!-- Cosmic background particles -->
-  <div class="hero-bg" aria-hidden="true">
-    <div class="cosmic-glow cosmic-glow--left"></div>
-    <div class="cosmic-glow cosmic-glow--right"></div>
-    <!-- Floating leaves -->
-    <svg class="leaf leaf-1" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#2ea82e" opacity="0.7"/>
-      <path d="M20 2 L20 48" stroke="#1d7a1d" stroke-width="1.5" opacity="0.8"/>
-      <path d="M20 15 L10 28 M20 20 L12 35 M20 25 L13 38 M20 15 L30 28 M20 20 L28 35 M20 25 L27 38" stroke="#1d7a1d" stroke-width="1" opacity="0.6"/>
-    </svg>
-    <svg class="leaf leaf-2" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#2ea82e" opacity="0.5"/>
-      <path d="M20 2 L20 48" stroke="#1d7a1d" stroke-width="1.5" opacity="0.6"/>
-    </svg>
-    <svg class="leaf leaf-3" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#3dbe3d" opacity="0.4"/>
-      <path d="M20 2 L20 48" stroke="#2ea82e" stroke-width="1.5" opacity="0.5"/>
-    </svg>
-    <svg class="leaf leaf-4" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#2ea82e" opacity="0.6"/>
-      <path d="M20 2 L20 48" stroke="#1d7a1d" stroke-width="1.5" opacity="0.7"/>
-    </svg>
-    <!-- Sparkle stars -->
-    <div class="star star-1" aria-hidden="true"></div>
-    <div class="star star-2" aria-hidden="true"></div>
-    <div class="star star-3" aria-hidden="true"></div>
-    <div class="star star-4" aria-hidden="true"></div>
-    <div class="star star-5" aria-hidden="true"></div>
-  </div>
+<section class="hero-banner{% if section.settings.hero_bg_image != blank %} hero-banner--has-bg-image{% endif %}" aria-label="Hero banner">
+
+  {%- if section.settings.hero_bg_image != blank -%}
+    <!-- Responsive background image -->
+    <img
+      class="hero-bg-img"
+      src="{{ section.settings.hero_bg_image | image_url: width: 1920 }}"
+      srcset="
+        {{ section.settings.hero_bg_image | image_url: width: 640 }} 640w,
+        {{ section.settings.hero_bg_image | image_url: width: 1024 }} 1024w,
+        {{ section.settings.hero_bg_image | image_url: width: 1440 }} 1440w,
+        {{ section.settings.hero_bg_image | image_url: width: 1920 }} 1920w
+      "
+      sizes="100vw"
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      width="1920"
+      height="640"
+    >
+  {%- else -%}
+    <!-- Cosmic background particles -->
+    <div class="hero-bg" aria-hidden="true">
+      <div class="cosmic-glow cosmic-glow--left"></div>
+      <div class="cosmic-glow cosmic-glow--right"></div>
+      <!-- Floating leaves -->
+      <svg class="leaf leaf-1" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#2ea82e" opacity="0.7"/>
+        <path d="M20 2 L20 48" stroke="#1d7a1d" stroke-width="1.5" opacity="0.8"/>
+        <path d="M20 15 L10 28 M20 20 L12 35 M20 25 L13 38 M20 15 L30 28 M20 20 L28 35 M20 25 L27 38" stroke="#1d7a1d" stroke-width="1" opacity="0.6"/>
+      </svg>
+      <svg class="leaf leaf-2" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#2ea82e" opacity="0.5"/>
+        <path d="M20 2 L20 48" stroke="#1d7a1d" stroke-width="1.5" opacity="0.6"/>
+      </svg>
+      <svg class="leaf leaf-3" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#3dbe3d" opacity="0.4"/>
+        <path d="M20 2 L20 48" stroke="#2ea82e" stroke-width="1.5" opacity="0.5"/>
+      </svg>
+      <svg class="leaf leaf-4" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#2ea82e" opacity="0.6"/>
+        <path d="M20 2 L20 48" stroke="#1d7a1d" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+      <!-- Sparkle stars -->
+      <div class="star star-1" aria-hidden="true"></div>
+      <div class="star star-2" aria-hidden="true"></div>
+      <div class="star star-3" aria-hidden="true"></div>
+      <div class="star star-4" aria-hidden="true"></div>
+      <div class="star star-5" aria-hidden="true"></div>
+    </div>
+  {%- endif -%}
 
   <div class="hero-inner">
-    <!-- Character image (left on desktop, top on mobile) -->
+    {%- unless section.settings.hero_bg_image != blank -%}
+    <!-- Character image (hidden when bg image is used — character is already in the bg) -->
     <div class="hero-character">
       {%- if section.settings.character_image != blank -%}
         <img
@@ -50,6 +72,7 @@
       {%- endif -%}
       <div class="hero-brand-text" aria-hidden="true">Uncle Vap</div>
     </div>
+    {%- endunless -%}
 
     <!-- Hero content (right on desktop, bottom on mobile) -->
     <div class="hero-content">
@@ -72,8 +95,13 @@
   "settings": [
     {
       "type": "image_picker",
+      "id": "hero_bg_image",
+      "label": "Image de fond bannière (remplace le fond animé)"
+    },
+    {
+      "type": "image_picker",
       "id": "character_image",
-      "label": "Image du personnage"
+      "label": "Image du personnage (sans image de fond uniquement)"
     },
     {
       "type": "richtext",
