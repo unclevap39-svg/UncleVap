@@ -14,11 +14,14 @@
         {%- endfor -%}
       {%- else -%}
         {%- comment -%} Placeholder cards when no collection is selected {%- endcomment -%}
-        {%- for i in (1..4) -%}
+        {%- assign placeholder_count = section.settings.products_count | default: 4 -%}
+        {%- for i in (1..placeholder_count) -%}
+          {%- assign icon_i = forloop.index | modulo: 4 -%}
+          {%- if icon_i == 0 -%}{%- assign icon_i = 4 -%}{%- endif -%}
           <article class="product-card product-card--placeholder">
             <div class="product-card-image-wrap">
               <div class="product-image-placeholder">
-                {%- case i -%}
+                {%- case icon_i -%}
                   {%- when 1 -%}
                     <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
                       <circle cx="50" cy="50" r="45" fill="rgba(46,168,46,0.2)" stroke="#2ea82e" stroke-width="2"/>
@@ -55,7 +58,7 @@
             </div>
             <div class="product-card-info">
               <h3 class="product-card-title">
-                {%- case i -%}
+                {%- case icon_i -%}
                   {%- when 1 -%}Haze Stellaire 2.0
                   {%- when 2 -%}Nebula Fixx
                   {%- when 3 -%}Nebula Vape Pen

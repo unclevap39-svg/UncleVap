@@ -24,6 +24,10 @@
       "type": "testimonials",
       "settings": {}
     },
+    "stats-counter": {
+      "type": "stats-counter",
+      "settings": {}
+    },
     "blog-posts": {
       "type": "blog-posts",
       "settings": {}
@@ -36,6 +40,7 @@
     "why-us",
     "promo-banner",
     "testimonials",
+    "stats-counter",
     "blog-posts"
   ]
 }

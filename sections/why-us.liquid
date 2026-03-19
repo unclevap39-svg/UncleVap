@@ -1,31 +1,80 @@
-{%- liquid
-  assign title    = section.settings.title
-  assign subtitle = section.settings.subtitle
--%}
-
 <section class="why-us" id="why-us-{{ section.id }}">
   <div class="why-us-inner">
-    {%- if title != blank or subtitle != blank -%}
-      <div class="section-header">
-        {%- if title != blank -%}
-          <h2 class="section-title">{{ title }}</h2>
-        {%- endif -%}
-        {%- if subtitle != blank -%}
-          <p class="section-subtitle">{{ subtitle }}</p>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title | default: 'POURQUOI UNCLE VAP ?' }}</h2>
+      <p class="section-subtitle">{{ section.settings.subtitle | default: 'La galaxie CBD mérite une escale de confiance.' }}</p>
+    </div>
 
     <div class="why-us-grid">
-      {%- for block in section.blocks -%}
-        <div class="why-us-card" {{ block.shopify_attributes }}>
-          <div class="why-us-icon">{{ block.settings.icon }}</div>
-          <h3 class="why-us-title">{{ block.settings.title }}</h3>
-          <p class="why-us-desc">{{ block.settings.description }}</p>
+
+      <!-- Carte 1 : Qualité Premium -->
+      <div class="why-us-card" style="--card-delay:0.05s; --float-delay:0s;">
+        <div class="why-us-icon-ring">
+          <svg class="why-us-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="40" cy="40" r="36" fill="rgba(46,168,46,0.08)" stroke="rgba(46,168,46,0.35)" stroke-width="1.5"/>
+            <path d="M40 14C40 14 22 26 20 42C18 58 32 68 40 68C48 68 62 58 60 42C58 26 40 14 40 14Z" fill="#2ea82e" opacity="0.75"/>
+            <line x1="40" y1="14" x2="40" y2="68" stroke="#1d7a1d" stroke-width="2"/>
+            <line x1="40" y1="30" x2="28" y2="46" stroke="#1d7a1d" stroke-width="1.5"/>
+            <line x1="40" y1="38" x2="29" y2="56" stroke="#1d7a1d" stroke-width="1.5"/>
+            <line x1="40" y1="30" x2="52" y2="46" stroke="#1d7a1d" stroke-width="1.5"/>
+            <line x1="40" y1="38" x2="51" y2="56" stroke="#1d7a1d" stroke-width="1.5"/>
+          </svg>
         </div>
-      {%- else -%}
-        <p class="why-us-empty">Ajoutez des avantages via l'éditeur de thème.</p>
-      {%- endfor -%}
+        <h3 class="why-us-title">Qualité Premium</h3>
+        <p class="why-us-desc">Nos fleurs et extraits sont sélectionnés parmi les meilleures récoltes de la galaxie, cultivés sans pesticides.</p>
+      </div>
+
+      <!-- Carte 2 : Lab Certifié -->
+      <div class="why-us-card" style="--card-delay:0.15s; --float-delay:0.4s;">
+        <div class="why-us-icon-ring">
+          <svg class="why-us-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="40" cy="40" r="36" fill="rgba(46,168,46,0.08)" stroke="rgba(46,168,46,0.35)" stroke-width="1.5"/>
+            <!-- Fiole -->
+            <path d="M34 18 L34 40 L24 60 Q22 64 26 66 L54 66 Q58 64 56 60 L46 40 L46 18 Z" fill="rgba(46,168,46,0.15)" stroke="#2ea82e" stroke-width="1.8" stroke-linejoin="round"/>
+            <line x1="32" y1="22" x2="48" y2="22" stroke="#2ea82e" stroke-width="2"/>
+            <circle cx="32" cy="56" r="3" fill="#2ea82e" opacity="0.8"/>
+            <circle cx="44" cy="60" r="2" fill="#3dbe3d" opacity="0.7"/>
+            <circle cx="37" cy="62" r="1.5" fill="#2ea82e" opacity="0.6"/>
+          </svg>
+        </div>
+        <h3 class="why-us-title">Lab Certifié</h3>
+        <p class="why-us-desc">Chaque produit est analysé par un laboratoire indépendant. Résultats disponibles en toute transparence.</p>
+      </div>
+
+      <!-- Carte 3 : Livraison Express -->
+      <div class="why-us-card" style="--card-delay:0.25s; --float-delay:0.8s;">
+        <div class="why-us-icon-ring">
+          <svg class="why-us-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="40" cy="40" r="36" fill="rgba(46,168,46,0.08)" stroke="rgba(46,168,46,0.35)" stroke-width="1.5"/>
+            <!-- Fusée -->
+            <path d="M40 16 C40 16 28 30 28 46 L34 52 L40 54 L46 52 L52 46 C52 30 40 16 40 16Z" fill="#2ea82e" opacity="0.8"/>
+            <ellipse cx="40" cy="46" rx="6" ry="4" fill="#1d7a1d"/>
+            <!-- Flamme -->
+            <path d="M36 54 Q38 62 40 60 Q42 62 44 54" fill="#f5a623" opacity="0.85"/>
+            <!-- Hublot -->
+            <circle cx="40" cy="36" r="5" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3 class="why-us-title">Livraison Express</h3>
+        <p class="why-us-desc">Commandez avant 14h, recevez sous 24-48h. Emballage discret et sécurisé pour chaque commande.</p>
+      </div>
+
+      <!-- Carte 4 : Conseil Expert -->
+      <div class="why-us-card" style="--card-delay:0.35s; --float-delay:1.2s;">
+        <div class="why-us-icon-ring">
+          <svg class="why-us-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="40" cy="40" r="36" fill="rgba(46,168,46,0.08)" stroke="rgba(46,168,46,0.35)" stroke-width="1.5"/>
+            <!-- Bulle de dialogue -->
+            <path d="M18 24 Q18 18 24 18 L56 18 Q62 18 62 24 L62 46 Q62 52 56 52 L44 52 L38 62 L32 52 L24 52 Q18 52 18 46 Z" fill="rgba(46,168,46,0.2)" stroke="#2ea82e" stroke-width="1.8"/>
+            <circle cx="30" cy="35" r="3" fill="#2ea82e"/>
+            <circle cx="40" cy="35" r="3" fill="#2ea82e"/>
+            <circle cx="50" cy="35" r="3" fill="#2ea82e"/>
+          </svg>
+        </div>
+        <h3 class="why-us-title">Conseil Expert</h3>
+        <p class="why-us-desc">Notre équipe de passionnés répond à toutes vos questions pour vous guider vers le produit idéal.</p>
+      </div>
+
     </div>
   </div>
 </section>
@@ -34,7 +83,6 @@
 {
   "name": "Pourquoi nous choisir",
   "class": "section-why-us",
-  "max_blocks": 6,
   "settings": [
     {
       "type": "text",
@@ -49,70 +97,8 @@
       "default": "La galaxie CBD mérite une escale de confiance."
     }
   ],
-  "blocks": [
-    {
-      "type": "item",
-      "name": "Avantage",
-      "settings": [
-        {
-          "type": "text",
-          "id": "icon",
-          "label": "Icône (emoji)",
-          "default": "🌿"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Titre",
-          "default": "Qualité Premium"
-        },
-        {
-          "type": "textarea",
-          "id": "description",
-          "label": "Description",
-          "default": "Nos produits sont sélectionnés parmi les meilleures récoltes de la galaxie."
-        }
-      ]
-    }
-  ],
   "presets": [
-    {
-      "name": "Pourquoi nous choisir",
-      "blocks": [
-        {
-          "type": "item",
-          "settings": {
-            "icon": "🌿",
-            "title": "Qualité Premium",
-            "description": "Nos fleurs et extraits sont sélectionnés parmi les meilleures récoltes de la galaxie."
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "icon": "🔬",
-            "title": "Lab Certifié",
-            "description": "Chaque produit est analysé en laboratoire indépendant pour garantir pureté et conformité."
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "icon": "🚀",
-            "title": "Livraison Express",
-            "description": "Commandez avant 14h et recevez votre colis sous 24-48h, emballé discrètement."
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "icon": "💬",
-            "title": "Conseil Expert",
-            "description": "Notre équipe vous guide vers les produits parfaits pour votre bien-être."
-          }
-        }
-      ]
-    }
+    { "name": "Pourquoi nous choisir" }
   ]
 }
 {% endschema %}

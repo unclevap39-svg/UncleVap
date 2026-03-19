@@ -1,42 +1,90 @@
-{%- liquid
-  assign title    = section.settings.title
-  assign subtitle = section.settings.subtitle
--%}
-
 <section class="testimonials" id="testimonials-{{ section.id }}">
   <div class="testimonials-inner">
-    {%- if title != blank or subtitle != blank -%}
-      <div class="section-header">
-        {%- if title != blank -%}
-          <h2 class="section-title">{{ title }}</h2>
-        {%- endif -%}
-        {%- if subtitle != blank -%}
-          <p class="section-subtitle">{{ subtitle }}</p>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-
-    <div class="testimonials-grid">
-      {%- for block in section.blocks -%}
-        {%- assign rating = block.settings.rating | times: 1 -%}
-        <div class="testimonial-card" {{ block.shopify_attributes }}>
-          <div class="testimonial-stars">
-            {%- for i in (1..5) -%}
-              <span class="star {% if i <= rating %}star--on{% endif %}">★</span>
-            {%- endfor -%}
-          </div>
-          <p class="testimonial-text">"{{ block.settings.content }}"</p>
-          <div class="testimonial-author">
-            <span class="testimonial-name">{{ block.settings.author }}</span>
-            {%- if block.settings.location != blank -%}
-              <span class="testimonial-location">— {{ block.settings.location }}</span>
-            {%- endif -%}
-          </div>
-        </div>
-      {%- else -%}
-        <p class="testimonials-empty">Ajoutez des avis via l'éditeur de thème.</p>
-      {%- endfor -%}
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title | default: 'CE QUE DIT LA GALAXIE' }}</h2>
+      <p class="section-subtitle">{{ section.settings.subtitle | default: 'Des milliers de voyageurs nous font confiance.' }}</p>
     </div>
+
+    {%- comment %} Carousel infini : les cartes sont dupliquées pour un défilement sans fin {%- endcomment %}
+    <div class="testimonials-track-wrap" aria-label="Carrousel d'avis clients">
+      <div class="testimonials-track">
+
+        {%- comment %} === Série 1 (originale) === {%- endcomment %}
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Des fleurs d'une qualité exceptionnelle. Je ne commande plus nulle part ailleurs, livraison rapide et emballage soigné."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Mathieu R.</span><span class="testimonial-location">— Lyon</span></div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Uncle Vap c'est une autre dimension. Les CBD étaient frais, odorants et vraiment efficaces pour me détendre après le travail."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Camille T.</span><span class="testimonial-location">— Paris</span></div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Service client au top, réponse rapide à mes questions. Les produits sont certifiés, ça se sent. Je recommande à 100&nbsp;%."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Alex D.</span><span class="testimonial-location">— Bordeaux</span></div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"La vape que j'ai commandée est incroyable, design soigné et tirage parfait. Je reviendrai assurément pour d'autres produits."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Léa M.</span><span class="testimonial-location">— Nantes</span></div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Commande reçue en 36h, même pas 48h ! Le packaging est discret et les produits sont exactement comme décrits. Parfait."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Thomas B.</span><span class="testimonial-location">— Toulouse</span></div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Rapport qualité-prix imbattable. J'ai testé d'autres boutiques, Uncle Vap est de loin la meilleure. Merci pour cette galaxie !"</p>
+          <div class="testimonial-author"><span class="testimonial-name">Sophie L.</span><span class="testimonial-location">— Strasbourg</span></div>
+        </div>
+
+        {%- comment %} === Série 2 (clone pour boucle infinie) === {%- endcomment %}
+        <div class="testimonial-card" aria-hidden="true">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Des fleurs d'une qualité exceptionnelle. Je ne commande plus nulle part ailleurs, livraison rapide et emballage soigné."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Mathieu R.</span><span class="testimonial-location">— Lyon</span></div>
+        </div>
+
+        <div class="testimonial-card" aria-hidden="true">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Uncle Vap c'est une autre dimension. Les CBD étaient frais, odorants et vraiment efficaces pour me détendre après le travail."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Camille T.</span><span class="testimonial-location">— Paris</span></div>
+        </div>
+
+        <div class="testimonial-card" aria-hidden="true">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Service client au top, réponse rapide à mes questions. Les produits sont certifiés, ça se sent. Je recommande à 100&nbsp;%."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Alex D.</span><span class="testimonial-location">— Bordeaux</span></div>
+        </div>
+
+        <div class="testimonial-card" aria-hidden="true">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"La vape que j'ai commandée est incroyable, design soigné et tirage parfait. Je reviendrai assurément pour d'autres produits."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Léa M.</span><span class="testimonial-location">— Nantes</span></div>
+        </div>
+
+        <div class="testimonial-card" aria-hidden="true">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Commande reçue en 36h, même pas 48h ! Le packaging est discret et les produits sont exactement comme décrits. Parfait."</p>
+          <div class="testimonial-author"><span class="testimonial-name">Thomas B.</span><span class="testimonial-location">— Toulouse</span></div>
+        </div>
+
+        <div class="testimonial-card" aria-hidden="true">
+          <div class="testimonial-stars"><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span><span class="star star--on">★</span></div>
+          <p class="testimonial-text">"Rapport qualité-prix imbattable. J'ai testé d'autres boutiques, Uncle Vap est de loin la meilleure. Merci pour cette galaxie !"</p>
+          <div class="testimonial-author"><span class="testimonial-name">Sophie L.</span><span class="testimonial-location">— Strasbourg</span></div>
+        </div>
+
+      </div><!-- /.testimonials-track -->
+    </div><!-- /.testimonials-track-wrap -->
   </div>
 </section>
 
@@ -44,7 +92,6 @@
 {
   "name": "Avis Clients",
   "class": "section-testimonials",
-  "max_blocks": 9,
   "settings": [
     {
       "type": "text",
@@ -59,74 +106,8 @@
       "default": "Des milliers de voyageurs nous font confiance."
     }
   ],
-  "blocks": [
-    {
-      "type": "review",
-      "name": "Avis",
-      "settings": [
-        {
-          "type": "range",
-          "id": "rating",
-          "label": "Note",
-          "min": 1,
-          "max": 5,
-          "step": 1,
-          "default": 5
-        },
-        {
-          "type": "textarea",
-          "id": "content",
-          "label": "Avis",
-          "default": "Qualité incroyable, produits vraiment d'une autre dimension !"
-        },
-        {
-          "type": "text",
-          "id": "author",
-          "label": "Nom du client",
-          "default": "Sophie M."
-        },
-        {
-          "type": "text",
-          "id": "location",
-          "label": "Ville (optionnel)",
-          "default": "Paris"
-        }
-      ]
-    }
-  ],
   "presets": [
-    {
-      "name": "Avis Clients",
-      "blocks": [
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "content": "Des fleurs d'une qualité exceptionnelle, je ne commande plus nulle part ailleurs. Livraison rapide et emballage soigné.",
-            "author": "Mathieu R.",
-            "location": "Lyon"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "content": "Uncle Vap c'est une autre dimension. Les CBD que j'ai commandés étaient frais, odorants et vraiment efficaces pour me détendre.",
-            "author": "Camille T.",
-            "location": "Paris"
-          }
-        },
-        {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "content": "Service client au top, réponse rapide à mes questions. Les produits sont certifiés et ça se sent. Je recommande à 100%.",
-            "author": "Alex D.",
-            "location": "Bordeaux"
-          }
-        }
-      ]
-    }
+    { "name": "Avis Clients" }
   ]
 }
 {% endschema %}
