@@ -1,0 +1,93 @@
+<section class="newsletter-section" aria-label="Newsletter">
+  <div class="newsletter-inner">
+
+    <div class="newsletter-content">
+      <p class="newsletter-eyebrow">{{ section.settings.eyebrow | default: 'Newsletter' }}</p>
+      <h2 class="newsletter-title">{{ section.settings.title | default: 'Rejoignez la galaxie Uncle Vap' }}</h2>
+      <p class="newsletter-subtitle">{{ section.settings.subtitle | default: "Inscrivez-vous et recevez -10% sur votre première commande, en plus de nos offres exclusives et avant-premières." }}</p>
+    </div>
+
+    <div class="newsletter-form-wrap">
+      {% form 'customer' %}
+        {% if form.posted_successfully? %}
+          <div class="newsletter-success">
+            <div class="newsletter-success-icon" aria-hidden="true">✓</div>
+            <p class="newsletter-success-title">Bienvenue dans la galaxie !</p>
+            <p class="newsletter-success-msg">Utilisez ce code lors de votre première commande :</p>
+            <div class="newsletter-code">
+              <span class="newsletter-code-value">{{ section.settings.discount_code | default: 'BIENVENUE10' }}</span>
+            </div>
+            <p class="newsletter-success-note">-10% sur votre première commande</p>
+          </div>
+        {% else %}
+          {% if form.errors %}
+            <div class="newsletter-error">{{ form.errors | default_errors }}</div>
+          {% endif %}
+          <div class="newsletter-form">
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <div class="newsletter-input-row">
+              <label for="newsletter-email" class="visually-hidden">Adresse e-mail</label>
+              <input
+                type="email"
+                name="contact[email]"
+                id="newsletter-email"
+                class="newsletter-input"
+                placeholder="Votre adresse e-mail"
+                required
+                autocomplete="email"
+                value="{{ form.email }}"
+              >
+              <button type="submit" class="newsletter-submit">
+                {{ section.settings.btn_label | default: "S'inscrire" }}
+              </button>
+            </div>
+          </div>
+          <p class="newsletter-privacy">Pas de spam. Désabonnement en un clic.</p>
+        {% endif %}
+      {% endform %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Étiquette au-dessus du titre",
+      "default": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Rejoignez la galaxie Uncle Vap"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Inscrivez-vous et recevez -10% sur votre première commande, en plus de nos offres exclusives et avant-premières."
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Texte du bouton",
+      "default": "S'inscrire"
+    },
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "Code de réduction affiché après inscription",
+      "default": "BIENVENUE10",
+      "info": "Créez ce code dans Shopify Admin > Remises avant de l'utiliser ici."
+    }
+  ],
+  "presets": [
+    { "name": "Newsletter" }
+  ]
+}
+{% endschema %}

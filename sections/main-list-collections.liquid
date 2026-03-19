@@ -1,0 +1,81 @@
+<section class="collections-list-page" aria-label="Toutes les collections">
+
+  <div class="collections-list-header">
+    <h1 class="collections-list-title">{{ section.settings.title | default: 'Notre Catalogue' }}</h1>
+    {%- if section.settings.subtitle != blank -%}
+      <p class="collections-list-subtitle">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- paginate collections by 24 -%}
+    <div class="collections-list-grid">
+      {%- for collection in collections -%}
+        {%- unless collection.handle == 'frontpage' -%}
+          <a href="{{ collection.url }}" class="collection-tile">
+            <div class="collection-tile-img-wrap">
+              {%- if collection.image != blank -%}
+                <img
+                  class="collection-tile-img"
+                  src="{{ collection.image | image_url: width: 600 }}"
+                  alt="{{ collection.title | escape }}"
+                  width="600"
+                  height="400"
+                  loading="lazy"
+                >
+              {%- else -%}
+                <div class="collection-tile-img-placeholder" aria-hidden="true">
+                  <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+                    <path d="M28 4C28 4 10 16 8 30C6 44 18 52 28 52C38 52 50 44 48 30C46 16 28 4 28 4Z" fill="#2ea82e" opacity="0.4"/>
+                    <path d="M28 4 L28 52" stroke="#1d7a1d" stroke-width="1.5" opacity="0.5"/>
+                    <path d="M28 18 L16 32 M28 24 L18 40 M28 18 L40 32 M28 24 L38 40" stroke="#1d7a1d" stroke-width="1" opacity="0.4"/>
+                  </svg>
+                </div>
+              {%- endif -%}
+              <div class="collection-tile-overlay" aria-hidden="true"></div>
+            </div>
+            <div class="collection-tile-info">
+              <h2 class="collection-tile-name">{{ collection.title }}</h2>
+              <span class="collection-tile-count">
+                {{ collection.products_count }}
+                produit{%- if collection.products_count != 1 -%}s{%- endif -%}
+              </span>
+              <span class="collection-tile-cta" aria-hidden="true">Voir la collection →</span>
+            </div>
+          </a>
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <div class="pagination">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="pagination-btn">← Précédent</a>
+        {%- endif -%}
+        <span class="pagination-info">{{ paginate.current_page }} / {{ paginate.pages }}</span>
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="pagination-btn">Suivant →</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+
+</section>
+
+{% schema %}
+{
+  "name": "Page catalogue",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre de la page",
+      "default": "Notre Catalogue"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre"
+    }
+  ]
+}
+{% endschema %}

@@ -31,6 +31,10 @@
     "blog-posts": {
       "type": "blog-posts",
       "settings": {}
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
     }
   },
   "order": [
@@ -41,6 +45,7 @@
     "promo-banner",
     "testimonials",
     "stats-counter",
-    "blog-posts"
+    "blog-posts",
+    "newsletter"
   ]
 }
