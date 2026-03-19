@@ -1,0 +1,132 @@
+{%- liquid
+  assign title    = section.settings.title
+  assign subtitle = section.settings.subtitle
+-%}
+
+<section class="testimonials" id="testimonials-{{ section.id }}">
+  <div class="testimonials-inner">
+    {%- if title != blank or subtitle != blank -%}
+      <div class="section-header">
+        {%- if title != blank -%}
+          <h2 class="section-title">{{ title }}</h2>
+        {%- endif -%}
+        {%- if subtitle != blank -%}
+          <p class="section-subtitle">{{ subtitle }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="testimonials-grid">
+      {%- for block in section.blocks -%}
+        {%- assign rating = block.settings.rating | times: 1 -%}
+        <div class="testimonial-card" {{ block.shopify_attributes }}>
+          <div class="testimonial-stars">
+            {%- for i in (1..5) -%}
+              <span class="star {% if i <= rating %}star--on{% endif %}">★</span>
+            {%- endfor -%}
+          </div>
+          <p class="testimonial-text">"{{ block.settings.content }}"</p>
+          <div class="testimonial-author">
+            <span class="testimonial-name">{{ block.settings.author }}</span>
+            {%- if block.settings.location != blank -%}
+              <span class="testimonial-location">— {{ block.settings.location }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- else -%}
+        <p class="testimonials-empty">Ajoutez des avis via l'éditeur de thème.</p>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avis Clients",
+  "class": "section-testimonials",
+  "max_blocks": 9,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "CE QUE DIT LA GALAXIE"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Des milliers de voyageurs nous font confiance."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Avis",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Note",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Avis",
+          "default": "Qualité incroyable, produits vraiment d'une autre dimension !"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Nom du client",
+          "default": "Sophie M."
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Ville (optionnel)",
+          "default": "Paris"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avis Clients",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "content": "Des fleurs d'une qualité exceptionnelle, je ne commande plus nulle part ailleurs. Livraison rapide et emballage soigné.",
+            "author": "Mathieu R.",
+            "location": "Lyon"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "content": "Uncle Vap c'est une autre dimension. Les CBD que j'ai commandés étaient frais, odorants et vraiment efficaces pour me détendre.",
+            "author": "Camille T.",
+            "location": "Paris"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "content": "Service client au top, réponse rapide à mes questions. Les produits sont certifiés et ça se sent. Je recommande à 100%.",
+            "author": "Alex D.",
+            "location": "Bordeaux"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

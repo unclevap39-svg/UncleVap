@@ -1,0 +1,118 @@
+{%- liquid
+  assign title    = section.settings.title
+  assign subtitle = section.settings.subtitle
+-%}
+
+<section class="why-us" id="why-us-{{ section.id }}">
+  <div class="why-us-inner">
+    {%- if title != blank or subtitle != blank -%}
+      <div class="section-header">
+        {%- if title != blank -%}
+          <h2 class="section-title">{{ title }}</h2>
+        {%- endif -%}
+        {%- if subtitle != blank -%}
+          <p class="section-subtitle">{{ subtitle }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="why-us-grid">
+      {%- for block in section.blocks -%}
+        <div class="why-us-card" {{ block.shopify_attributes }}>
+          <div class="why-us-icon">{{ block.settings.icon }}</div>
+          <h3 class="why-us-title">{{ block.settings.title }}</h3>
+          <p class="why-us-desc">{{ block.settings.description }}</p>
+        </div>
+      {%- else -%}
+        <p class="why-us-empty">Ajoutez des avantages via l'éditeur de thème.</p>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pourquoi nous choisir",
+  "class": "section-why-us",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "POURQUOI UNCLE VAP ?"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "La galaxie CBD mérite une escale de confiance."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Avantage",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icône (emoji)",
+          "default": "🌿"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre",
+          "default": "Qualité Premium"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Nos produits sont sélectionnés parmi les meilleures récoltes de la galaxie."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pourquoi nous choisir",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "icon": "🌿",
+            "title": "Qualité Premium",
+            "description": "Nos fleurs et extraits sont sélectionnés parmi les meilleures récoltes de la galaxie."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "🔬",
+            "title": "Lab Certifié",
+            "description": "Chaque produit est analysé en laboratoire indépendant pour garantir pureté et conformité."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "🚀",
+            "title": "Livraison Express",
+            "description": "Commandez avant 14h et recevez votre colis sous 24-48h, emballé discrètement."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "💬",
+            "title": "Conseil Expert",
+            "description": "Notre équipe vous guide vers les produits parfaits pour votre bien-être."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

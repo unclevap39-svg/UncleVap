@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "hero-banner": {
+      "type": "hero-banner",
+      "settings": {}
+    },
+    "featured-categories": {
+      "type": "featured-categories",
+      "settings": {}
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "settings": {}
+    },
+    "why-us": {
+      "type": "why-us",
+      "settings": {}
+    },
+    "promo-banner": {
+      "type": "promo-banner",
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "settings": {}
+    },
+    "blog-posts": {
+      "type": "blog-posts",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero-banner",
+    "featured-categories",
+    "featured-products",
+    "why-us",
+    "promo-banner",
+    "testimonials",
+    "blog-posts"
+  ]
+}
