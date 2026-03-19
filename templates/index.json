@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "hero-banner": {
+      "type": "hero-banner",
+      "settings": {
+        "title": "<p>VOTRE ESCALE VERS LA RELAXATION COSMIQUE</p>",
+        "subtitle": "Uncle Vap vous guide à travers notre collection de fleurs, vapes et cafés d'une autre dimension.",
+        "cta_text": "DÉCOUVRIR LA GALAXIE CBD"
+      }
+    },
+    "featured-categories": {
+      "type": "featured-categories",
+      "settings": {
+        "cat_1_title": "FLEURS PREMIUM",
+        "cat_1_desc": "Les pépites de notre sélection spatiale.",
+        "cat_2_title": "VAPES AVANCÉES",
+        "cat_2_desc": "Technologie et saveurs terrestres et au-delà.",
+        "cat_3_title": "BOISSONS ET INFUSIONS",
+        "cat_3_desc": "Détente cosmique instantanée.",
+        "cat_4_title": "LAB REPORTS COSMIC-APPROVED.",
+        "cat_4_desc": "Transparence totale."
+      }
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "settings": {
+        "title": "Nos Produits Cosmiques",
+        "products_count": 6
+      }
+    }
+  },
+  "order": [
+    "hero-banner",
+    "featured-categories",
+    "featured-products"
+  ]
+}

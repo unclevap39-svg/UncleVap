@@ -1,0 +1,113 @@
+<header class="site-header" role="banner">
+  <div class="header-inner">
+
+    <!-- Logo -->
+    <a href="{{ routes.root_url }}" class="header-logo" aria-label="{{ shop.name }}">
+      {%- if section.settings.logo != blank -%}
+        <img
+          src="{{ section.settings.logo | image_url: width: 160 }}"
+          alt="{{ shop.name }}"
+          width="80"
+          height="80"
+          loading="eager"
+        >
+      {%- else -%}
+        <div class="header-logo-placeholder">
+          <span>{{ shop.name }}</span>
+        </div>
+      {%- endif -%}
+    </a>
+
+    <!-- Mobile hamburger -->
+    <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav">
+      <span></span><span></span><span></span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="header-nav" id="mobile-nav" aria-label="Navigation principale">
+      <ul class="nav-list">
+        {%- for link in linklists[section.settings.menu].links -%}
+          <li class="nav-item{% if link.active %} active{% endif %}">
+            <a href="{{ link.url }}" class="nav-link">{{ link.title | upcase }}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <!-- Header icons -->
+    <div class="header-icons">
+      <!-- Search -->
+      <button class="header-icon-btn" aria-label="Rechercher" id="search-toggle">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+
+      <!-- Account -->
+      <a href="{{ routes.account_url }}" class="header-icon-btn" aria-label="Mon compte">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span class="header-icon-label">Account</span>
+      </a>
+
+      <!-- Cart -->
+      <a href="{{ routes.cart_url }}" class="header-icon-btn cart-btn" aria-label="Panier">
+        <div class="cart-rocket-wrap">
+          <svg class="cart-rocket-icon" width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Rocket body -->
+            <ellipse cx="32" cy="26" rx="9" ry="16" fill="#e8e8e8" stroke="#cccccc" stroke-width="1.5"/>
+            <!-- Rocket window -->
+            <circle cx="32" cy="22" r="4" fill="#7ecfff" stroke="#aaaaaa" stroke-width="1"/>
+            <!-- Rocket fins left -->
+            <path d="M23 36 L17 46 L23 43 Z" fill="#cc3333"/>
+            <!-- Rocket fins right -->
+            <path d="M41 36 L47 46 L41 43 Z" fill="#cc3333"/>
+            <!-- Rocket flame -->
+            <ellipse cx="32" cy="44" rx="5" ry="7" fill="#ff9900" opacity="0.9"/>
+            <ellipse cx="32" cy="46" rx="3" ry="5" fill="#ffdd00"/>
+            <!-- Rocket tip -->
+            <path d="M32 8 L25 18 L39 18 Z" fill="#cc3333"/>
+          </svg>
+          {%- if cart.item_count > 0 -%}
+            <span class="cart-count">{{ cart.item_count }}</span>
+          {%- endif -%}
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-bar" id="search-bar" hidden>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+      <input type="search" name="q" placeholder="Rechercher des produits..." class="search-input" aria-label="Rechercher">
+      <button type="submit" class="search-submit" aria-label="Lancer la recherche">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu de navigation",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

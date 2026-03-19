@@ -1,0 +1,44 @@
+<article class="product-card">
+  <a href="{{ product.url }}" class="product-card-link" aria-label="{{ product.title }}">
+    <div class="product-card-image-wrap">
+      {%- if product.featured_image -%}
+        <img
+          src="{{ product.featured_image | image_url: width: 400 }}"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          width="400"
+          height="400"
+          loading="lazy"
+          class="product-card-img"
+        >
+      {%- else -%}
+        <div class="product-image-placeholder">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="60" height="60">
+            <rect width="100" height="100" fill="rgba(46,168,46,0.1)"/>
+            <path d="M50 20C50 20 30 33 28 50C26 67 40 80 50 80C60 80 74 67 72 50C70 33 50 20 50 20Z" fill="#2ea82e" opacity="0.5"/>
+          </svg>
+        </div>
+      {%- endif -%}
+      {%- if product.compare_at_price > product.price -%}
+        <span class="product-badge product-badge--sale">SOLDE</span>
+      {%- endif -%}
+    </div>
+    <div class="product-card-info">
+      <h3 class="product-card-title">{{ product.title }}</h3>
+      <div class="product-card-price">
+        {%- if product.compare_at_price > product.price -%}
+          <span class="price-compare">{{ product.compare_at_price | money }}</span>
+          <span class="price-current price-current--sale">{{ product.price | money }}</span>
+        {%- else -%}
+          <span class="price-current">{{ product.price | money }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+  </a>
+  <button
+    class="btn-add-to-cart"
+    data-product-id="{{ product.variants.first.id }}"
+    aria-label="Ajouter {{ product.title }} au panier"
+  >
+    Ajouter
+  </button>
+</article>

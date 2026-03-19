@@ -1,0 +1,33 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Uncle Vap",
+    "theme_version": "1.0.0",
+    "theme_author": "Uncle Vap",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Background Color",
+        "default": "#050e05"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent Green",
+        "default": "#2ea82e"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text Color",
+        "default": "#ffffff"
+      }
+    ]
+  }
+]

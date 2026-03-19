@@ -1,0 +1,121 @@
+<section class="cart-page" aria-label="Panier">
+  <div class="cart-inner">
+    <h1 class="cart-title">Mon Panier</h1>
+
+    {%- if cart.item_count > 0 -%}
+      <div class="cart-layout">
+        <!-- Cart items -->
+        <div class="cart-items">
+          {%- for item in cart.items -%}
+            <div class="cart-item" data-key="{{ item.key }}">
+              <a href="{{ item.url }}" class="cart-item-image-wrap">
+                {%- if item.image -%}
+                  <img
+                    src="{{ item.image | image_url: width: 200 }}"
+                    alt="{{ item.image.alt | default: item.title | escape }}"
+                    width="100" height="100"
+                    loading="lazy"
+                    class="cart-item-img"
+                  >
+                {%- endif -%}
+              </a>
+              <div class="cart-item-details">
+                <a href="{{ item.url }}" class="cart-item-title">{{ item.product.title }}</a>
+                {%- unless item.product.has_only_default_variant -%}
+                  <p class="cart-item-variant">{{ item.variant.title }}</p>
+                {%- endunless -%}
+                <p class="cart-item-price">{{ item.final_price | money }}</p>
+                <div class="cart-item-qty">
+                  <button class="qty-btn qty-btn--minus cart-qty-btn" data-key="{{ item.key }}" data-action="minus">−</button>
+                  <span class="cart-qty-display">{{ item.quantity }}</span>
+                  <button class="qty-btn qty-btn--plus cart-qty-btn" data-key="{{ item.key }}" data-action="plus">+</button>
+                </div>
+              </div>
+              <button class="cart-item-remove" data-key="{{ item.key }}" aria-label="Supprimer {{ item.title }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <!-- Cart summary -->
+        <div class="cart-summary">
+          <h2 class="cart-summary-title">Récapitulatif</h2>
+          <div class="cart-summary-row">
+            <span>Sous-total</span>
+            <span class="cart-subtotal">{{ cart.total_price | money }}</span>
+          </div>
+          <p class="cart-shipping-note">Livraison calculée à la caisse.</p>
+          <a href="{{ routes.checkout }}" class="btn-checkout">Passer la commande</a>
+          <a href="{{ routes.root_url }}" class="btn-continue">← Continuer mes achats</a>
+        </div>
+      </div>
+    {%- else -%}
+      <div class="cart-empty">
+        <p>Votre panier est vide.</p>
+        <a href="{{ routes.root_url }}" class="btn-hero-cta">Découvrir nos produits</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+.cart-page { padding: 32px 16px; max-width: 1200px; margin: 0 auto; }
+.cart-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 6vw, 48px); letter-spacing: 2px; margin-bottom: 32px;
+}
+.cart-layout { display: flex; flex-direction: column; gap: 32px; }
+.cart-items { display: flex; flex-direction: column; gap: 16px; }
+.cart-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: var(--bg-card); border: 1px solid rgba(46,168,46,0.15);
+  border-radius: var(--radius); padding: 16px;
+}
+.cart-item-image-wrap { flex-shrink: 0; }
+.cart-item-img { width: 90px; height: 90px; object-fit: cover; border-radius: 8px; }
+.cart-item-details { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.cart-item-title { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 500; }
+.cart-item-title:hover { color: var(--green-lt); }
+.cart-item-variant { font-size: 12px; color: var(--text-muted); }
+.cart-item-price { font-family: 'Oswald', sans-serif; color: var(--green-lt); font-size: 15px; }
+.cart-item-qty { display: flex; align-items: center; gap: 0; width: fit-content; border: 1px solid rgba(46,168,46,0.3); border-radius: 6px; overflow: hidden; }
+.cart-qty-display { padding: 4px 12px; font-size: 14px; border-left: 1px solid rgba(46,168,46,0.2); border-right: 1px solid rgba(46,168,46,0.2); }
+.cart-item-remove { color: var(--text-muted); padding: 4px; transition: color var(--transition); flex-shrink: 0; }
+.cart-item-remove:hover { color: #ff6b6b; }
+.cart-summary {
+  background: var(--bg-card); border: 1px solid rgba(46,168,46,0.2);
+  border-radius: var(--radius); padding: 24px;
+  display: flex; flex-direction: column; gap: 16px;
+  height: fit-content;
+}
+.cart-summary-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; }
+.cart-summary-row { display: flex; justify-content: space-between; align-items: center; }
+.cart-subtotal { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--green-lt); }
+.cart-shipping-note { font-size: 12px; color: var(--text-muted); }
+.btn-checkout {
+  display: block; text-align: center; padding: 14px;
+  background: var(--green); color: #fff; border-radius: 10px;
+  font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 600;
+  letter-spacing: 1px; transition: background var(--transition);
+}
+.btn-checkout:hover { background: var(--green-lt); }
+.btn-continue { text-align: center; color: var(--text-muted); font-size: 13px; transition: color var(--transition); }
+.btn-continue:hover { color: var(--green-lt); }
+.cart-empty { text-align: center; padding: 60px 0; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.cart-empty p { color: var(--text-muted); font-size: 18px; }
+@media (min-width: 900px) {
+  .cart-layout { flex-direction: row; }
+  .cart-items { flex: 1; }
+  .cart-summary { flex: 0 0 300px; }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Page panier",
+  "settings": []
+}
+{% endschema %}

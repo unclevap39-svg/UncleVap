@@ -1,0 +1,108 @@
+<section class="hero-banner" aria-label="Hero banner">
+  <!-- Cosmic background particles -->
+  <div class="hero-bg" aria-hidden="true">
+    <div class="cosmic-glow cosmic-glow--left"></div>
+    <div class="cosmic-glow cosmic-glow--right"></div>
+    <!-- Floating leaves -->
+    <svg class="leaf leaf-1" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#2ea82e" opacity="0.7"/>
+      <path d="M20 2 L20 48" stroke="#1d7a1d" stroke-width="1.5" opacity="0.8"/>
+      <path d="M20 15 L10 28 M20 20 L12 35 M20 25 L13 38 M20 15 L30 28 M20 20 L28 35 M20 25 L27 38" stroke="#1d7a1d" stroke-width="1" opacity="0.6"/>
+    </svg>
+    <svg class="leaf leaf-2" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#2ea82e" opacity="0.5"/>
+      <path d="M20 2 L20 48" stroke="#1d7a1d" stroke-width="1.5" opacity="0.6"/>
+    </svg>
+    <svg class="leaf leaf-3" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#3dbe3d" opacity="0.4"/>
+      <path d="M20 2 L20 48" stroke="#2ea82e" stroke-width="1.5" opacity="0.5"/>
+    </svg>
+    <svg class="leaf leaf-4" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 2C20 2 6 12 4 26C2 40 14 48 20 48C26 48 38 40 36 26C34 12 20 2 20 2Z" fill="#2ea82e" opacity="0.6"/>
+      <path d="M20 2 L20 48" stroke="#1d7a1d" stroke-width="1.5" opacity="0.7"/>
+    </svg>
+    <!-- Sparkle stars -->
+    <div class="star star-1" aria-hidden="true"></div>
+    <div class="star star-2" aria-hidden="true"></div>
+    <div class="star star-3" aria-hidden="true"></div>
+    <div class="star star-4" aria-hidden="true"></div>
+    <div class="star star-5" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero-inner">
+    <!-- Character image (left on desktop, top on mobile) -->
+    <div class="hero-character">
+      {%- if section.settings.character_image != blank -%}
+        <img
+          src="{{ section.settings.character_image | image_url: width: 700 }}"
+          alt="Uncle Vap"
+          class="hero-character-img"
+          width="600"
+          height="700"
+          loading="eager"
+          fetchpriority="high"
+        >
+      {%- else -%}
+        <!-- Placeholder character silhouette -->
+        <div class="hero-character-placeholder" aria-label="Personnage Uncle Vap">
+          <div class="character-glow-ring"></div>
+        </div>
+      {%- endif -%}
+      <div class="hero-brand-text" aria-hidden="true">Uncle Vap</div>
+    </div>
+
+    <!-- Hero content (right on desktop, bottom on mobile) -->
+    <div class="hero-content">
+      <h1 class="hero-title">
+        {{ section.settings.title | default: 'VOTRE ESCALE VERS LA<br>RELAXATION COSMIQUE' }}
+      </h1>
+      <p class="hero-subtitle">
+        {{ section.settings.subtitle | default: 'Uncle Vap vous guide à travers notre collection de fleurs, vapes et cafés d\'une autre dimension.' }}
+      </p>
+      <a href="{{ section.settings.cta_link | default: routes.collections_url }}" class="btn-hero-cta">
+        {{ section.settings.cta_text | default: 'DÉCOUVRIR LA GALAXIE CBD' }}
+      </a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "character_image",
+      "label": "Image du personnage"
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Titre principal",
+      "default": "<p>VOTRE ESCALE VERS LA RELAXATION COSMIQUE</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Uncle Vap vous guide à travers notre collection de fleurs, vapes et cafés d'une autre dimension."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texte du bouton CTA",
+      "default": "DÉCOUVRIR LA GALAXIE CBD"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien du bouton CTA"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

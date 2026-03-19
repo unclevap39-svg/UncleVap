@@ -1,0 +1,209 @@
+<section class="product-page" aria-label="{{ product.title }}">
+  <div class="product-page-inner">
+    <!-- Product gallery -->
+    <div class="product-gallery">
+      {%- if product.images.size > 0 -%}
+        <div class="product-main-image">
+          <img
+            id="product-main-img"
+            src="{{ product.featured_image | image_url: width: 700 }}"
+            alt="{{ product.featured_image.alt | default: product.title | escape }}"
+            width="700"
+            height="700"
+            loading="eager"
+            class="product-main-img"
+          >
+        </div>
+        {%- if product.images.size > 1 -%}
+          <div class="product-thumbnails">
+            {%- for image in product.images limit: 6 -%}
+              <button
+                class="product-thumb-btn{% if forloop.first %} active{% endif %}"
+                data-src="{{ image | image_url: width: 700 }}"
+                aria-label="Image {{ forloop.index }}"
+              >
+                <img
+                  src="{{ image | image_url: width: 120 }}"
+                  alt="{{ image.alt | escape }}"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                >
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="product-image-placeholder product-image-placeholder--lg">
+          <svg viewBox="0 0 100 100" fill="none" width="80" height="80">
+            <path d="M50 20C50 20 30 33 28 50C26 67 40 80 50 80C60 80 74 67 72 50C70 33 50 20 50 20Z" fill="#2ea82e" opacity="0.5"/>
+          </svg>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Product info -->
+    <div class="product-info">
+      <h1 class="product-title">{{ product.title }}</h1>
+
+      <div class="product-price-wrap">
+        {%- if product.compare_at_price > product.price -%}
+          <span class="price-compare">{{ product.compare_at_price | money }}</span>
+          <span class="price-current price-current--sale">{{ product.price | money }}</span>
+        {%- else -%}
+          <span class="price-current">{{ product.price | money }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- unless product.has_only_default_variant -%}
+        <div class="product-variants">
+          {%- for option in product.options_with_values -%}
+            <div class="variant-group">
+              <label class="variant-label">{{ option.name }}</label>
+              <div class="variant-options">
+                {%- for value in option.values -%}
+                  <button class="variant-option-btn" data-option="{{ option.position }}" data-value="{{ value }}">
+                    {{ value }}
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endunless -%}
+
+      <div class="product-form">
+        <div class="quantity-wrap">
+          <label for="quantity" class="variant-label">Quantité</label>
+          <div class="quantity-control">
+            <button class="qty-btn qty-btn--minus" aria-label="Diminuer">−</button>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" class="qty-input">
+            <button class="qty-btn qty-btn--plus" aria-label="Augmenter">+</button>
+          </div>
+        </div>
+
+        <button
+          class="btn-add-to-cart btn-add-to-cart--product"
+          data-product-id="{{ product.variants.first.id }}"
+        >
+          Ajouter au panier
+        </button>
+      </div>
+
+      {%- if product.description != blank -%}
+        <div class="product-description">
+          {{ product.description }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+.product-page {
+  padding: 32px 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.product-page-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.product-gallery { display: flex; flex-direction: column; gap: 12px; }
+.product-main-image { border-radius: var(--radius); overflow: hidden; background: rgba(0,30,0,0.5); }
+.product-main-img { width: 100%; object-fit: cover; }
+.product-thumbnails { display: flex; gap: 8px; flex-wrap: wrap; }
+.product-thumb-btn {
+  width: 72px; height: 72px;
+  border-radius: 8px; overflow: hidden;
+  border: 2px solid rgba(46,168,46,0.2);
+  transition: border-color var(--transition);
+}
+.product-thumb-btn.active,
+.product-thumb-btn:hover { border-color: var(--green); }
+.product-thumb-btn img { width: 100%; height: 100%; object-fit: cover; }
+.product-image-placeholder--lg {
+  height: 320px; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,30,0,0.4); border-radius: var(--radius);
+}
+.product-info { display: flex; flex-direction: column; gap: 20px; }
+.product-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(24px, 5vw, 42px);
+  line-height: 1.1; letter-spacing: 1px;
+}
+.product-price-wrap { display: flex; gap: 12px; align-items: center; }
+.variant-group { display: flex; flex-direction: column; gap: 8px; }
+.variant-label { font-size: 13px; color: var(--text-muted); letter-spacing: 0.5px; font-weight: 600; }
+.variant-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.variant-option-btn {
+  padding: 6px 16px; border-radius: 6px;
+  border: 1px solid rgba(46,168,46,0.3);
+  background: transparent; color: var(--text);
+  font-size: 13px; transition: border-color var(--transition), background var(--transition);
+}
+.variant-option-btn:hover,
+.variant-option-btn.active { border-color: var(--green); background: rgba(46,168,46,0.15); }
+.product-form { display: flex; flex-direction: column; gap: 16px; }
+.quantity-wrap { display: flex; flex-direction: column; gap: 8px; }
+.quantity-control { display: flex; align-items: center; gap: 0; border: 1px solid rgba(46,168,46,0.3); border-radius: 8px; overflow: hidden; width: fit-content; }
+.qty-btn { width: 40px; height: 40px; font-size: 18px; color: var(--text); transition: background var(--transition); }
+.qty-btn:hover { background: rgba(46,168,46,0.15); }
+.qty-input { width: 56px; height: 40px; text-align: center; background: transparent; border: none; color: var(--text); font-size: 15px; border-left: 1px solid rgba(46,168,46,0.2); border-right: 1px solid rgba(46,168,46,0.2); }
+.qty-input:focus { outline: none; }
+.btn-add-to-cart--product {
+  width: 100%; padding: 14px;
+  background: var(--green);
+  color: #fff; border-radius: 10px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px; font-weight: 600;
+  letter-spacing: 1px;
+  transition: background var(--transition), box-shadow var(--transition);
+  border: none;
+}
+.btn-add-to-cart--product:hover { background: var(--green-lt); box-shadow: 0 0 20px rgba(46,168,46,0.4); }
+.product-description { font-size: 14px; color: var(--text-muted); line-height: 1.8; border-top: 1px solid rgba(46,168,46,0.1); padding-top: 20px; }
+@media (min-width: 768px) {
+  .product-page-inner { flex-direction: row; gap: 48px; }
+  .product-gallery { flex: 0 0 50%; }
+  .product-info { flex: 1; }
+}
+</style>
+
+<script>
+(function(){
+  // Thumbnail gallery
+  document.querySelectorAll('.product-thumb-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.product-thumb-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var mainImg = document.getElementById('product-main-img');
+      if(mainImg) mainImg.src = btn.dataset.src;
+    });
+  });
+  // Quantity
+  var qtyInput = document.querySelector('.qty-input');
+  document.querySelector('.qty-btn--minus')?.addEventListener('click', function(){
+    if(qtyInput && parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+  });
+  document.querySelector('.qty-btn--plus')?.addEventListener('click', function(){
+    if(qtyInput) qtyInput.value = parseInt(qtyInput.value) + 1;
+  });
+  // Variant buttons
+  document.querySelectorAll('.variant-option-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var group = btn.closest('.variant-options');
+      group.querySelectorAll('.variant-option-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Page produit",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,12 @@
+{
+  "general": {
+    "search": {
+      "placeholder": "Rechercher...",
+      "submit": "Rechercher"
+    },
+    "cart": {
+      "title": "Panier",
+      "empty": "Votre panier est vide"
+    }
+  }
+}
