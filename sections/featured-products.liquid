@@ -1,94 +1,85 @@
 {%- liquid
   assign bg_image = section.settings.bg_image
   assign overlay  = section.settings.overlay_opacity | divided_by: 100.0
+  assign product_blocks = section.blocks | where: 'type', 'product_item'
 -%}
+
 <section class="featured-products{% if bg_image != blank %} section--has-bg{% endif %}" aria-label="Produits vedettes">
   {%- if bg_image != blank -%}
     <img class="section-bg-img" src="{{ bg_image | image_url: width: 1600 }}" alt="" loading="lazy" width="1600" height="600">
     <div class="section-bg-overlay" style="--section-overlay: {{ overlay }};"></div>
   {%- endif -%}
+
   {%- if section.settings.title != blank -%}
     <div class="section-heading">
       <h2 class="section-title">{{ section.settings.title }}</h2>
+      {%- if section.settings.subtitle != blank -%}
+        <p class="section-subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
     </div>
   {%- endif -%}
 
   <div class="products-slider-wrap">
     <div class="products-slider" id="products-slider">
-      {%- assign collection = collections[section.settings.collection] -%}
-      {%- if collection != blank and collection.products.size > 0 -%}
-        {%- for product in collection.products limit: section.settings.products_count -%}
-          {%- render 'product-card', product: product -%}
+
+      {%- if product_blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'product_item' -%}
+            {%- assign fp = block.settings.product -%}
+            {%- if fp != blank -%}
+              {%- render 'product-card', product: fp -%}
+            {%- else -%}
+              <!-- Placeholder quand aucun produit sélectionné -->
+              <article class="product-card product-card--placeholder" {{ block.shopify_attributes }}>
+                <div class="product-card-image-wrap">
+                  <div class="product-image-placeholder">
+                    <svg viewBox="0 0 100 100" fill="none" width="80" height="80">
+                      <circle cx="50" cy="50" r="45" fill="rgba(46,168,46,0.2)" stroke="#2ea82e" stroke-width="2"/>
+                      <path d="M50 20C50 20 30 33 28 50C26 67 40 80 50 80C60 80 74 67 72 50C70 33 50 20 50 20Z" fill="#2ea82e" opacity="0.7"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="product-card-info">
+                  <h3 class="product-card-title">Choisir un produit →</h3>
+                </div>
+              </article>
+            {%- endif -%}
+          {%- endif -%}
         {%- endfor -%}
+
       {%- else -%}
-        {%- comment -%} Placeholder cards when no collection is selected {%- endcomment -%}
-        {%- assign placeholder_count = section.settings.products_count | default: 4 -%}
-        {%- for i in (1..placeholder_count) -%}
-          {%- assign icon_i = forloop.index | modulo: 4 -%}
-          {%- if icon_i == 0 -%}{%- assign icon_i = 4 -%}{%- endif -%}
+        {%- comment -%} Placeholders quand aucun bloc ajouté {%- endcomment -%}
+        {%- for i in (1..4) -%}
+          {%- assign icon_i = forloop.index -%}
           <article class="product-card product-card--placeholder">
             <div class="product-card-image-wrap">
               <div class="product-image-placeholder">
                 {%- case icon_i -%}
                   {%- when 1 -%}
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
-                      <circle cx="50" cy="50" r="45" fill="rgba(46,168,46,0.2)" stroke="#2ea82e" stroke-width="2"/>
-                      <path d="M50 20C50 20 30 33 28 50C26 67 40 80 50 80C60 80 74 67 72 50C70 33 50 20 50 20Z" fill="#2ea82e" opacity="0.7"/>
-                      <line x1="50" y1="20" x2="50" y2="80" stroke="#1d7a1d" stroke-width="2"/>
-                      <line x1="50" y1="35" x2="36" y2="52" stroke="#1d7a1d" stroke-width="1.5"/>
-                      <line x1="50" y1="40" x2="38" y2="60" stroke="#1d7a1d" stroke-width="1.5"/>
-                      <line x1="50" y1="35" x2="64" y2="52" stroke="#1d7a1d" stroke-width="1.5"/>
-                      <line x1="50" y1="40" x2="62" y2="60" stroke="#1d7a1d" stroke-width="1.5"/>
-                    </svg>
+                    <svg viewBox="0 0 100 100" fill="none" width="80" height="80"><circle cx="50" cy="50" r="45" fill="rgba(46,168,46,0.2)" stroke="#2ea82e" stroke-width="2"/><path d="M50 20C50 20 30 33 28 50C26 67 40 80 50 80C60 80 74 67 72 50C70 33 50 20 50 20Z" fill="#2ea82e" opacity="0.7"/><line x1="50" y1="20" x2="50" y2="80" stroke="#1d7a1d" stroke-width="2"/></svg>
                   {%- when 2 -%}
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
-                      <ellipse cx="50" cy="50" rx="35" ry="40" fill="rgba(180,120,40,0.3)" stroke="#2ea82e" stroke-width="2"/>
-                      <ellipse cx="50" cy="50" rx="28" ry="33" fill="rgba(140,90,30,0.4)"/>
-                      <circle cx="40" cy="42" r="3" fill="#2ea82e" opacity="0.8"/>
-                      <circle cx="58" cy="38" r="2" fill="#2ea82e" opacity="0.6"/>
-                    </svg>
+                    <svg viewBox="0 0 100 100" fill="none" width="80" height="80"><ellipse cx="50" cy="50" rx="35" ry="40" fill="rgba(180,120,40,0.3)" stroke="#2ea82e" stroke-width="2"/><ellipse cx="50" cy="50" rx="28" ry="33" fill="rgba(140,90,30,0.4)"/></svg>
                   {%- when 3 -%}
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
-                      <rect x="30" y="20" width="20" height="60" rx="5" fill="#3dbe3d" opacity="0.8" stroke="#2ea82e" stroke-width="1.5"/>
-                      <rect x="34" y="25" width="12" height="8" rx="2" fill="#fff" opacity="0.2"/>
-                      <ellipse cx="60" cy="40" rx="8" ry="4" fill="#2ea82e" opacity="0.6"/>
-                      <rect x="55" y="40" width="3" height="15" fill="#2ea82e" opacity="0.5"/>
-                    </svg>
+                    <svg viewBox="0 0 100 100" fill="none" width="80" height="80"><rect x="30" y="20" width="20" height="60" rx="5" fill="#3dbe3d" opacity="0.8" stroke="#2ea82e" stroke-width="1.5"/></svg>
                   {%- when 4 -%}
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
-                      <ellipse cx="50" cy="60" rx="30" ry="15" fill="rgba(46,168,46,0.2)" stroke="#2ea82e" stroke-width="1.5"/>
-                      <rect x="35" y="25" width="30" height="35" rx="4" fill="#2ea82e" opacity="0.7"/>
-                      <rect x="40" y="30" width="20" height="4" rx="2" fill="#fff" opacity="0.5"/>
-                      <rect x="40" y="37" width="14" height="3" rx="1" fill="#fff" opacity="0.3"/>
-                    </svg>
+                    <svg viewBox="0 0 100 100" fill="none" width="80" height="80"><ellipse cx="50" cy="60" rx="30" ry="15" fill="rgba(46,168,46,0.2)" stroke="#2ea82e" stroke-width="1.5"/><rect x="35" y="25" width="30" height="35" rx="4" fill="#2ea82e" opacity="0.7"/></svg>
                 {%- endcase -%}
               </div>
             </div>
             <div class="product-card-info">
-              <h3 class="product-card-title">
-                {%- case icon_i -%}
-                  {%- when 1 -%}Haze Stellaire 2.0
-                  {%- when 2 -%}Nebula Fixx
-                  {%- when 3 -%}Nebula Vape Pen
-                  {%- when 4 -%}Cosmic OG Kush
-                {%- endcase -%}
-              </h3>
+              <h3 class="product-card-title">Ajouter un produit</h3>
             </div>
           </article>
         {%- endfor -%}
       {%- endif -%}
+
     </div>
 
-    <!-- Slider controls -->
-    <button class="slider-btn slider-btn--prev" aria-label="Produits précédents" data-slider="products-slider">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <polyline points="15 18 9 12 15 6"/>
-      </svg>
+    <button class="slider-btn slider-btn--prev" aria-label="Précédent" data-slider="products-slider">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <button class="slider-btn slider-btn--next" aria-label="Produits suivants" data-slider="products-slider">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <polyline points="9 18 15 12 9 6"/>
-      </svg>
+    <button class="slider-btn slider-btn--next" aria-label="Suivant" data-slider="products-slider">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
   </div>
 </section>
@@ -104,22 +95,13 @@
       "default": "Nos Produits Cosmiques"
     },
     {
-      "type": "collection",
-      "id": "collection",
-      "label": "Collection à afficher"
-    },
-    {
-      "type": "range",
-      "id": "products_count",
-      "label": "Nombre de produits",
-      "min": 2,
-      "max": 12,
-      "step": 1,
-      "default": 6
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sous-titre (optionnel)"
     },
     {
       "type": "header",
-      "content": "Arrière-plan de la section"
+      "content": "Arrière-plan"
     },
     {
       "type": "image_picker",
@@ -129,7 +111,7 @@
     {
       "type": "range",
       "id": "overlay_opacity",
-      "label": "Opacité de l'overlay sombre",
+      "label": "Opacité overlay",
       "min": 0,
       "max": 80,
       "step": 5,
@@ -137,9 +119,28 @@
       "unit": "%"
     }
   ],
+  "blocks": [
+    {
+      "type": "product_item",
+      "name": "Produit",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produit à afficher"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "Produits vedettes"
+      "name": "Produits vedettes",
+      "blocks": [
+        { "type": "product_item" },
+        { "type": "product_item" },
+        { "type": "product_item" },
+        { "type": "product_item" }
+      ]
     }
   ]
 }

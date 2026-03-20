@@ -7,6 +7,7 @@
   assign tier_blocks   = section.blocks | where: 'type', 'cbd_tier'
   assign trust_blocks  = section.blocks | where: 'type', 'trust_badge'
   assign accordion_blocks = section.blocks | where: 'type', 'accordion'
+  assign rec_blocks = section.blocks | where: 'type', 'recommended_product'
 -%}
 
 <section class="product-page" aria-label="{{ product.title | escape }}">
@@ -205,6 +206,42 @@
   </div><!-- /product-page-inner -->
 </section>
 
+<!-- ═══ PRODUITS RECOMMANDÉS ═══ -->
+{%- if rec_blocks.size > 0 -%}
+  <section class="product-recs" aria-label="{{ section.settings.recommendations_title | default: 'Vous aimerez aussi' }}">
+    <div class="product-recs-inner">
+      <h2 class="product-recs-title">{{ section.settings.recommendations_title | default: 'Vous aimerez aussi' }}</h2>
+      <div class="products-slider-wrap">
+        <div class="products-slider" id="recs-slider">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'recommended_product' -%}
+              {%- assign rec = block.settings.product -%}
+              {%- if rec != blank -%}
+                {%- render 'product-card', product: rec -%}
+              {%- else -%}
+                <article class="product-card product-card--placeholder" {{ block.shopify_attributes }}>
+                  <div class="product-card-image-wrap">
+                    <div class="product-image-placeholder">
+                      <svg viewBox="0 0 100 100" fill="none" width="60" height="60"><path d="M50 20C50 20 30 33 28 50C26 67 40 80 50 80C60 80 74 67 72 50C70 33 50 20 50 20Z" fill="#2ea82e" opacity="0.5"/></svg>
+                    </div>
+                  </div>
+                  <div class="product-card-info"><h3 class="product-card-title">Choisir un produit</h3></div>
+                </article>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        <button class="slider-btn slider-btn--prev" aria-label="Précédent" data-slider="recs-slider">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="slider-btn slider-btn--next" aria-label="Suivant" data-slider="recs-slider">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
 <script>
 (function () {
   var variants     = {{ product.variants | json }};
@@ -347,6 +384,16 @@
     },
     {
       "type": "header",
+      "content": "Produits recommandés"
+    },
+    {
+      "type": "text",
+      "id": "recommendations_title",
+      "label": "Titre de la section recommandations",
+      "default": "Vous aimerez aussi"
+    },
+    {
+      "type": "header",
       "content": "Tarification dégressive CBD"
     },
     {
@@ -421,6 +468,17 @@
           "id": "content",
           "label": "Contenu",
           "default": "<p>Détaillez ici la composition du produit.</p>"
+        }
+      ]
+    },
+    {
+      "type": "recommended_product",
+      "name": "Produit recommandé",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produit à afficher"
         }
       ]
     },
