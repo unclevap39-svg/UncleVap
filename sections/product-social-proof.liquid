@@ -1,6 +1,7 @@
 {%- if section.settings.enabled -%}
-{%- assign rating = section.settings.rating | default: 4.8 | times: 1.0 -%}
+{%- assign rating = section.settings.rating | default: '4.8' -%}
 {%- assign full_stars = rating | floor -%}
+{%- assign next_star = full_stars | plus: 1 -%}
 {%- assign has_half = false -%}
 {%- if rating != full_stars %}{%- assign has_half = true -%}{%- endif -%}
 
@@ -13,7 +14,7 @@
         {%- for i in (1..5) -%}
           {%- if i <= full_stars -%}
             <span class="star" aria-hidden="true">★</span>
-          {%- elsif i == full_stars | plus: 1 and has_half -%}
+          {%- elsif i == next_star and has_half -%}
             <span class="star half" aria-hidden="true">★</span>
           {%- else -%}
             <span class="star" style="opacity:.2" aria-hidden="true">★</span>

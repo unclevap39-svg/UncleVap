@@ -1,4 +1,6 @@
 {%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign per_g_arr = section.settings.tier_per_g | split: ',' -%}
+{%- assign badge_arr = section.settings.tier_badges | split: ',' -%}
 
 <section class="product-page" aria-label="{{ product.title | escape }}">
   <div class="product-page-inner">
@@ -65,53 +67,33 @@
       </div>
 
       <!-- ═ SÉLECTEUR GRAMMES / TARIFS DÉGRESSIFS ═ -->
-      {%- if section.settings.show_tiers -%}
+      {%- if section.settings.show_tiers and product.variants.size > 1 -%}
         <div class="tiers-section">
           <p class="tiers-label">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
             {{ section.settings.tiers_title | default: 'Choisissez votre quantité' }}
           </p>
           <div class="tiers-grid" id="tiers-grid">
-            {%- if section.settings.tier1_active and section.settings.tier1_qty != blank -%}
-              <button type="button" class="tier-tile" data-match="{{ section.settings.tier1_match | downcase }}" data-opt-index="{{ section.settings.tier1_opt_index | default: 0 }}">
-                {%- if section.settings.tier1_badge != blank -%}<span class="tier-badge">{{ section.settings.tier1_badge }}</span>{%- endif -%}
-                <span class="tier-qty">{{ section.settings.tier1_qty }}</span>
-                <span class="tier-total">{{ section.settings.tier1_total }}€</span>
-                <span class="tier-per-g">{{ section.settings.tier1_per_g }}€/g</span>
+            {%- for variant in product.variants -%}
+              {%- assign pg = per_g_arr[forloop.index0] | strip -%}
+              {%- assign vbadge = badge_arr[forloop.index0] | strip -%}
+              <button
+                type="button"
+                class="tier-tile{% if variant.id == current_variant.id %} is-active{% endif %}"
+                data-variant-id="{{ variant.id }}"
+                data-val="{{ variant.options.first | escape }}"
+                data-opt-index="0"
+              >
+                {%- if vbadge != blank -%}
+                  <span class="tier-badge">{{ vbadge }}</span>
+                {%- endif -%}
+                <span class="tier-qty">{{ variant.options.first }}</span>
+                <span class="tier-total">{{ variant.price | money }}</span>
+                {%- if pg != blank -%}
+                  <span class="tier-per-g">{{ pg }}€/g</span>
+                {%- endif -%}
               </button>
-            {%- endif -%}
-            {%- if section.settings.tier2_active and section.settings.tier2_qty != blank -%}
-              <button type="button" class="tier-tile" data-match="{{ section.settings.tier2_match | downcase }}" data-opt-index="{{ section.settings.tier2_opt_index | default: 0 }}">
-                {%- if section.settings.tier2_badge != blank -%}<span class="tier-badge">{{ section.settings.tier2_badge }}</span>{%- endif -%}
-                <span class="tier-qty">{{ section.settings.tier2_qty }}</span>
-                <span class="tier-total">{{ section.settings.tier2_total }}€</span>
-                <span class="tier-per-g">{{ section.settings.tier2_per_g }}€/g</span>
-              </button>
-            {%- endif -%}
-            {%- if section.settings.tier3_active and section.settings.tier3_qty != blank -%}
-              <button type="button" class="tier-tile" data-match="{{ section.settings.tier3_match | downcase }}" data-opt-index="{{ section.settings.tier3_opt_index | default: 0 }}">
-                {%- if section.settings.tier3_badge != blank -%}<span class="tier-badge">{{ section.settings.tier3_badge }}</span>{%- endif -%}
-                <span class="tier-qty">{{ section.settings.tier3_qty }}</span>
-                <span class="tier-total">{{ section.settings.tier3_total }}€</span>
-                <span class="tier-per-g">{{ section.settings.tier3_per_g }}€/g</span>
-              </button>
-            {%- endif -%}
-            {%- if section.settings.tier4_active and section.settings.tier4_qty != blank -%}
-              <button type="button" class="tier-tile" data-match="{{ section.settings.tier4_match | downcase }}" data-opt-index="{{ section.settings.tier4_opt_index | default: 0 }}">
-                {%- if section.settings.tier4_badge != blank -%}<span class="tier-badge">{{ section.settings.tier4_badge }}</span>{%- endif -%}
-                <span class="tier-qty">{{ section.settings.tier4_qty }}</span>
-                <span class="tier-total">{{ section.settings.tier4_total }}€</span>
-                <span class="tier-per-g">{{ section.settings.tier4_per_g }}€/g</span>
-              </button>
-            {%- endif -%}
-            {%- if section.settings.tier5_active and section.settings.tier5_qty != blank -%}
-              <button type="button" class="tier-tile" data-match="{{ section.settings.tier5_match | downcase }}" data-opt-index="{{ section.settings.tier5_opt_index | default: 0 }}">
-                {%- if section.settings.tier5_badge != blank -%}<span class="tier-badge">{{ section.settings.tier5_badge }}</span>{%- endif -%}
-                <span class="tier-qty">{{ section.settings.tier5_qty }}</span>
-                <span class="tier-total">{{ section.settings.tier5_total }}€</span>
-                <span class="tier-per-g">{{ section.settings.tier5_per_g }}€/g</span>
-              </button>
-            {%- endif -%}
+            {%- endfor -%}
           </div>
         </div>
       {%- endif -%}
@@ -185,8 +167,9 @@
 
 <script>
 (function () {
-  var variants   = {{ product.variants | json }};
-  var selOptions = [
+  var variants          = {{ product.variants | json }};
+  var currentVariantId  = {{ current_variant.id }};
+  var selOptions        = [
     {%- for option in product.options_with_values -%}
       {{ option.selected_value | json }}{%- unless forloop.last -%},{%- endunless -%}
     {%- endfor -%}
@@ -205,9 +188,10 @@
   function applyVariant(v) {
     if (!v) return;
     document.getElementById('variant-id').value = v.id;
+    currentVariantId = v.id;
     var priceEl = document.getElementById('product-price');
     if (priceEl) priceEl.textContent = money(v.price);
-    var btn = document.getElementById('btn-atc');
+    var btn   = document.getElementById('btn-atc');
     var label = document.getElementById('atc-label');
     if (btn && label) {
       btn.disabled = !v.available;
@@ -220,6 +204,14 @@
     var url = new URL(window.location.href);
     url.searchParams.set('variant', v.id);
     window.history.replaceState({}, '', url.toString());
+    syncTiles();
+  }
+
+  /* ── Synchronisation des tuiles dégressives ── */
+  function syncTiles() {
+    document.querySelectorAll('.tier-tile').forEach(function(tile) {
+      tile.classList.toggle('is-active', String(currentVariantId) === tile.dataset.variantId);
+    });
   }
 
   /* ── Boutons variantes classiques ── */
@@ -233,52 +225,36 @@
         var valDisplay = document.getElementById('opt-val-' + optIdx);
         if (valDisplay) valDisplay.textContent = '— ' + btn.dataset.val;
         applyVariant(findVariant());
-        syncTiersToVariant();
       });
     });
   });
 
-  /* ── Sélecteur de paliers dégressifs ── */
-  function syncTiersToVariant() {
-    var tiles = document.querySelectorAll('.tier-tile');
-    if (!tiles.length) return;
-    var optStr = selOptions.join(' ').toLowerCase();
-    tiles.forEach(function(tile) {
-      var match = (tile.dataset.match || '').toLowerCase();
-      tile.classList.toggle('is-active', match && optStr.indexOf(match) !== -1);
-    });
-  }
-
+  /* ── Tuiles dégressives ── */
   document.querySelectorAll('.tier-tile').forEach(function(tile) {
     tile.addEventListener('click', function() {
-      var matchVal = tile.dataset.match;
-      var optIdx   = parseInt(tile.dataset.optIndex || '0', 10);
-      /* Trouver le bouton variante correspondant et le déclencher */
+      var val    = tile.dataset.val;
+      var optIdx = parseInt(tile.dataset.optIndex || '0', 10);
+      /* Déclencher le bouton variante correspondant s'il existe */
       var targetBtn = null;
-      document.querySelectorAll('.variant-btns[data-opt="' + optIdx + '"] .variant-btn').forEach(function(btn) {
-        if (btn.dataset.val.toLowerCase() === matchVal) targetBtn = btn;
+      document.querySelectorAll('.variant-btns[data-opt="' + optIdx + '"] .variant-btn').forEach(function(b) {
+        if (b.dataset.val === val) targetBtn = b;
       });
       if (targetBtn) {
         targetBtn.click();
       } else {
-        /* Fallback : sélection directe si pas de boutons variantes visibles */
-        selOptions[optIdx] = matchVal;
-        applyVariant(findVariant());
-        document.querySelectorAll('.tier-tile').forEach(function(t) { t.classList.remove('is-active'); });
-        tile.classList.add('is-active');
+        /* Fallback : sélection directe par ID de variante */
+        var vid = tile.dataset.variantId;
+        var v = variants.find(function(vv) { return String(vv.id) === vid; });
+        if (v) { selOptions = v.options.slice(); applyVariant(v); }
       }
     });
   });
-
-  /* Synchronisation initiale des paliers */
-  syncTiersToVariant();
 
   /* ── Quantité ── */
   var qtyInput = document.getElementById('qty-input');
   if (qtyInput) {
     document.getElementById('qty-minus').addEventListener('click', function() {
-      var n = parseInt(qtyInput.value, 10);
-      if (n > 1) qtyInput.value = n - 1;
+      var n = parseInt(qtyInput.value, 10); if (n > 1) qtyInput.value = n - 1;
     });
     document.getElementById('qty-plus').addEventListener('click', function() {
       qtyInput.value = parseInt(qtyInput.value, 10) + 1;
@@ -303,13 +279,9 @@
   "name": "Page produit",
   "settings": [
     {
-      "type": "header",
-      "content": "Sélecteur de grammes (tarifs dégressifs)"
-    },
-    {
       "type": "checkbox",
       "id": "show_tiers",
-      "label": "Afficher le sélecteur de grammes",
+      "label": "Afficher le sélecteur de quantité",
       "default": false
     },
     {
@@ -319,205 +291,16 @@
       "default": "Choisissez votre quantité"
     },
     {
-      "type": "header",
-      "content": "Palier 1"
-    },
-    {
-      "type": "checkbox",
-      "id": "tier1_active",
-      "label": "Activer le palier 1",
-      "default": true
+      "type": "text",
+      "id": "tier_per_g",
+      "label": "Prix/g par variante (séparés par virgule)",
+      "info": "Ex : 5.00,4.40,3.80 — dans l'ordre des variantes Shopify"
     },
     {
       "type": "text",
-      "id": "tier1_qty",
-      "label": "Quantité affichée (ex : 3g)",
-      "default": "3g"
-    },
-    {
-      "type": "text",
-      "id": "tier1_match",
-      "label": "Valeur exacte de l'option variante",
-      "info": "Doit correspondre exactement à l'option produit Shopify (ex : 3g)",
-      "default": "3g"
-    },
-    {
-      "type": "text",
-      "id": "tier1_total",
-      "label": "Prix total (€)",
-      "default": "15.00"
-    },
-    {
-      "type": "text",
-      "id": "tier1_per_g",
-      "label": "Prix par gramme (€/g)",
-      "default": "5.00"
-    },
-    {
-      "type": "text",
-      "id": "tier1_badge",
-      "label": "Badge promo (ex : -10%)",
-      "default": ""
-    },
-    {
-      "type": "header",
-      "content": "Palier 2"
-    },
-    {
-      "type": "checkbox",
-      "id": "tier2_active",
-      "label": "Activer le palier 2",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "tier2_qty",
-      "label": "Quantité affichée",
-      "default": "5g"
-    },
-    {
-      "type": "text",
-      "id": "tier2_match",
-      "label": "Valeur exacte de l'option variante",
-      "default": "5g"
-    },
-    {
-      "type": "text",
-      "id": "tier2_total",
-      "label": "Prix total (€)",
-      "default": "22.00"
-    },
-    {
-      "type": "text",
-      "id": "tier2_per_g",
-      "label": "Prix par gramme (€/g)",
-      "default": "4.40"
-    },
-    {
-      "type": "text",
-      "id": "tier2_badge",
-      "label": "Badge promo",
-      "default": "-12%"
-    },
-    {
-      "type": "header",
-      "content": "Palier 3"
-    },
-    {
-      "type": "checkbox",
-      "id": "tier3_active",
-      "label": "Activer le palier 3",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "tier3_qty",
-      "label": "Quantité affichée",
-      "default": "10g"
-    },
-    {
-      "type": "text",
-      "id": "tier3_match",
-      "label": "Valeur exacte de l'option variante",
-      "default": "10g"
-    },
-    {
-      "type": "text",
-      "id": "tier3_total",
-      "label": "Prix total (€)",
-      "default": "38.00"
-    },
-    {
-      "type": "text",
-      "id": "tier3_per_g",
-      "label": "Prix par gramme (€/g)",
-      "default": "3.80"
-    },
-    {
-      "type": "text",
-      "id": "tier3_badge",
-      "label": "Badge promo",
-      "default": "Meilleure valeur"
-    },
-    {
-      "type": "header",
-      "content": "Palier 4"
-    },
-    {
-      "type": "checkbox",
-      "id": "tier4_active",
-      "label": "Activer le palier 4",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "tier4_qty",
-      "label": "Quantité affichée",
-      "default": "20g"
-    },
-    {
-      "type": "text",
-      "id": "tier4_match",
-      "label": "Valeur exacte de l'option variante",
-      "default": "20g"
-    },
-    {
-      "type": "text",
-      "id": "tier4_total",
-      "label": "Prix total (€)",
-      "default": "68.00"
-    },
-    {
-      "type": "text",
-      "id": "tier4_per_g",
-      "label": "Prix par gramme (€/g)",
-      "default": "3.40"
-    },
-    {
-      "type": "text",
-      "id": "tier4_badge",
-      "label": "Badge promo",
-      "default": "-32%"
-    },
-    {
-      "type": "header",
-      "content": "Palier 5"
-    },
-    {
-      "type": "checkbox",
-      "id": "tier5_active",
-      "label": "Activer le palier 5",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "tier5_qty",
-      "label": "Quantité affichée",
-      "default": "50g"
-    },
-    {
-      "type": "text",
-      "id": "tier5_match",
-      "label": "Valeur exacte de l'option variante",
-      "default": "50g"
-    },
-    {
-      "type": "text",
-      "id": "tier5_total",
-      "label": "Prix total (€)",
-      "default": "150.00"
-    },
-    {
-      "type": "text",
-      "id": "tier5_per_g",
-      "label": "Prix par gramme (€/g)",
-      "default": "3.00"
-    },
-    {
-      "type": "text",
-      "id": "tier5_badge",
-      "label": "Badge promo",
-      "default": "-40%"
+      "id": "tier_badges",
+      "label": "Badges par variante (séparés par virgule)",
+      "info": "Ex : ,-12%,Meilleure valeur — laisser vide pour aucun badge"
     }
   ]
 }
