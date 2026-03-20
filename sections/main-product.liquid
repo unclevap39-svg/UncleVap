@@ -195,7 +195,7 @@
                   <span class="accordion-title">{{ block.settings.title }}</span>
                   <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
                 </summary>
-                <div class="accordion-body rte">{{ block.settings.content }}</div>
+                <div class="accordion-body rte">{{ block.settings.content | newline_to_br }}</div>
               </details>
             {%- endif -%}
           {%- endfor -%}
@@ -463,10 +463,10 @@
           "default": "Composition"
         },
         {
-          "type": "richtext",
+          "type": "textarea",
           "id": "content",
           "label": "Contenu",
-          "default": "<p>Détaillez ici la composition du produit.</p>"
+          "default": "Détaillez ici la composition du produit."
         }
       ]
     },
@@ -495,21 +495,7 @@
     }
   ],
   "presets": [
-    {
-      "name": "Page produit",
-      "blocks": [
-        { "type": "cbd_tier", "settings": { "grams": "1g",  "variant_match": "1g",  "total_price": "10.00", "price_per_gram": "10.00", "badge": "" } },
-        { "type": "cbd_tier", "settings": { "grams": "3g",  "variant_match": "3g",  "total_price": "27.00", "price_per_gram": "9.00",  "badge": "-10%" } },
-        { "type": "cbd_tier", "settings": { "grams": "5g",  "variant_match": "5g",  "total_price": "40.00", "price_per_gram": "8.00",  "badge": "-20%" } },
-        { "type": "cbd_tier", "settings": { "grams": "10g", "variant_match": "10g", "total_price": "70.00", "price_per_gram": "7.00",  "badge": "Meilleure valeur" } },
-        { "type": "trust_badge", "settings": { "text": "Livraison express 24-48h" } },
-        { "type": "trust_badge", "settings": { "text": "Paiement 100% sécurisé" } },
-        { "type": "trust_badge", "settings": { "text": "Analyses laboratoire certifiées" } },
-        { "type": "accordion", "settings": { "title": "Composition & taux de CBD" } },
-        { "type": "accordion", "settings": { "title": "Livraison & retours" } },
-        { "type": "accordion", "settings": { "title": "Analyses & certifications" } }
-      ]
-    }
+    { "name": "Page produit" }
   ]
 }
 {% endschema %}
