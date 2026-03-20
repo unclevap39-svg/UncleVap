@@ -2,23 +2,36 @@
 <section class="hero-banner{% if section.settings.hero_bg_image != blank %} hero-banner--has-bg-image{% endif %}" aria-label="Hero banner">
 
   {%- if section.settings.hero_bg_image != blank -%}
-    <!-- Responsive background image -->
-    <img
-      class="hero-bg-img"
-      src="{{ section.settings.hero_bg_image | image_url: width: 1920 }}"
-      srcset="
-        {{ section.settings.hero_bg_image | image_url: width: 640 }} 640w,
-        {{ section.settings.hero_bg_image | image_url: width: 1024 }} 1024w,
-        {{ section.settings.hero_bg_image | image_url: width: 1440 }} 1440w,
-        {{ section.settings.hero_bg_image | image_url: width: 1920 }} 1920w
-      "
-      sizes="100vw"
-      alt=""
-      loading="eager"
-      fetchpriority="high"
-      width="1920"
-      height="640"
-    >
+    <!-- Responsive background image (picture pour mobile/desktop séparés) -->
+    <picture>
+      {%- if section.settings.hero_bg_image_mobile != blank -%}
+        <source
+          media="(max-width: 749px)"
+          srcset="
+            {{ section.settings.hero_bg_image_mobile | image_url: width: 480 }} 480w,
+            {{ section.settings.hero_bg_image_mobile | image_url: width: 750 }} 750w,
+            {{ section.settings.hero_bg_image_mobile | image_url: width: 960 }} 960w
+          "
+          sizes="100vw"
+        >
+      {%- endif -%}
+      <img
+        class="hero-bg-img{% if section.settings.hero_bg_image_mobile == blank %} hero-bg-img--mobile-focal-{{ section.settings.mobile_focal | default: 'center' }}{% endif %}"
+        src="{{ section.settings.hero_bg_image | image_url: width: 1920 }}"
+        srcset="
+          {{ section.settings.hero_bg_image | image_url: width: 750 }} 750w,
+          {{ section.settings.hero_bg_image | image_url: width: 1024 }} 1024w,
+          {{ section.settings.hero_bg_image | image_url: width: 1440 }} 1440w,
+          {{ section.settings.hero_bg_image | image_url: width: 1920 }} 1920w
+        "
+        sizes="100vw"
+        alt=""
+        loading="eager"
+        fetchpriority="high"
+        width="1920"
+        height="640"
+      >
+    </picture>
     <div class="hero-bg-overlay" style="--hero-overlay: {{ overlay }};"></div>
   {%- else -%}
     <!-- Cosmic background particles -->
@@ -96,9 +109,32 @@
   "name": "Hero Banner",
   "settings": [
     {
+      "type": "header",
+      "content": "Images de fond"
+    },
+    {
       "type": "image_picker",
       "id": "hero_bg_image",
-      "label": "Image de fond bannière (remplace le fond animé)"
+      "label": "Image de fond — Desktop",
+      "info": "Format paysage recommandé (ex : 1920×1080)"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_bg_image_mobile",
+      "label": "Image de fond — Mobile (optionnel)",
+      "info": "Format portrait recommandé (ex : 750×1200). Si absent, l'image desktop est utilisée avec recadrage."
+    },
+    {
+      "type": "select",
+      "id": "mobile_focal",
+      "label": "Recadrage mobile (si pas d'image mobile)",
+      "options": [
+        { "value": "center", "label": "Centre" },
+        { "value": "left",   "label": "Gauche" },
+        { "value": "right",  "label": "Droite" },
+        { "value": "top",    "label": "Haut" }
+      ],
+      "default": "center"
     },
     {
       "type": "image_picker",
