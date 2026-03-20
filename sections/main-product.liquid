@@ -1,14 +1,12 @@
-{%- liquid
-  assign current_variant   = product.selected_or_first_available_variant
-  assign product_desc      = section.settings.description
-  if product_desc == blank or product_desc == '<p></p>'
-    assign product_desc = product.description
-  endif
-  assign tier_blocks   = section.blocks | where: 'type', 'cbd_tier'
-  assign trust_blocks  = section.blocks | where: 'type', 'trust_badge'
-  assign accordion_blocks = section.blocks | where: 'type', 'accordion'
-  assign rec_blocks = section.blocks | where: 'type', 'recommended_product'
--%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign product_desc = section.settings.description -%}
+{%- if product_desc == blank -%}
+  {%- assign product_desc = product.description -%}
+{%- endif -%}
+{%- assign tier_blocks = section.blocks | where: 'type', 'cbd_tier' -%}
+{%- assign trust_blocks = section.blocks | where: 'type', 'trust_badge' -%}
+{%- assign accordion_blocks = section.blocks | where: 'type', 'accordion' -%}
+{%- assign rec_blocks = section.blocks | where: 'type', 'recommended_product' -%}
 
 <section class="product-page" aria-label="{{ product.title | escape }}">
   <div class="product-page-inner">
@@ -179,7 +177,7 @@
 
       <!-- Description -->
       {%- if product_desc != blank -%}
-        <div class="product-desc rte">{{ product_desc }}</div>
+        <div class="product-desc rte">{{ product_desc | newline_to_br }}</div>
       {%- endif -%}
 
       <!-- Accordéons -->
@@ -377,10 +375,10 @@
       "info": "Remplace le type de produit Shopify si renseigné."
     },
     {
-      "type": "richtext",
+      "type": "textarea",
       "id": "description",
       "label": "Description produit",
-      "info": "Laissez vide pour utiliser la description saisie dans Shopify Admin > Produits."
+      "info": "Laissez vide pour utiliser la description de Shopify Admin."
     },
     {
       "type": "header",
