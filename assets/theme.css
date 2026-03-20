@@ -2774,8 +2774,13 @@ a.contact-detail-value:hover { color: var(--green); }
   display: flex;
   flex-direction: column;
   gap: 12px;
-  position: sticky;
-  top: calc(var(--header-h) + 20px);
+}
+
+@media (min-width: 768px) {
+  .product-gallery {
+    position: sticky;
+    top: calc(var(--header-h) + 20px);
+  }
 }
 
 .product-gallery-main {
@@ -3211,3 +3216,453 @@ a.contact-detail-value:hover { color: var(--green); }
   margin-bottom: 28px;
   text-align: center;
 }
+
+/* ============================================================
+   SÉLECTEUR DE GRAMMES / TARIFS DÉGRESSIFS
+   ============================================================ */
+
+.tiers-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tiers-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tiers-label svg { flex-shrink: 0; }
+
+.tiers-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tier-tile {
+  flex: 1 1 calc(20% - 8px);
+  min-width: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 8px;
+  border-radius: 10px;
+  border: 2px solid rgba(46, 168, 46, 0.2);
+  background: var(--bg-card);
+  cursor: pointer;
+  position: relative;
+  transition: border-color var(--transition), background var(--transition), transform var(--transition);
+  text-align: center;
+}
+
+.tier-tile:hover {
+  border-color: rgba(46, 168, 46, 0.5);
+  transform: translateY(-2px);
+}
+
+.tier-tile.is-active {
+  border-color: var(--green);
+  background: rgba(46, 168, 46, 0.08);
+}
+
+.tier-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green);
+  color: var(--bg);
+  font-family: 'Oswald', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 99px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.tier-qty {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--text);
+  line-height: 1;
+}
+
+.tier-tile.is-active .tier-qty { color: var(--green); }
+
+.tier-total {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tier-per-g {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 480px) {
+  .tier-tile { flex: 1 1 calc(33% - 8px); padding: 10px 6px; }
+  .tier-qty { font-size: 18px; }
+}
+
+/* ============================================================
+   SECTION URGENCE / SCARCITÉ
+   ============================================================ */
+
+.product-urgency {
+  padding: 0 20px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.urgency-inner {
+  border: 1px solid rgba(46, 168, 46, 0.25);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(46,168,46,0.04), rgba(46,168,46,0.01));
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.urgency-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.urgency-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+.urgency-text { color: var(--text); }
+.urgency-text strong { color: var(--green); }
+
+.urgency-stock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.urgency-stock-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+.urgency-bar-track {
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.urgency-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--green-dark), var(--green));
+  transition: width 0.8s ease;
+}
+
+.urgency-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(46, 168, 46, 0.12);
+  border: 1px solid rgba(46, 168, 46, 0.3);
+  border-radius: 99px;
+  padding: 5px 14px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--green);
+  align-self: flex-start;
+}
+
+/* ============================================================
+   SECTION BÉNÉFICES PRODUIT
+   ============================================================ */
+
+.product-benefits {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(46, 168, 46, 0.1);
+}
+
+.benefits-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(24px, 4vw, 38px);
+  letter-spacing: 1.5px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.benefits-subheading {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 15px;
+  margin-bottom: 40px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .benefits-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.benefit-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 168, 46, 0.1);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.benefit-card:hover {
+  border-color: rgba(46, 168, 46, 0.3);
+  transform: translateY(-4px);
+}
+
+.benefit-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.benefit-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text);
+}
+
+.benefit-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   SECTION GARANTIES / CONFIANCE
+   ============================================================ */
+
+.product-guarantee {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(46, 168, 46, 0.1);
+}
+
+.guarantee-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(20px, 3vw, 30px);
+  letter-spacing: 1.5px;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.guarantee-grid {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.guarantee-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 168, 46, 0.15);
+  border-radius: 99px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  transition: border-color var(--transition);
+}
+
+.guarantee-item:hover { border-color: var(--green); }
+
+.guarantee-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   SECTION AVIS CLIENTS / PREUVE SOCIALE
+   ============================================================ */
+
+.product-social-proof {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-top: 1px solid rgba(46, 168, 46, 0.1);
+}
+
+.social-proof-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.social-proof-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(24px, 4vw, 38px);
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
+}
+
+.social-proof-rating-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stars-display {
+  display: flex;
+  gap: 3px;
+}
+
+.star {
+  color: #f5b700;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.star.half { opacity: 0.5; }
+
+.rating-score {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--green);
+}
+
+.rating-count {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 600px) {
+  .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 900px) {
+  .reviews-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.review-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 168, 46, 0.1);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color var(--transition);
+}
+
+.review-card:hover { border-color: rgba(46, 168, 46, 0.3); }
+
+.review-stars {
+  display: flex;
+  gap: 3px;
+}
+
+.review-star { color: #f5b700; font-size: 16px; }
+
+.review-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-style: italic;
+  flex: 1;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green-dark), var(--green));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  color: var(--bg);
+  flex-shrink: 0;
+}
+
+.review-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.review-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.review-verified {
+  margin-top: -4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--green);
+}
+

@@ -1,0 +1,173 @@
+{%- if section.settings.enabled -%}
+<section class="product-benefits">
+  <h2 class="benefits-heading">{{ section.settings.title | default: 'Pourquoi choisir ce produit ?' }}</h2>
+  {%- if section.settings.subtitle != blank -%}
+    <p class="benefits-subheading">{{ section.settings.subtitle }}</p>
+  {%- endif -%}
+  <div class="benefits-grid">
+
+    {%- if section.settings.benefit1_title != blank -%}
+      <div class="benefit-card">
+        {%- if section.settings.benefit1_icon != blank -%}
+          <div class="benefit-icon">{{ section.settings.benefit1_icon }}</div>
+        {%- endif -%}
+        <p class="benefit-title">{{ section.settings.benefit1_title }}</p>
+        {%- if section.settings.benefit1_desc != blank -%}
+          <p class="benefit-desc">{{ section.settings.benefit1_desc }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.benefit2_title != blank -%}
+      <div class="benefit-card">
+        {%- if section.settings.benefit2_icon != blank -%}
+          <div class="benefit-icon">{{ section.settings.benefit2_icon }}</div>
+        {%- endif -%}
+        <p class="benefit-title">{{ section.settings.benefit2_title }}</p>
+        {%- if section.settings.benefit2_desc != blank -%}
+          <p class="benefit-desc">{{ section.settings.benefit2_desc }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.benefit3_title != blank -%}
+      <div class="benefit-card">
+        {%- if section.settings.benefit3_icon != blank -%}
+          <div class="benefit-icon">{{ section.settings.benefit3_icon }}</div>
+        {%- endif -%}
+        <p class="benefit-title">{{ section.settings.benefit3_title }}</p>
+        {%- if section.settings.benefit3_desc != blank -%}
+          <p class="benefit-desc">{{ section.settings.benefit3_desc }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.benefit4_title != blank -%}
+      <div class="benefit-card">
+        {%- if section.settings.benefit4_icon != blank -%}
+          <div class="benefit-icon">{{ section.settings.benefit4_icon }}</div>
+        {%- endif -%}
+        <p class="benefit-title">{{ section.settings.benefit4_title }}</p>
+        {%- if section.settings.benefit4_desc != blank -%}
+          <p class="benefit-desc">{{ section.settings.benefit4_desc }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Bénéfices produit",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Afficher cette section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Pourquoi choisir ce produit ?"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Une qualité supérieure à chaque étape"
+    },
+    {
+      "type": "header",
+      "content": "Bénéfice 1"
+    },
+    {
+      "type": "text",
+      "id": "benefit1_icon",
+      "label": "Emoji / icône",
+      "default": "🌿"
+    },
+    {
+      "type": "text",
+      "id": "benefit1_title",
+      "label": "Titre",
+      "default": "100% Naturel"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit1_desc",
+      "label": "Description",
+      "default": "Cultivé sans pesticides ni engrais chimiques, en agriculture raisonnée."
+    },
+    {
+      "type": "header",
+      "content": "Bénéfice 2"
+    },
+    {
+      "type": "text",
+      "id": "benefit2_icon",
+      "label": "Emoji / icône",
+      "default": "🔬"
+    },
+    {
+      "type": "text",
+      "id": "benefit2_title",
+      "label": "Titre",
+      "default": "Testé en laboratoire"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit2_desc",
+      "label": "Description",
+      "default": "Chaque lot est analysé par un laboratoire indépendant. Certificats disponibles."
+    },
+    {
+      "type": "header",
+      "content": "Bénéfice 3"
+    },
+    {
+      "type": "text",
+      "id": "benefit3_icon",
+      "label": "Emoji / icône",
+      "default": "⚡"
+    },
+    {
+      "type": "text",
+      "id": "benefit3_title",
+      "label": "Titre",
+      "default": "Effet rapide"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit3_desc",
+      "label": "Description",
+      "default": "Formule concentrée pour une absorption optimale et des effets ressentis rapidement."
+    },
+    {
+      "type": "header",
+      "content": "Bénéfice 4"
+    },
+    {
+      "type": "text",
+      "id": "benefit4_icon",
+      "label": "Emoji / icône",
+      "default": "🚚"
+    },
+    {
+      "type": "text",
+      "id": "benefit4_title",
+      "label": "Titre",
+      "default": "Livraison discrète"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit4_desc",
+      "label": "Description",
+      "default": "Emballage neutre et expédition en 24-48h, partout en France."
+    }
+  ]
+}
+{% endschema %}

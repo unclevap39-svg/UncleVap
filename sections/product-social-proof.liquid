@@ -1,0 +1,190 @@
+{%- if section.settings.enabled -%}
+{%- assign rating = section.settings.rating | default: 4.8 | times: 1.0 -%}
+{%- assign full_stars = rating | floor -%}
+{%- assign has_half = false -%}
+{%- if rating != full_stars %}{%- assign has_half = true -%}{%- endif -%}
+
+<section class="product-social-proof">
+
+  <div class="social-proof-header">
+    <h2 class="social-proof-title">{{ section.settings.title | default: 'Ce que disent nos clients' }}</h2>
+    <div class="social-proof-rating-row">
+      <div class="stars-display" aria-label="Note {{ section.settings.rating }} sur 5">
+        {%- for i in (1..5) -%}
+          {%- if i <= full_stars -%}
+            <span class="star" aria-hidden="true">★</span>
+          {%- elsif i == full_stars | plus: 1 and has_half -%}
+            <span class="star half" aria-hidden="true">★</span>
+          {%- else -%}
+            <span class="star" style="opacity:.2" aria-hidden="true">★</span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <span class="rating-score">{{ section.settings.rating | default: '4.8' }}</span>
+      <span class="rating-count">{{ section.settings.review_count | default: '(124 avis)' }}</span>
+    </div>
+  </div>
+
+  <div class="reviews-grid">
+
+    {%- if section.settings.r1_text != blank -%}
+      <article class="review-card">
+        <div class="review-stars" aria-label="5 étoiles">
+          {%- for i in (1..5) -%}<span class="review-star" aria-hidden="true">★</span>{%- endfor -%}
+        </div>
+        <p class="review-text">"{{ section.settings.r1_text }}"</p>
+        <div class="review-author">
+          <div class="review-avatar" aria-hidden="true">{{ section.settings.r1_name | slice: 0 }}</div>
+          <div>
+            <p class="review-name">{{ section.settings.r1_name }}</p>
+            <p class="review-date">{{ section.settings.r1_date }}</p>
+          </div>
+        </div>
+        <p class="review-verified">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Achat vérifié
+        </p>
+      </article>
+    {%- endif -%}
+
+    {%- if section.settings.r2_text != blank -%}
+      <article class="review-card">
+        <div class="review-stars" aria-label="5 étoiles">
+          {%- for i in (1..5) -%}<span class="review-star" aria-hidden="true">★</span>{%- endfor -%}
+        </div>
+        <p class="review-text">"{{ section.settings.r2_text }}"</p>
+        <div class="review-author">
+          <div class="review-avatar" aria-hidden="true">{{ section.settings.r2_name | slice: 0 }}</div>
+          <div>
+            <p class="review-name">{{ section.settings.r2_name }}</p>
+            <p class="review-date">{{ section.settings.r2_date }}</p>
+          </div>
+        </div>
+        <p class="review-verified">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Achat vérifié
+        </p>
+      </article>
+    {%- endif -%}
+
+    {%- if section.settings.r3_text != blank -%}
+      <article class="review-card">
+        <div class="review-stars" aria-label="5 étoiles">
+          {%- for i in (1..5) -%}<span class="review-star" aria-hidden="true">★</span>{%- endfor -%}
+        </div>
+        <p class="review-text">"{{ section.settings.r3_text }}"</p>
+        <div class="review-author">
+          <div class="review-avatar" aria-hidden="true">{{ section.settings.r3_name | slice: 0 }}</div>
+          <div>
+            <p class="review-name">{{ section.settings.r3_name }}</p>
+            <p class="review-date">{{ section.settings.r3_date }}</p>
+          </div>
+        </div>
+        <p class="review-verified">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          Achat vérifié
+        </p>
+      </article>
+    {%- endif -%}
+
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Avis clients",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Afficher cette section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Ce que disent nos clients"
+    },
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Note globale (ex : 4.8)",
+      "default": "4.8"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Nombre d'avis affiché",
+      "default": "(124 avis vérifiés)"
+    },
+    {
+      "type": "header",
+      "content": "Avis 1"
+    },
+    {
+      "type": "textarea",
+      "id": "r1_text",
+      "label": "Texte de l'avis",
+      "default": "Qualité exceptionnelle, arôme agréable et effet relaxant. Je recommande vraiment, je reviendrai commander !"
+    },
+    {
+      "type": "text",
+      "id": "r1_name",
+      "label": "Nom du client",
+      "default": "Sophie M."
+    },
+    {
+      "type": "text",
+      "id": "r1_date",
+      "label": "Date",
+      "default": "Il y a 3 jours"
+    },
+    {
+      "type": "header",
+      "content": "Avis 2"
+    },
+    {
+      "type": "textarea",
+      "id": "r2_text",
+      "label": "Texte de l'avis",
+      "default": "Livraison ultra rapide, emballage soigné et produit conforme à la description. Top !"
+    },
+    {
+      "type": "text",
+      "id": "r2_name",
+      "label": "Nom du client",
+      "default": "Thomas R."
+    },
+    {
+      "type": "text",
+      "id": "r2_date",
+      "label": "Date",
+      "default": "Il y a 1 semaine"
+    },
+    {
+      "type": "header",
+      "content": "Avis 3"
+    },
+    {
+      "type": "textarea",
+      "id": "r3_text",
+      "label": "Texte de l'avis",
+      "default": "Mon meilleur achat CBD. La grille de prix est très intéressante pour les grosses quantités."
+    },
+    {
+      "type": "text",
+      "id": "r3_name",
+      "label": "Nom du client",
+      "default": "Marie L."
+    },
+    {
+      "type": "text",
+      "id": "r3_date",
+      "label": "Date",
+      "default": "Il y a 2 semaines"
+    }
+  ]
+}
+{% endschema %}

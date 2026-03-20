@@ -1,0 +1,122 @@
+{%- if section.settings.enabled -%}
+<section class="product-guarantee">
+  {%- if section.settings.title != blank -%}
+    <h2 class="guarantee-heading">{{ section.settings.title }}</h2>
+  {%- endif -%}
+  <div class="guarantee-grid">
+
+    {%- if section.settings.g1_text != blank -%}
+      <div class="guarantee-item">
+        <span class="guarantee-icon">{{ section.settings.g1_icon | default: '✅' }}</span>
+        <span>{{ section.settings.g1_text }}</span>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.g2_text != blank -%}
+      <div class="guarantee-item">
+        <span class="guarantee-icon">{{ section.settings.g2_icon | default: '✅' }}</span>
+        <span>{{ section.settings.g2_text }}</span>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.g3_text != blank -%}
+      <div class="guarantee-item">
+        <span class="guarantee-icon">{{ section.settings.g3_icon | default: '✅' }}</span>
+        <span>{{ section.settings.g3_text }}</span>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.g4_text != blank -%}
+      <div class="guarantee-item">
+        <span class="guarantee-icon">{{ section.settings.g4_icon | default: '✅' }}</span>
+        <span>{{ section.settings.g4_text }}</span>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Garanties produit",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Afficher cette section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre (optionnel)",
+      "default": "Achetez en toute confiance"
+    },
+    {
+      "type": "header",
+      "content": "Garantie 1"
+    },
+    {
+      "type": "text",
+      "id": "g1_icon",
+      "label": "Emoji",
+      "default": "🔒"
+    },
+    {
+      "type": "text",
+      "id": "g1_text",
+      "label": "Texte",
+      "default": "Paiement 100% sécurisé"
+    },
+    {
+      "type": "header",
+      "content": "Garantie 2"
+    },
+    {
+      "type": "text",
+      "id": "g2_icon",
+      "label": "Emoji",
+      "default": "↩️"
+    },
+    {
+      "type": "text",
+      "id": "g2_text",
+      "label": "Texte",
+      "default": "Retours sous 14 jours"
+    },
+    {
+      "type": "header",
+      "content": "Garantie 3"
+    },
+    {
+      "type": "text",
+      "id": "g3_icon",
+      "label": "Emoji",
+      "default": "🚚"
+    },
+    {
+      "type": "text",
+      "id": "g3_text",
+      "label": "Texte",
+      "default": "Livraison express 24-48h"
+    },
+    {
+      "type": "header",
+      "content": "Garantie 4"
+    },
+    {
+      "type": "text",
+      "id": "g4_icon",
+      "label": "Emoji",
+      "default": "🌿"
+    },
+    {
+      "type": "text",
+      "id": "g4_text",
+      "label": "Texte",
+      "default": "Qualité certifiée, lot analysé"
+    }
+  ]
+}
+{% endschema %}
