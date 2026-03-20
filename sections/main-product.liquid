@@ -1,209 +1,458 @@
-<section class="product-page" aria-label="{{ product.title }}">
+{%- liquid
+  assign current_variant   = product.selected_or_first_available_variant
+  assign product_desc      = section.settings.description
+  if product_desc == blank or product_desc == '<p></p>'
+    assign product_desc = product.description
+  endif
+  assign tier_blocks   = section.blocks | where: 'type', 'cbd_tier'
+  assign trust_blocks  = section.blocks | where: 'type', 'trust_badge'
+  assign accordion_blocks = section.blocks | where: 'type', 'accordion'
+-%}
+
+<section class="product-page" aria-label="{{ product.title | escape }}">
   <div class="product-page-inner">
-    <!-- Product gallery -->
+
+    <!-- ═══ GALERIE ═══ -->
     <div class="product-gallery">
-      {%- if product.images.size > 0 -%}
-        <div class="product-main-image">
+      <div class="product-gallery-main">
+        {%- if product.images.size > 0 -%}
           <img
             id="product-main-img"
-            src="{{ product.featured_image | image_url: width: 700 }}"
+            src="{{ current_variant.featured_image | default: product.featured_image | image_url: width: 800 }}"
             alt="{{ product.featured_image.alt | default: product.title | escape }}"
-            width="700"
-            height="700"
+            width="800"
+            height="800"
             loading="eager"
-            class="product-main-img"
+            fetchpriority="high"
           >
-        </div>
-        {%- if product.images.size > 1 -%}
-          <div class="product-thumbnails">
-            {%- for image in product.images limit: 6 -%}
-              <button
-                class="product-thumb-btn{% if forloop.first %} active{% endif %}"
-                data-src="{{ image | image_url: width: 700 }}"
-                aria-label="Image {{ forloop.index }}"
-              >
-                <img
-                  src="{{ image | image_url: width: 120 }}"
-                  alt="{{ image.alt | escape }}"
-                  width="80"
-                  height="80"
-                  loading="lazy"
-                >
-              </button>
-            {%- endfor -%}
+        {%- else -%}
+          <div class="product-img-placeholder">
+            <svg viewBox="0 0 80 80" fill="none" width="80" height="80">
+              <path d="M40 8C40 8 20 20 18 38C16 56 30 68 40 68C50 68 64 56 62 38C60 20 40 8 40 8Z" fill="#2ea82e" opacity="0.4"/>
+              <path d="M40 8 L40 68" stroke="#1d7a1d" stroke-width="1.5" opacity="0.5"/>
+            </svg>
           </div>
         {%- endif -%}
-      {%- else -%}
-        <div class="product-image-placeholder product-image-placeholder--lg">
-          <svg viewBox="0 0 100 100" fill="none" width="80" height="80">
-            <path d="M50 20C50 20 30 33 28 50C26 67 40 80 50 80C60 80 74 67 72 50C70 33 50 20 50 20Z" fill="#2ea82e" opacity="0.5"/>
-          </svg>
+      </div>
+
+      {%- if product.images.size > 1 -%}
+        <div class="product-thumbs" aria-label="Images du produit">
+          {%- for image in product.images limit: 6 -%}
+            <button
+              class="product-thumb-btn{% if forloop.first %} active{% endif %}"
+              data-src="{{ image | image_url: width: 800 }}"
+              aria-label="Image {{ forloop.index }}"
+              type="button"
+            >
+              <img src="{{ image | image_url: width: 120 }}" alt="{{ image.alt | escape }}" width="80" height="80" loading="lazy">
+            </button>
+          {%- endfor -%}
         </div>
       {%- endif -%}
     </div>
 
-    <!-- Product info -->
+    <!-- ═══ INFOS PRODUIT ═══ -->
     <div class="product-info">
+
+      <!-- Badge catégorie -->
+      {%- assign badge_text = section.settings.badge | default: product.type -%}
+      {%- if badge_text != blank -%}
+        <p class="product-type-tag">{{ badge_text }}</p>
+      {%- endif -%}
+
       <h1 class="product-title">{{ product.title }}</h1>
 
-      <div class="product-price-wrap">
-        {%- if product.compare_at_price > product.price -%}
-          <span class="price-compare">{{ product.compare_at_price | money }}</span>
-          <span class="price-current price-current--sale">{{ product.price | money }}</span>
+      <!-- Prix -->
+      <div class="product-price-row" id="product-price-wrap">
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <span class="price-compare">{{ current_variant.compare_at_price | money }}</span>
+          <span class="price-main price-main--sale" id="product-price">{{ current_variant.price | money }}</span>
+          <span class="price-badge-saved">
+            -{{ current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price | round }}%
+          </span>
         {%- else -%}
-          <span class="price-current">{{ product.price | money }}</span>
+          <span class="price-main" id="product-price">{{ current_variant.price | money }}</span>
         {%- endif -%}
       </div>
 
-      {%- unless product.has_only_default_variant -%}
-        <div class="product-variants">
+      <!-- ═ GRILLE DÉGRRESSIVE CBD ═ -->
+      {%- if section.settings.show_degressive and tier_blocks.size > 0 -%}
+        <div class="degressive-section">
+          <p class="degressive-heading">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            {{ section.settings.degressive_label | default: 'Tarifs dégressifs' }}
+          </p>
+          <div class="degressive-grid">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'cbd_tier' -%}
+                <div
+                  class="degressive-tile{% if forloop.first %} is-active{% endif %}"
+                  data-match="{{ block.settings.variant_match | downcase }}"
+                  data-grams="{{ block.settings.grams | downcase }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {%- if block.settings.badge != blank -%}
+                    <span class="degressive-tile-badge">{{ block.settings.badge }}</span>
+                  {%- endif -%}
+                  <span class="degressive-tile-qty">{{ block.settings.grams }}</span>
+                  <span class="degressive-tile-total">{{ block.settings.total_price }}€</span>
+                  <span class="degressive-tile-per-g">{{ block.settings.price_per_gram }}€/g</span>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      <!-- ═ FORMULAIRE VARIANTS + PANIER ═ -->
+      <form
+        action="{{ routes.cart_add_url }}"
+        method="post"
+        id="product-form"
+        class="product-form"
+        enctype="multipart/form-data"
+      >
+        <input type="hidden" name="id" id="variant-id" value="{{ current_variant.id }}">
+
+        {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
             <div class="variant-group">
-              <label class="variant-label">{{ option.name }}</label>
-              <div class="variant-options">
+              <p class="variant-label">
+                {{ option.name }}
+                <span class="variant-selected-val" id="opt-val-{{ forloop.index0 }}">— {{ option.selected_value }}</span>
+              </p>
+              <div class="variant-btns" data-opt="{{ forloop.index0 }}">
                 {%- for value in option.values -%}
-                  <button class="variant-option-btn" data-option="{{ option.position }}" data-value="{{ value }}">
-                    {{ value }}
-                  </button>
+                  <button
+                    type="button"
+                    class="variant-btn{% if option.selected_value == value %} is-active{% endif %}"
+                    data-val="{{ value | escape }}"
+                  >{{ value }}</button>
                 {%- endfor -%}
               </div>
             </div>
           {%- endfor -%}
-        </div>
-      {%- endunless -%}
+        {%- endunless -%}
 
-      <div class="product-form">
-        <div class="quantity-wrap">
-          <label for="quantity" class="variant-label">Quantité</label>
-          <div class="quantity-control">
-            <button class="qty-btn qty-btn--minus" aria-label="Diminuer">−</button>
-            <input type="number" id="quantity" name="quantity" value="1" min="1" class="qty-input">
-            <button class="qty-btn qty-btn--plus" aria-label="Augmenter">+</button>
+        <!-- Quantité -->
+        <div class="qty-group">
+          <p class="variant-label">Quantité</p>
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn" id="qty-minus" aria-label="Diminuer">−</button>
+            <input type="number" name="quantity" id="qty-input" value="1" min="1" class="qty-input" aria-label="Quantité">
+            <button type="button" class="qty-btn" id="qty-plus" aria-label="Augmenter">+</button>
           </div>
         </div>
 
+        <!-- Bouton panier -->
         <button
-          class="btn-add-to-cart btn-add-to-cart--product"
-          data-product-id="{{ product.variants.first.id }}"
+          type="submit"
+          class="btn-atc"
+          id="btn-atc"
+          {% unless current_variant.available %}disabled{% endunless %}
         >
-          Ajouter au panier
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+          <span id="atc-label">
+            {%- if current_variant.available -%}Ajouter au panier{%- else -%}Rupture de stock{%- endif -%}
+          </span>
         </button>
-      </div>
 
-      {%- if product.description != blank -%}
-        <div class="product-description">
-          {{ product.description }}
+      </form>
+
+      <!-- Badges de confiance -->
+      {%- if trust_blocks.size > 0 -%}
+        <ul class="trust-list" aria-label="Garanties">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'trust_badge' -%}
+              <li class="trust-item" {{ block.shopify_attributes }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2ea82e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                {{ block.settings.text }}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <!-- Description -->
+      {%- if product_desc != blank -%}
+        <div class="product-desc rte">{{ product_desc }}</div>
+      {%- endif -%}
+
+      <!-- Accordéons -->
+      {%- if accordion_blocks.size > 0 -%}
+        <div class="product-accordions">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'accordion' -%}
+              <details class="accordion" {{ block.shopify_attributes }}>
+                <summary class="accordion-head">
+                  {%- if block.settings.icon != blank -%}
+                    <span class="accordion-icon" aria-hidden="true">{{ block.settings.icon }}</span>
+                  {%- endif -%}
+                  <span class="accordion-title">{{ block.settings.title }}</span>
+                  <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </summary>
+                <div class="accordion-body rte">{{ block.settings.content }}</div>
+              </details>
+            {%- endif -%}
+          {%- endfor -%}
         </div>
       {%- endif -%}
-    </div>
-  </div>
+
+    </div><!-- /product-info -->
+  </div><!-- /product-page-inner -->
 </section>
 
-<style>
-.product-page {
-  padding: 32px 16px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.product-page-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-.product-gallery { display: flex; flex-direction: column; gap: 12px; }
-.product-main-image { border-radius: var(--radius); overflow: hidden; background: rgba(0,30,0,0.5); }
-.product-main-img { width: 100%; object-fit: cover; }
-.product-thumbnails { display: flex; gap: 8px; flex-wrap: wrap; }
-.product-thumb-btn {
-  width: 72px; height: 72px;
-  border-radius: 8px; overflow: hidden;
-  border: 2px solid rgba(46,168,46,0.2);
-  transition: border-color var(--transition);
-}
-.product-thumb-btn.active,
-.product-thumb-btn:hover { border-color: var(--green); }
-.product-thumb-btn img { width: 100%; height: 100%; object-fit: cover; }
-.product-image-placeholder--lg {
-  height: 320px; display: flex; align-items: center; justify-content: center;
-  background: rgba(0,30,0,0.4); border-radius: var(--radius);
-}
-.product-info { display: flex; flex-direction: column; gap: 20px; }
-.product-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(24px, 5vw, 42px);
-  line-height: 1.1; letter-spacing: 1px;
-}
-.product-price-wrap { display: flex; gap: 12px; align-items: center; }
-.variant-group { display: flex; flex-direction: column; gap: 8px; }
-.variant-label { font-size: 13px; color: var(--text-muted); letter-spacing: 0.5px; font-weight: 600; }
-.variant-options { display: flex; flex-wrap: wrap; gap: 8px; }
-.variant-option-btn {
-  padding: 6px 16px; border-radius: 6px;
-  border: 1px solid rgba(46,168,46,0.3);
-  background: transparent; color: var(--text);
-  font-size: 13px; transition: border-color var(--transition), background var(--transition);
-}
-.variant-option-btn:hover,
-.variant-option-btn.active { border-color: var(--green); background: rgba(46,168,46,0.15); }
-.product-form { display: flex; flex-direction: column; gap: 16px; }
-.quantity-wrap { display: flex; flex-direction: column; gap: 8px; }
-.quantity-control { display: flex; align-items: center; gap: 0; border: 1px solid rgba(46,168,46,0.3); border-radius: 8px; overflow: hidden; width: fit-content; }
-.qty-btn { width: 40px; height: 40px; font-size: 18px; color: var(--text); transition: background var(--transition); }
-.qty-btn:hover { background: rgba(46,168,46,0.15); }
-.qty-input { width: 56px; height: 40px; text-align: center; background: transparent; border: none; color: var(--text); font-size: 15px; border-left: 1px solid rgba(46,168,46,0.2); border-right: 1px solid rgba(46,168,46,0.2); }
-.qty-input:focus { outline: none; }
-.btn-add-to-cart--product {
-  width: 100%; padding: 14px;
-  background: var(--green);
-  color: #fff; border-radius: 10px;
-  font-family: 'Oswald', sans-serif;
-  font-size: 16px; font-weight: 600;
-  letter-spacing: 1px;
-  transition: background var(--transition), box-shadow var(--transition);
-  border: none;
-}
-.btn-add-to-cart--product:hover { background: var(--green-lt); box-shadow: 0 0 20px rgba(46,168,46,0.4); }
-.product-description { font-size: 14px; color: var(--text-muted); line-height: 1.8; border-top: 1px solid rgba(46,168,46,0.1); padding-top: 20px; }
-@media (min-width: 768px) {
-  .product-page-inner { flex-direction: row; gap: 48px; }
-  .product-gallery { flex: 0 0 50%; }
-  .product-info { flex: 1; }
-}
-</style>
-
 <script>
-(function(){
-  // Thumbnail gallery
-  document.querySelectorAll('.product-thumb-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      document.querySelectorAll('.product-thumb-btn').forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-      var mainImg = document.getElementById('product-main-img');
-      if(mainImg) mainImg.src = btn.dataset.src;
+(function () {
+  var variants     = {{ product.variants | json }};
+  var selOptions   = [
+    {%- for option in product.options_with_values -%}
+      {{ option.selected_value | json }}{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ];
+
+  /* ── Trouver la variante correspondante ── */
+  function findVariant () {
+    return variants.find(function (v) {
+      return v.options.every(function (opt, i) { return opt === selOptions[i]; });
+    });
+  }
+
+  /* ── Formater le prix ── */
+  function money (cents) {
+    return (cents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '\u00a0€';
+  }
+
+  /* ── Mettre à jour l'UI après changement de variante ── */
+  function applyVariant (v) {
+    if (!v) return;
+
+    document.getElementById('variant-id').value = v.id;
+
+    var priceEl = document.getElementById('product-price');
+    if (priceEl) priceEl.textContent = money(v.price);
+
+    var btn   = document.getElementById('btn-atc');
+    var label = document.getElementById('atc-label');
+    if (btn && label) {
+      btn.disabled     = !v.available;
+      label.textContent = v.available ? 'Ajouter au panier' : 'Rupture de stock';
+    }
+
+    if (v.featured_image) {
+      var img = document.getElementById('product-main-img');
+      if (img) img.src = v.featured_image.src;
+    }
+
+    highlightTier(v);
+
+    var url = new URL(window.location.href);
+    url.searchParams.set('variant', v.id);
+    window.history.replaceState({}, '', url.toString());
+  }
+
+  /* ── Surligner le palier dégressif correspondant ── */
+  function highlightTier (v) {
+    var tiles = document.querySelectorAll('.degressive-tile');
+    if (!tiles.length) return;
+
+    var optStr = v ? v.options.join(' ').toLowerCase() : '';
+    var found  = false;
+
+    tiles.forEach(function (tile) {
+      var matchKey = (tile.dataset.match || '').toLowerCase();
+      var gramsKey = (tile.dataset.grams || '').toLowerCase();
+      var hit = (matchKey && optStr.indexOf(matchKey) !== -1) ||
+                (gramsKey && optStr.indexOf(gramsKey) !== -1);
+      tile.classList.toggle('is-active', hit);
+      if (hit) found = true;
+    });
+
+    /* Fallback : surligne le premier si aucun match */
+    if (!found && tiles.length) tiles[0].classList.add('is-active');
+  }
+
+  /* ── Boutons variantes ── */
+  document.querySelectorAll('.variant-btns').forEach(function (group) {
+    var optIdx = parseInt(group.dataset.opt, 10);
+    group.querySelectorAll('.variant-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        group.querySelectorAll('.variant-btn').forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+        selOptions[optIdx] = btn.dataset.val;
+
+        /* Afficher la valeur sélectionnée à côté du label */
+        var valDisplay = document.getElementById('opt-val-' + optIdx);
+        if (valDisplay) valDisplay.textContent = '— ' + btn.dataset.val;
+
+        applyVariant(findVariant());
+      });
     });
   });
-  // Quantity
-  var qtyInput = document.querySelector('.qty-input');
-  document.querySelector('.qty-btn--minus')?.addEventListener('click', function(){
-    if(qtyInput && parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+
+  /* ── Quantité ── */
+  var qtyInput = document.getElementById('qty-input');
+  document.getElementById('qty-minus').addEventListener('click', function () {
+    var n = parseInt(qtyInput.value, 10);
+    if (n > 1) qtyInput.value = n - 1;
   });
-  document.querySelector('.qty-btn--plus')?.addEventListener('click', function(){
-    if(qtyInput) qtyInput.value = parseInt(qtyInput.value) + 1;
+  document.getElementById('qty-plus').addEventListener('click', function () {
+    qtyInput.value = parseInt(qtyInput.value, 10) + 1;
   });
-  // Variant buttons
-  document.querySelectorAll('.variant-option-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var group = btn.closest('.variant-options');
-      group.querySelectorAll('.variant-option-btn').forEach(function(b){ b.classList.remove('active'); });
+
+  /* ── Galerie miniatures ── */
+  document.querySelectorAll('.product-thumb-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.product-thumb-btn').forEach(function (b) { b.classList.remove('active'); });
       btn.classList.add('active');
+      var img = document.getElementById('product-main-img');
+      if (img) img.src = btn.dataset.src;
     });
   });
-})();
+
+  /* ── Accordéons animés ── */
+  document.querySelectorAll('.accordion').forEach(function (acc) {
+    var body = acc.querySelector('.accordion-body');
+    body.style.maxHeight = acc.open ? body.scrollHeight + 'px' : '0';
+    acc.addEventListener('toggle', function () {
+      body.style.maxHeight = acc.open ? body.scrollHeight + 'px' : '0';
+    });
+  });
+
+}());
 </script>
 
 {% schema %}
 {
   "name": "Page produit",
-  "settings": []
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contenu général"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge de catégorie (ex : Fleurs CBD)",
+      "info": "Remplace le type de produit Shopify si renseigné."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description produit",
+      "info": "Laissez vide pour utiliser la description saisie dans Shopify Admin > Produits."
+    },
+    {
+      "type": "header",
+      "content": "Tarification dégressive CBD"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_degressive",
+      "label": "Afficher la grille de prix dégressifs",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "degressive_label",
+      "label": "Titre de la grille",
+      "default": "Tarifs dégressifs"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "cbd_tier",
+      "name": "Palier de prix CBD",
+      "settings": [
+        {
+          "type": "text",
+          "id": "grams",
+          "label": "Quantité affichée (ex : 3g)",
+          "default": "3g"
+        },
+        {
+          "type": "text",
+          "id": "variant_match",
+          "label": "Valeur de variante à associer",
+          "info": "Doit correspondre exactement à une option de la variante Shopify (ex : 3g).",
+          "default": "3g"
+        },
+        {
+          "type": "text",
+          "id": "total_price",
+          "label": "Prix total (€)",
+          "default": "15.00"
+        },
+        {
+          "type": "text",
+          "id": "price_per_gram",
+          "label": "Prix par gramme (€/g)",
+          "default": "5.00"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge promo (ex : -20%, Meilleure valeur)",
+          "default": ""
+        }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Accordéon d'information",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Emoji ou icône",
+          "default": "🌿"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre",
+          "default": "Composition"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenu",
+          "default": "<p>Détaillez ici la composition du produit.</p>"
+        }
+      ]
+    },
+    {
+      "type": "trust_badge",
+      "name": "Badge de confiance",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Livraison express 24-48h"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page produit",
+      "blocks": [
+        { "type": "cbd_tier", "settings": { "grams": "1g",  "variant_match": "1g",  "total_price": "10.00", "price_per_gram": "10.00", "badge": "" } },
+        { "type": "cbd_tier", "settings": { "grams": "3g",  "variant_match": "3g",  "total_price": "27.00", "price_per_gram": "9.00",  "badge": "-10%" } },
+        { "type": "cbd_tier", "settings": { "grams": "5g",  "variant_match": "5g",  "total_price": "40.00", "price_per_gram": "8.00",  "badge": "-20%" } },
+        { "type": "cbd_tier", "settings": { "grams": "10g", "variant_match": "10g", "total_price": "70.00", "price_per_gram": "7.00",  "badge": "Meilleure valeur" } },
+        { "type": "trust_badge", "settings": { "text": "Livraison express 24-48h" } },
+        { "type": "trust_badge", "settings": { "text": "Paiement 100% sécurisé" } },
+        { "type": "trust_badge", "settings": { "text": "Analyses laboratoire certifiées" } },
+        { "type": "accordion", "settings": { "icon": "🌿", "title": "Composition & taux de CBD" } },
+        { "type": "accordion", "settings": { "icon": "📦", "title": "Livraison & retours" } },
+        { "type": "accordion", "settings": { "icon": "🔬", "title": "Analyses & certifications" } }
+      ]
+    }
+  ]
 }
 {% endschema %}
