@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "show_banner": false,
+        "banner_height": 280,
+        "banner_overlay": 50,
+        "banner_v_align": "flex-end",
+        "header_alignment": "center",
+        "title_color": "#ffffff",
+        "title_size_min": 28,
+        "title_size_max": 48,
+        "title_letter_spacing": 2,
+        "show_description": true,
+        "desc_max_width": 600,
+        "header_mb": 32,
+        "show_filter_tags": true,
+        "show_sort": true,
+        "show_product_count": true,
+        "empty_text": "Aucun produit dans cette collection.",
+        "columns_mobile": "2",
+        "columns_tablet": "3",
+        "columns_desktop": "4",
+        "gap_mobile": 12,
+        "gap_desktop": 24,
+        "products_per_page": 24,
+        "bg_color": "#050e05",
+        "padding_top": 32,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": ["main"]
+}
