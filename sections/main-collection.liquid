@@ -125,7 +125,7 @@
 
   <div class="col-toolbar">
     {%- if show_count -%}
-      <span class="col-count">{{ collection.products_count }} produit{{ collection.products_count | pluralize: '', 's' }}</span>
+      <span class="col-count">{{ collection.products_count }} produit{% if collection.products_count > 1 %}s{% endif %}</span>
     {%- else -%}
       <span></span>
     {%- endif -%}
