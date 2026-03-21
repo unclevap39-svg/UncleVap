@@ -1,31 +1,23 @@
 {%- assign current_variant = product.selected_or_first_available_variant -%}
-{%- assign per_g_arr = section.settings.tier_per_g | split: ',' -%}
-{%- assign badge_arr = section.settings.tier_badges | split: ',' -%}
-
-{%- comment %} Metafields produit {%- endcomment %}
-{%- assign badge_label   = product.metafields.custom.badge_label -%}
-{%- assign badge_emoji   = product.metafields.custom.badge_emoji -%}
-{%- assign intensity_lvl = product.metafields.custom.intensity_level -%}
-{%- assign intensity_lbl = product.metafields.custom.intensity_label -%}
-{%- assign prod_tags     = product.metafields.custom.product_tags -%}
-{%- assign catchphrase   = product.metafields.custom.catchphrase -%}
-{%- assign short_desc    = product.metafields.custom.short_description -%}
 
 <section class="product-page" aria-label="{{ product.title | escape }}">
   <div class="product-page-inner">
 
-    <!-- ═══ GALERIE ═══ -->
+    <!-- GALERIE -->
     <div class="product-gallery">
       <div class="product-gallery-main">
 
-        {%- if badge_label != blank or badge_emoji != blank -%}
+        {%- comment %} Badge catégorie depuis metafield {%- endcomment %}
+        {%- assign mf_badge_label = product.metafields.custom.badge_label -%}
+        {%- assign mf_badge_emoji = product.metafields.custom.badge_emoji -%}
+        {%- if mf_badge_label != blank or mf_badge_emoji != blank -%}
           <div class="product-cat-badge">
-            {%- if badge_emoji != blank -%}<span class="product-cat-badge-emoji">{{ badge_emoji }}</span>{%- endif -%}
-            {%- if badge_label != blank -%}<span>{{ badge_label }}</span>{%- endif -%}
+            {%- if mf_badge_emoji != blank -%}<span class="product-cat-badge-emoji">{{ mf_badge_emoji }}</span>{%- endif -%}
+            {%- if mf_badge_label != blank -%}<span>{{ mf_badge_label }}</span>{%- endif -%}
           </div>
         {%- endif -%}
 
-        {%- if product.images.size > 0 -%}
+        {%- if product.featured_image -%}
           <img
             id="product-main-img"
             src="{{ current_variant.featured_image | default: product.featured_image | image_url: width: 800 }}"
@@ -33,27 +25,22 @@
             width="800"
             height="800"
             loading="eager"
-            fetchpriority="high"
           >
         {%- else -%}
           <div class="product-img-placeholder">
             <svg viewBox="0 0 80 80" fill="none" width="80" height="80">
               <path d="M40 8C40 8 20 20 18 38C16 56 30 68 40 68C50 68 64 56 62 38C60 20 40 8 40 8Z" fill="#2ea82e" opacity="0.4"/>
-              <path d="M40 8 L40 68" stroke="#1d7a1d" stroke-width="1.5" opacity="0.5"/>
             </svg>
           </div>
         {%- endif -%}
       </div>
 
       {%- if product.images.size > 1 -%}
-        <div class="product-thumbs" aria-label="Images du produit">
+        <div class="product-thumbs">
           {%- for image in product.images limit: 6 -%}
-            <button
-              class="product-thumb-btn{% if forloop.first %} active{% endif %}"
+            <button class="product-thumb-btn{% if forloop.first %} active{% endif %}"
               data-src="{{ image | image_url: width: 800 }}"
-              aria-label="Image {{ forloop.index }}"
-              type="button"
-            >
+              type="button" aria-label="Image {{ forloop.index }}">
               <img src="{{ image | image_url: width: 120 }}" alt="{{ image.alt | escape }}" width="80" height="80" loading="lazy">
             </button>
           {%- endfor -%}
@@ -61,7 +48,7 @@
       {%- endif -%}
     </div>
 
-    <!-- ═══ INFOS PRODUIT ═══ -->
+    <!-- INFOS PRODUIT -->
     <div class="product-info">
 
       {%- if product.type != blank -%}
@@ -70,38 +57,36 @@
 
       <h1 class="product-title">{{ product.title }}</h1>
 
-      <!-- ═ BLOC INTENSITÉ ═ -->
-      {%- if intensity_lvl != blank or catchphrase != blank -%}
+      {%- comment %} Bloc intensité depuis metafield {%- endcomment %}
+      {%- assign mf_intensity = product.metafields.custom.intensity_level -%}
+      {%- assign mf_intensity_lbl = product.metafields.custom.intensity_label -%}
+      {%- assign mf_catchphrase = product.metafields.custom.catchphrase -%}
+      {%- assign mf_short_desc = product.metafields.custom.short_description -%}
+      {%- assign mf_prod_tags = product.metafields.custom.product_tags -%}
+
+      {%- if mf_intensity != blank or mf_catchphrase != blank -%}
         <div class="product-intensity-block">
-          {%- if intensity_lvl != blank -%}
-            {%- assign int_val = intensity_lvl | times: 1 -%}
-            <div class="intensity-slider-wrap" aria-label="Niveau d'intensité : {{ intensity_lbl | default: intensity_lvl }}">
+          {%- if mf_intensity != blank -%}
+            {%- assign int_pct = mf_intensity | times: 1 -%}
+            <div class="intensity-slider-wrap">
               <div class="intensity-track">
-                <div class="intensity-fill" style="width: {{ int_val }}%;"></div>
-                <div class="intensity-thumb" style="left: calc({{ int_val }}% - 10px);"></div>
+                <div class="intensity-fill" style="width: {{ int_pct }}%;"></div>
+                <div class="intensity-thumb" style="left: calc({{ int_pct }}% - 10px);"></div>
               </div>
               <div class="intensity-labels">
-                <span>Douce</span>
-                <span>Forte</span>
-                <span>Très forte</span>
+                <span>Douce</span><span>Forte</span><span>Très forte</span>
               </div>
-              {%- if intensity_lbl != blank -%}
-                <p class="intensity-current-label">Intensité : <strong>{{ intensity_lbl }}</strong></p>
+              {%- if mf_intensity_lbl != blank -%}
+                <p class="intensity-current-label">Intensité : <strong>{{ mf_intensity_lbl }}</strong></p>
               {%- endif -%}
             </div>
           {%- endif -%}
-          {%- if catchphrase != blank -%}
-            <p class="product-catchphrase">{{ catchphrase }}</p>
-          {%- endif -%}
-          {%- if short_desc != blank -%}
-            <p class="product-short-desc">{{ short_desc }}</p>
-          {%- endif -%}
-          {%- if prod_tags != blank -%}
+          {%- if mf_catchphrase != blank -%}<p class="product-catchphrase">{{ mf_catchphrase }}</p>{%- endif -%}
+          {%- if mf_short_desc != blank -%}<p class="product-short-desc">{{ mf_short_desc }}</p>{%- endif -%}
+          {%- if mf_prod_tags != blank -%}
             <div class="product-pill-tags">
-              {%- assign tags_arr = prod_tags | split: ',' -%}
-              {%- for tag in tags_arr -%}
-                <span class="product-pill-tag">{{ tag | strip }}</span>
-              {%- endfor -%}
+              {%- assign mf_tags_arr = mf_prod_tags | split: ',' -%}
+              {%- for t in mf_tags_arr -%}<span class="product-pill-tag">{{ t | strip }}</span>{%- endfor -%}
             </div>
           {%- endif -%}
         </div>
@@ -112,9 +97,7 @@
         {%- if current_variant.compare_at_price > current_variant.price -%}
           <span class="price-compare" id="product-price-compare">{{ current_variant.compare_at_price | money }}</span>
           <span class="price-main price-main--sale" id="product-price">{{ current_variant.price | money }}</span>
-          <span class="price-badge-saved" id="price-saved-badge">
-            -{{ current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price | round }}%
-          </span>
+          <span class="price-badge-saved" id="price-saved-badge">-{{ current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price | round }}%</span>
         {%- else -%}
           <span class="price-compare" id="product-price-compare" style="display:none;"></span>
           <span class="price-main" id="product-price">{{ current_variant.price | money }}</span>
@@ -122,56 +105,44 @@
         {%- endif -%}
       </div>
 
-      <!-- ═ SÉLECTEUR GRAMMES / TARIFS DÉGRESSIFS ═ -->
+      {%- comment %} Sélecteur dégressif optionnel {%- endcomment %}
       {%- if section.settings.show_tiers and product.variants.size > 1 -%}
+        {%- assign per_g_arr = section.settings.tier_per_g | split: ',' -%}
+        {%- assign badge_arr = section.settings.tier_badges | split: ',' -%}
         <div class="tiers-section">
-          <p class="tiers-label">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            {{ section.settings.tiers_title | default: 'Choisissez votre quantité' }}
-          </p>
+          <p class="tiers-label">{{ section.settings.tiers_title | default: 'Choisissez votre quantité' }}</p>
           <div class="tiers-grid" id="tiers-grid">
             {%- for variant in product.variants -%}
               {%- assign pg = per_g_arr[forloop.index0] | strip -%}
               {%- assign vbadge = badge_arr[forloop.index0] | strip -%}
-              <button
-                type="button"
+              <button type="button"
                 class="tier-tile{% if variant.id == current_variant.id %} is-active{% endif %}"
                 data-variant-id="{{ variant.id }}"
                 data-val="{{ variant.options.first | escape }}"
-                data-opt-index="0"
-              >
-                {%- if vbadge != blank -%}
-                  <span class="tier-badge">{{ vbadge }}</span>
-                {%- endif -%}
+                data-opt-index="0">
+                {%- if vbadge != blank -%}<span class="tier-badge">{{ vbadge }}</span>{%- endif -%}
                 <span class="tier-qty">{{ variant.options.first }}</span>
                 <span class="tier-total">{{ variant.price | money }}</span>
-                {%- if pg != blank -%}
-                  <span class="tier-per-g">{{ pg }}€/g</span>
-                {%- endif -%}
+                {%- if pg != blank -%}<span class="tier-per-g">{{ pg }}€/g</span>{%- endif -%}
               </button>
             {%- endfor -%}
           </div>
         </div>
       {%- endif -%}
 
-      <!-- ═ FORMULAIRE VARIANTS + PANIER ═ -->
+      <!-- Formulaire -->
       {%- form 'product', product, id: 'product-form', class: 'product-form' -%}
         <input type="hidden" name="id" id="variant-id" value="{{ current_variant.id }}">
 
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
             <div class="variant-group">
-              <p class="variant-label">
-                {{ option.name }}
-                <span class="variant-selected-val" id="opt-val-{{ forloop.index0 }}">— {{ option.selected_value }}</span>
-              </p>
+              <p class="variant-label">{{ option.name }} <span class="variant-selected-val" id="opt-val-{{ forloop.index0 }}">— {{ option.selected_value }}</span></p>
               <div class="variant-grid" data-opt="{{ forloop.index0 }}">
                 {%- for value in option.values -%}
-                  <button
-                    type="button"
+                  <button type="button"
                     class="variant-grid-btn{% if option.selected_value == value %} is-active{% endif %}"
-                    data-val="{{ value | escape }}"
-                  >
+                    data-val="{{ value | escape }}">
                     <span class="variant-grid-qty">{{ value }}</span>
                     <span class="variant-grid-per-g js-per-g" data-val="{{ value | escape }}"></span>
                   </button>
@@ -181,23 +152,17 @@
           {%- endfor -%}
         {%- endunless -%}
 
-        <!-- Quantité -->
         <div class="qty-group">
           <p class="variant-label">Quantité</p>
           <div class="qty-stepper">
             <button type="button" class="qty-btn" id="qty-minus" aria-label="Diminuer">−</button>
-            <input type="number" name="quantity" id="qty-input" value="1" min="1" class="qty-input" aria-label="Quantité">
+            <input type="number" name="quantity" id="qty-input" value="1" min="1" class="qty-input">
             <button type="button" class="qty-btn" id="qty-plus" aria-label="Augmenter">+</button>
           </div>
         </div>
 
-        <!-- Bouton ATC enrichi -->
-        <button
-          type="submit"
-          class="btn-atc btn-atc--enriched"
-          id="btn-atc"
-          {% unless current_variant.available %}disabled{% endunless %}
-        >
+        <button type="submit" class="btn-atc btn-atc--enriched" id="btn-atc"
+          {% unless current_variant.available %}disabled{% endunless %}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
@@ -219,34 +184,18 @@
           </span>
         </button>
 
-        <!-- Icônes paiement -->
         <div class="payment-icons">
           <span class="payment-icons-label">🔒 Paiement 100% sécurisé</span>
           <div class="payment-icons-row">
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Visa" role="img">
-              <rect width="48" height="30" rx="4" fill="#1a1f71"/>
-              <path d="M20.5 20H17.8l1.7-10H22l-1.5 10zm-6.5 0l-2.6-6.9-.3 1.5-1 5.4H8l2.6-10h2.9l3.2 8.2.3-8.2H19l-1.6 10h-3.4zm22.2 0h-2.7l-.3-1.3h-3.3l-.5 1.3h-2.8l4-10h3l2.6 10zm-5.6-3.3h2.1l-.8-4-1.3 4zM39 15.3c0-.7-.5-1.2-1.6-1.7-1.1-.5-1.1-.5-1.1-.8 0-.3.3-.5.9-.5.9 0 1.5.2 2 .4l.3-1.7c-.5-.2-1.3-.4-2.3-.4-2.5 0-4.2 1.3-4.2 3.1 0 1.4 1.3 2.1 2.2 2.6.9.5 1.3.8 1.3 1.2 0 .7-.8 1-1.5 1-1.1 0-1.9-.3-2.5-.5l-.3 1.8c.6.3 1.6.5 2.7.5 2.7.1 4.2-1.3 4.1-3z" fill="#fff"/>
-            </svg>
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Mastercard" role="img">
-              <rect width="48" height="30" rx="4" fill="#252525"/>
-              <circle cx="19" cy="15" r="8" fill="#eb001b"/>
-              <circle cx="29" cy="15" r="8" fill="#f79e1b"/>
-              <path d="M24 9.3a8 8 0 0 1 0 11.4A8 8 0 0 1 24 9.3z" fill="#ff5f00"/>
-            </svg>
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="American Express" role="img">
-              <rect width="48" height="30" rx="4" fill="#2e77bc"/>
-              <path d="M7 18l1-2.4 1 2.4H7zm27.3-3.5v-.8H37v.8h-2.7zm-4.5 0v-.8h2.7v.8H29.8zM11.5 12l-3 7h2l.5-1.3H14l.5 1.3h2.1l-3-7h-2.1zm10.5 0l-2 4.5-2-4.5H16v7h1.8V15l2 4.5h1.4l2-4.5V19H25v-7h-3zm9.7 0v7h6.4v-1.6h-4.5v-1.2h4.4V15h-4.4v-1.4h4.5V12h-6.4z" fill="#fff"/>
-            </svg>
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Carte Bancaire" role="img">
-              <rect width="48" height="30" rx="4" fill="#0054a6"/>
-              <text x="8" y="21" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#fff" letter-spacing="1">CB</text>
-            </svg>
+            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Visa" role="img"><rect width="48" height="30" rx="4" fill="#1a1f71"/><path d="M20.5 20H17.8l1.7-10H22l-1.5 10zm-6.5 0l-2.6-6.9-.3 1.5-1 5.4H8l2.6-10h2.9l3.2 8.2.3-8.2H19l-1.6 10h-3.4zm22.2 0h-2.7l-.3-1.3h-3.3l-.5 1.3h-2.8l4-10h3l2.6 10zm-5.6-3.3h2.1l-.8-4-1.3 4zM39 15.3c0-.7-.5-1.2-1.6-1.7-1.1-.5-1.1-.5-1.1-.8 0-.3.3-.5.9-.5.9 0 1.5.2 2 .4l.3-1.7c-.5-.2-1.3-.4-2.3-.4-2.5 0-4.2 1.3-4.2 3.1 0 1.4 1.3 2.1 2.2 2.6.9.5 1.3.8 1.3 1.2 0 .7-.8 1-1.5 1-1.1 0-1.9-.3-2.5-.5l-.3 1.8c.6.3 1.6.5 2.7.5 2.7.1 4.2-1.3 4.1-3z" fill="#fff"/></svg>
+            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Mastercard" role="img"><rect width="48" height="30" rx="4" fill="#252525"/><circle cx="19" cy="15" r="8" fill="#eb001b"/><circle cx="29" cy="15" r="8" fill="#f79e1b"/><path d="M24 9.3a8 8 0 0 1 0 11.4A8 8 0 0 1 24 9.3z" fill="#ff5f00"/></svg>
+            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="CB" role="img"><rect width="48" height="30" rx="4" fill="#0054a6"/><text x="8" y="21" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#fff" letter-spacing="1">CB</text></svg>
           </div>
         </div>
 
       {%- endform -%}
 
-      <!-- ═ BANDE EXPÉDITION ═ -->
+      <!-- Bande expédition -->
       <div class="shipping-band">
         <span class="shipping-dot" aria-hidden="true"></span>
         <div class="shipping-band-text">
@@ -255,16 +204,15 @@
         </div>
       </div>
 
-      <!-- Description -->
       {%- if product.description != blank -%}
         <div class="product-desc rte">{{ product.description }}</div>
       {%- endif -%}
 
-    </div><!-- /product-info -->
-  </div><!-- /product-page-inner -->
+    </div>
+  </div>
 </section>
 
-<!-- ═══ STICKY ATC BAR ═══ -->
+<!-- Sticky ATC -->
 <div class="sticky-atc" id="sticky-atc" aria-hidden="true">
   <div class="sticky-atc-inner">
     <div class="sticky-atc-product">
@@ -277,225 +225,112 @@
       </div>
     </div>
     <button type="button" class="sticky-atc-btn" id="sticky-atc-btn"
-      {%- unless current_variant.available %} disabled{%- endunless -%}
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      {% unless current_variant.available %}disabled{% endunless %}>
       Ajouter au panier
     </button>
   </div>
 </div>
 
 <script>
-(function () {
-  var variants         = {{ product.variants | json }};
-  var currentVariantId = {{ current_variant.id }};
-  var selOptions       = [
-    {%- for option in product.options_with_values -%}
-      {{ option.selected_value | json }}{%- unless forloop.last -%},{%- endunless -%}
-    {%- endfor -%}
-  ];
+(function(){
+  var variants = {{ product.variants | json }};
+  var curId    = {{ current_variant.id | json }};
+  var selOpts  = [{% for opt in product.options_with_values %}{{ opt.selected_value | json }}{% unless forloop.last %},{% endunless %}{% endfor %}];
 
-  /* ── Prix au gramme — calculé depuis le titre de la variante ── */
-  function parseGrams(str) {
-    var m = (str || '').match(/(\d+(?:[.,]\d+)?)\s*g(?:r)?(?:\b|$)/i);
-    return m ? parseFloat(m[1].replace(',', '.')) : null;
-  }
-  function buildPerGMap() {
-    var map = {};
-    variants.forEach(function(v) {
-      var label = (v.options && v.options[0]) || v.title || '';
-      var g = parseGrams(label);
-      if (g) map[v.options[0]] = (v.price / g / 100).toFixed(2);
-    });
-    return map;
-  }
-  var perGMap = buildPerGMap();
-  document.querySelectorAll('.js-per-g').forEach(function(el) {
-    var pg = perGMap[el.dataset.val];
-    if (pg) { el.textContent = pg + '\u00a0€/g'; el.style.display = ''; }
-    else     { el.style.display = 'none'; }
-  });
+  function parseGrams(s){ var m=(s||'').match(/(\d+(?:[.,]\d+)?)\s*gr?(?:\b|$)/i); return m?parseFloat(m[1].replace(',','.')):null; }
+  var perGMap = {};
+  variants.forEach(function(v){ var g=parseGrams((v.options&&v.options[0])||v.title||''); if(g) perGMap[v.options[0]]=(v.price/g/100).toFixed(2); });
+  document.querySelectorAll('.js-per-g').forEach(function(el){ var pg=perGMap[el.dataset.val]; if(pg){el.textContent=pg+'\u00a0€/g';el.style.display='';}else{el.style.display='none';} });
 
-  function findVariant() {
-    return variants.find(function(v) {
-      return v.options.every(function(opt, i) { return opt === selOptions[i]; });
-    });
-  }
+  function money(c){ return (c/100).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+'\u00a0€'; }
+  function findVariant(){ return variants.find(function(v){ return v.options.every(function(o,i){return o===selOpts[i];}); }); }
 
-  function money(cents) {
-    return (cents / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '\u00a0€';
-  }
-
-  function applyVariant(v) {
-    if (!v) return;
+  function applyVariant(v){
+    if(!v) return;
     document.getElementById('variant-id').value = v.id;
-    currentVariantId = v.id;
-
-    /* Prix */
-    var priceEl   = document.getElementById('product-price');
-    var compareEl = document.getElementById('product-price-compare');
-    var savedEl   = document.getElementById('price-saved-badge');
-    if (priceEl) priceEl.textContent = money(v.price);
-    if (compareEl) {
-      if (v.compare_at_price && v.compare_at_price > v.price) {
-        compareEl.textContent = money(v.compare_at_price);
-        compareEl.style.display = '';
-      } else {
-        compareEl.textContent = '';
-        compareEl.style.display = 'none';
+    curId = v.id;
+    var pe=document.getElementById('product-price'), ce=document.getElementById('product-price-compare'), se=document.getElementById('price-saved-badge');
+    if(pe) pe.textContent=money(v.price);
+    if(ce){ if(v.compare_at_price&&v.compare_at_price>v.price){ce.textContent=money(v.compare_at_price);ce.style.display='';}else{ce.textContent='';ce.style.display='none';} }
+    if(se){ if(v.compare_at_price&&v.compare_at_price>v.price){se.textContent='-'+Math.round((v.compare_at_price-v.price)*100/v.compare_at_price)+'%';se.style.display='';}else{se.style.display='none';} }
+    var btn=document.getElementById('btn-atc'),lbl=document.getElementById('atc-label');
+    if(btn){btn.disabled=!v.available;}
+    if(lbl){
+      if(!v.available){lbl.innerHTML='Rupture de stock';}
+      else{
+        var ph='<span class="atc-price-sep">|</span>';
+        if(v.compare_at_price&&v.compare_at_price>v.price) ph+='<span class="atc-price-compare">'+money(v.compare_at_price)+'</span>';
+        ph+='<span class="atc-price-current">'+money(v.price)+'</span>';
+        lbl.innerHTML='Ajouter au panier'+ph;
       }
     }
-    if (savedEl) {
-      if (v.compare_at_price && v.compare_at_price > v.price) {
-        savedEl.textContent = '-' + Math.round((v.compare_at_price - v.price) * 100 / v.compare_at_price) + '%';
-        savedEl.style.display = '';
-      } else {
-        savedEl.style.display = 'none';
-      }
-    }
-
-    /* ATC enrichi */
-    var btn = document.getElementById('btn-atc');
-    if (btn) {
-      btn.disabled = !v.available;
-      var atcLabel = document.getElementById('atc-label');
-      if (atcLabel) {
-        if (!v.available) {
-          atcLabel.innerHTML = 'Rupture de stock';
-        } else {
-          var priceHtml = '<span class="atc-price-sep">|</span>';
-          if (v.compare_at_price && v.compare_at_price > v.price) {
-            priceHtml += '<span class="atc-price-compare">' + money(v.compare_at_price) + '</span>';
-          }
-          priceHtml += '<span class="atc-price-current">' + money(v.price) + '</span>';
-          atcLabel.innerHTML = 'Ajouter au panier' + priceHtml;
-        }
-      }
-    }
-
-    /* Sticky */
-    var stickyPrice = document.getElementById('sticky-price');
-    if (stickyPrice) stickyPrice.textContent = money(v.price);
-    var stickyBtn = document.getElementById('sticky-atc-btn');
-    if (stickyBtn) stickyBtn.disabled = !v.available;
-
-    /* Image */
-    if (v.featured_image) {
-      var imgEl = document.getElementById('product-main-img');
-      if (imgEl) imgEl.src = v.featured_image.src;
-    }
-
-    /* URL */
-    var url = new URL(window.location.href);
-    url.searchParams.set('variant', v.id);
-    window.history.replaceState({}, '', url.toString());
-
-    syncGridBtns();
-    syncTiles();
+    var sp=document.getElementById('sticky-price'); if(sp) sp.textContent=money(v.price);
+    var sb=document.getElementById('sticky-atc-btn'); if(sb) sb.disabled=!v.available;
+    if(v.featured_image){var im=document.getElementById('product-main-img');if(im)im.src=v.featured_image.src;}
+    var url=new URL(window.location.href); url.searchParams.set('variant',v.id); history.replaceState({},'',url.toString());
+    syncGrid(); syncTiles();
   }
 
-  function syncGridBtns() {
-    document.querySelectorAll('.variant-grid').forEach(function(group) {
-      var optIdx = parseInt(group.dataset.opt, 10);
-      group.querySelectorAll('.variant-grid-btn').forEach(function(btn) {
-        btn.classList.toggle('is-active', btn.dataset.val === selOptions[optIdx]);
-      });
+  function syncGrid(){
+    document.querySelectorAll('.variant-grid').forEach(function(g){
+      var i=parseInt(g.dataset.opt,10);
+      g.querySelectorAll('.variant-grid-btn').forEach(function(b){ b.classList.toggle('is-active',b.dataset.val===selOpts[i]); });
     });
   }
+  function syncTiles(){ document.querySelectorAll('.tier-tile').forEach(function(t){ t.classList.toggle('is-active',String(curId)===t.dataset.variantId); }); }
 
-  function syncTiles() {
-    document.querySelectorAll('.tier-tile').forEach(function(tile) {
-      tile.classList.toggle('is-active', String(currentVariantId) === tile.dataset.variantId);
-    });
-  }
-
-  /* ── Grille variantes ── */
-  document.querySelectorAll('.variant-grid').forEach(function(group) {
-    var optIdx = parseInt(group.dataset.opt, 10);
-    group.querySelectorAll('.variant-grid-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        selOptions[optIdx] = btn.dataset.val;
-        var valDisplay = document.getElementById('opt-val-' + optIdx);
-        if (valDisplay) valDisplay.textContent = '— ' + btn.dataset.val;
+  document.querySelectorAll('.variant-grid').forEach(function(g){
+    var i=parseInt(g.dataset.opt,10);
+    g.querySelectorAll('.variant-grid-btn').forEach(function(b){
+      b.addEventListener('click',function(){
+        selOpts[i]=b.dataset.val;
+        var vd=document.getElementById('opt-val-'+i); if(vd) vd.textContent='— '+b.dataset.val;
         applyVariant(findVariant());
       });
     });
   });
 
-  /* ── Tuiles dégressives ── */
-  document.querySelectorAll('.tier-tile').forEach(function(tile) {
-    tile.addEventListener('click', function() {
-      var val    = tile.dataset.val;
-      var optIdx = parseInt(tile.dataset.optIndex || '0', 10);
-      var targetBtn = null;
-      document.querySelectorAll('.variant-grid[data-opt="' + optIdx + '"] .variant-grid-btn').forEach(function(b) {
-        if (b.dataset.val === val) targetBtn = b;
-      });
-      if (targetBtn) {
-        targetBtn.click();
-      } else {
-        var vid = tile.dataset.variantId;
-        var v = variants.find(function(vv) { return String(vv.id) === vid; });
-        if (v) { selOptions = v.options.slice(); applyVariant(v); }
-      }
+  document.querySelectorAll('.tier-tile').forEach(function(t){
+    t.addEventListener('click',function(){
+      var val=t.dataset.val, oi=parseInt(t.dataset.optIndex||'0',10);
+      var tb=null;
+      document.querySelectorAll('.variant-grid[data-opt="'+oi+'"] .variant-grid-btn').forEach(function(b){if(b.dataset.val===val)tb=b;});
+      if(tb){tb.click();}else{var vid=t.dataset.variantId;var vv=variants.find(function(v){return String(v.id)===vid;});if(vv){selOpts=vv.options.slice();applyVariant(vv);}}
     });
   });
 
-  /* ── Quantité ── */
-  var qtyInput = document.getElementById('qty-input');
-  if (qtyInput) {
-    document.getElementById('qty-minus').addEventListener('click', function() {
-      var n = parseInt(qtyInput.value, 10); if (n > 1) qtyInput.value = n - 1;
-    });
-    document.getElementById('qty-plus').addEventListener('click', function() {
-      qtyInput.value = parseInt(qtyInput.value, 10) + 1;
-    });
+  var qi=document.getElementById('qty-input');
+  if(qi){
+    document.getElementById('qty-minus').addEventListener('click',function(){var n=parseInt(qi.value,10);if(n>1)qi.value=n-1;});
+    document.getElementById('qty-plus').addEventListener('click',function(){qi.value=parseInt(qi.value,10)+1;});
   }
 
-  /* ── Galerie miniatures ── */
-  document.querySelectorAll('.product-thumb-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.product-thumb-btn').forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      var imgEl = document.getElementById('product-main-img');
-      if (imgEl) imgEl.src = btn.dataset.src;
+  document.querySelectorAll('.product-thumb-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.product-thumb-btn').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active');
+      var im=document.getElementById('product-main-img'); if(im) im.src=b.dataset.src;
     });
   });
 
-  /* ── Sticky ATC bar ── */
-  var stickyBar  = document.getElementById('sticky-atc');
-  var mainAtcBtn = document.getElementById('btn-atc');
-  if (stickyBar && mainAtcBtn && 'IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        stickyBar.classList.toggle('sticky-atc--visible', !e.isIntersecting);
-        stickyBar.setAttribute('aria-hidden', String(e.isIntersecting));
-      });
-    }, { threshold: 0 });
-    io.observe(mainAtcBtn);
+  var sbar=document.getElementById('sticky-atc');
+  var matc=document.getElementById('btn-atc');
+  if(sbar&&matc&&'IntersectionObserver' in window){
+    new IntersectionObserver(function(e){e.forEach(function(en){sbar.classList.toggle('sticky-atc--visible',!en.isIntersecting);sbar.setAttribute('aria-hidden',String(en.isIntersecting));});},{threshold:0}).observe(matc);
   }
-  var stickyBtn2 = document.getElementById('sticky-atc-btn');
-  if (stickyBtn2) {
-    stickyBtn2.addEventListener('click', function() {
-      var form = document.getElementById('product-form');
-      if (form) { if (form.requestSubmit) form.requestSubmit(); else form.submit(); }
-    });
-  }
+  var sb2=document.getElementById('sticky-atc-btn');
+  if(sb2) sb2.addEventListener('click',function(){var f=document.getElementById('product-form');if(f){if(f.requestSubmit)f.requestSubmit();else f.submit();}});
 
-  /* ── Date expédition dynamique ── */
-  (function() {
-    var el = document.getElementById('shipping-date-display');
-    if (!el) return;
-    var now     = new Date();
-    var cutoff  = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0);
-    var target  = now < cutoff ? now : new Date(now.getTime() + 86400000);
-    if (target.getDay() === 0) target = new Date(target.getTime() + 86400000); /* skip sunday */
-    if (target.getDay() === 6 && now >= cutoff) target = new Date(target.getTime() + 2 * 86400000); /* skip saturday */
-    var days = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
-    var isToday = target.toDateString() === now.toDateString();
-    el.textContent = isToday ? 'aujourd\'hui' : 'le ' + days[target.getDay()] + ' ' + target.getDate() + '/' + String(target.getMonth() + 1).padStart(2, '0');
+  (function(){
+    var el=document.getElementById('shipping-date-display'); if(!el) return;
+    var now=new Date(), cut=new Date(now.getFullYear(),now.getMonth(),now.getDate(),14,0,0);
+    var tgt=now<cut?now:new Date(now.getTime()+86400000);
+    if(tgt.getDay()===0) tgt=new Date(tgt.getTime()+86400000);
+    if(tgt.getDay()===6&&now>=cut) tgt=new Date(tgt.getTime()+2*86400000);
+    var days=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+    var same=tgt.toDateString()===now.toDateString();
+    el.textContent=same?"aujourd'hui":'le '+days[tgt.getDay()]+' '+tgt.getDate()+'/'+(tgt.getMonth()+1);
   })();
-
 }());
 </script>
 
@@ -503,30 +338,10 @@
 {
   "name": "Page produit",
   "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_tiers",
-      "label": "Afficher le sélecteur de quantité",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "tiers_title",
-      "label": "Titre du sélecteur",
-      "default": "Choisissez votre quantité"
-    },
-    {
-      "type": "text",
-      "id": "tier_per_g",
-      "label": "Prix/g par variante (séparés par virgule)",
-      "info": "Ex : 5.00,4.40,3.80 — dans l'ordre des variantes Shopify"
-    },
-    {
-      "type": "text",
-      "id": "tier_badges",
-      "label": "Badges par variante (séparés par virgule)",
-      "info": "Ex : ,-12%,Meilleure valeur — laisser vide pour aucun badge"
-    }
+    { "type": "checkbox", "id": "show_tiers",   "label": "Afficher le sélecteur de quantité", "default": false },
+    { "type": "text",     "id": "tiers_title",  "label": "Titre du sélecteur", "default": "Choisissez votre quantité" },
+    { "type": "text",     "id": "tier_per_g",   "label": "Prix/g par variante (séparés par virgule)", "info": "Ex : 5.00,4.40,3.80" },
+    { "type": "text",     "id": "tier_badges",  "label": "Badges par variante (séparés par virgule)", "info": "Ex : ,-12%,Meilleure valeur" }
   ]
 }
 {% endschema %}
