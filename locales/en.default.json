@@ -1,5 +1,8 @@
 {
   "general": {
+    "404": {
+      "title": "Page not found"
+    },
     "search": {
       "placeholder": "Rechercher...",
       "submit": "Rechercher"
