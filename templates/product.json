@@ -25,6 +25,23 @@
         "quote": "Un nuage de pureté dans l'immensité du vide."
       }
     },
+    "you-may-like": {
+      "type": "product-you-may-like",
+      "settings": {
+        "heading": "Vous pourriez aimer",
+        "subheading": "Découvrez d'autres produits sélectionnés pour vous",
+        "show_emoji": true,
+        "emoji": "🌿",
+        "columns": "3",
+        "show_atc": true,
+        "atc_label": "Ajouter",
+        "bg_color": "#060f06",
+        "title_color": "#ffffff",
+        "padding_top": 56,
+        "padding_bottom": 56
+      },
+      "blocks": {}
+    },
     "related": {
       "type": "product-related",
       "settings": {
@@ -43,6 +60,7 @@
     "main",
     "profil",
     "gamme",
+    "you-may-like",
     "related",
     "legal"
   ]

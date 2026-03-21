@@ -52,16 +52,15 @@
     <div class="product-info">
 
       <!-- Note / Avis -->
-      <div class="product-rating-row">
-        <span class="product-stars" aria-hidden="true">★★★★★</span>
-        <span class="product-rating-count">
-          {%- if mf_review_count != blank -%}
-            ({{ mf_review_count }} avis vérifiés)
-          {%- else -%}
-            ({{ section.settings.review_count | default: 128 }} avis vérifiés)
-          {%- endif -%}
-        </span>
-      </div>
+      {%- if section.settings.show_rating -%}
+        <div class="product-rating-row">
+          <span class="product-stars" aria-hidden="true">★★★★★</span>
+          <span class="product-rating-count">
+            {%- assign rc = mf_review_count | default: section.settings.review_count | default: 128 -%}
+            ({{ rc }} {{ section.settings.rating_label | default: 'avis vérifiés' }})
+          </span>
+        </div>
+      {%- endif -%}
 
       <!-- Titre + Sous-titre cosmique -->
       <div class="product-title-block">
@@ -153,52 +152,77 @@
         <button type="submit" class="btn-atc btn-atc--v2" id="btn-atc"
           {% unless current_variant.available %}disabled{% endunless %}>
           <span id="atc-label">
-            {%- if current_variant.available -%}Ajouter au panier{%- else -%}Rupture de stock{%- endif -%}
+            {%- if current_variant.available -%}
+              {{ section.settings.atc_text_available | default: 'Ajouter au panier' }}
+            {%- else -%}
+              {{ section.settings.atc_text_unavailable | default: 'Rupture de stock' }}
+            {%- endif -%}
           </span>
         </button>
 
         <!-- Trust badges inline -->
-        <div class="product-hero-trust">
-          <span class="hero-trust-item">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            100% Bio &amp; Pur
-          </span>
-          <span class="hero-trust-sep">|</span>
-          <span class="hero-trust-item">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            Expédition 24h
-          </span>
-        </div>
+        {%- if section.settings.show_trust_badges -%}
+          <div class="product-hero-trust">
+            {%- if section.settings.trust_badge_1 != blank -%}
+              <span class="hero-trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                {{ section.settings.trust_badge_1 }}
+              </span>
+            {%- endif -%}
+            {%- if section.settings.trust_badge_2 != blank -%}
+              <span class="hero-trust-sep">|</span>
+              <span class="hero-trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                {{ section.settings.trust_badge_2 }}
+              </span>
+            {%- endif -%}
+            {%- if section.settings.trust_badge_3 != blank -%}
+              <span class="hero-trust-sep">|</span>
+              <span class="hero-trust-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                {{ section.settings.trust_badge_3 }}
+              </span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
 
         <!-- Icônes paiement -->
-        <div class="product-payment-row">
-          <span class="product-payment-label">🔒 Paiement sécurisé</span>
-          <div class="product-payment-icons">
-            <!-- Visa -->
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Visa" role="img">
-              <rect width="48" height="30" rx="4" fill="#1a1f71"/>
-              <path d="M20.5 20H17.8l1.7-10H22l-1.5 10zm-6.5 0l-2.6-6.9-.3 1.5-1 5.4H8l2.6-10h2.9l3.2 8.2.3-8.2H19l-1.6 10h-3.4zm22.2 0h-2.7l-.3-1.3h-3.3l-.5 1.3h-2.8l4-10h3l2.6 10zm-5.6-3.3h2.1l-.8-4-1.3 4zM39 15.3c0-.7-.5-1.2-1.6-1.7-1.1-.5-1.1-.5-1.1-.8 0-.3.3-.5.9-.5.9 0 1.5.2 2 .4l.3-1.7c-.5-.2-1.3-.4-2.3-.4-2.5 0-4.2 1.3-4.2 3.1 0 1.4 1.3 2.1 2.2 2.6.9.5 1.3.8 1.3 1.2 0 .7-.8 1-1.5 1-1.1 0-1.9-.3-2.5-.5l-.3 1.8c.6.3 1.6.5 2.7.5 2.7.1 4.2-1.3 4.1-3z" fill="#fff"/>
-            </svg>
-            <!-- Mastercard -->
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Mastercard" role="img">
-              <rect width="48" height="30" rx="4" fill="#252525"/>
-              <circle cx="19" cy="15" r="8" fill="#eb001b"/>
-              <circle cx="29" cy="15" r="8" fill="#f79e1b"/>
-              <path d="M24 9.3a8 8 0 0 1 0 11.4A8 8 0 0 1 24 9.3z" fill="#ff5f00"/>
-            </svg>
-            <!-- CB -->
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="CB" role="img">
-              <rect width="48" height="30" rx="4" fill="#0054a6"/>
-              <text x="8" y="21" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#fff" letter-spacing="1">CB</text>
-            </svg>
-            <!-- American Express -->
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="American Express" role="img">
-              <rect width="48" height="30" rx="4" fill="#016FD0"/>
-              <text x="5" y="20" font-family="Arial,sans-serif" font-weight="700" font-size="9" fill="#fff" letter-spacing="0.3">AMERICAN</text>
-              <text x="5" y="27" font-family="Arial,sans-serif" font-weight="700" font-size="9" fill="#fff" letter-spacing="0.3">EXPRESS</text>
-            </svg>
+        {%- if section.settings.show_payment_icons -%}
+          <div class="product-payment-row">
+            {%- if section.settings.payment_label != blank -%}
+              <span class="product-payment-label">{{ section.settings.payment_label }}</span>
+            {%- endif -%}
+            <div class="product-payment-icons">
+              {%- if section.settings.show_visa -%}
+                <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Visa" role="img">
+                  <rect width="48" height="30" rx="4" fill="#1a1f71"/>
+                  <path d="M20.5 20H17.8l1.7-10H22l-1.5 10zm-6.5 0l-2.6-6.9-.3 1.5-1 5.4H8l2.6-10h2.9l3.2 8.2.3-8.2H19l-1.6 10h-3.4zm22.2 0h-2.7l-.3-1.3h-3.3l-.5 1.3h-2.8l4-10h3l2.6 10zm-5.6-3.3h2.1l-.8-4-1.3 4zM39 15.3c0-.7-.5-1.2-1.6-1.7-1.1-.5-1.1-.5-1.1-.8 0-.3.3-.5.9-.5.9 0 1.5.2 2 .4l.3-1.7c-.5-.2-1.3-.4-2.3-.4-2.5 0-4.2 1.3-4.2 3.1 0 1.4 1.3 2.1 2.2 2.6.9.5 1.3.8 1.3 1.2 0 .7-.8 1-1.5 1-1.1 0-1.9-.3-2.5-.5l-.3 1.8c.6.3 1.6.5 2.7.5 2.7.1 4.2-1.3 4.1-3z" fill="#fff"/>
+                </svg>
+              {%- endif -%}
+              {%- if section.settings.show_mastercard -%}
+                <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Mastercard" role="img">
+                  <rect width="48" height="30" rx="4" fill="#252525"/>
+                  <circle cx="19" cy="15" r="8" fill="#eb001b"/>
+                  <circle cx="29" cy="15" r="8" fill="#f79e1b"/>
+                  <path d="M24 9.3a8 8 0 0 1 0 11.4A8 8 0 0 1 24 9.3z" fill="#ff5f00"/>
+                </svg>
+              {%- endif -%}
+              {%- if section.settings.show_cb -%}
+                <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="CB" role="img">
+                  <rect width="48" height="30" rx="4" fill="#0054a6"/>
+                  <text x="8" y="21" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#fff" letter-spacing="1">CB</text>
+                </svg>
+              {%- endif -%}
+              {%- if section.settings.show_amex -%}
+                <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="American Express" role="img">
+                  <rect width="48" height="30" rx="4" fill="#016FD0"/>
+                  <text x="5" y="20" font-family="Arial,sans-serif" font-weight="700" font-size="9" fill="#fff" letter-spacing="0.3">AMERICAN</text>
+                  <text x="5" y="27" font-family="Arial,sans-serif" font-weight="700" font-size="9" fill="#fff" letter-spacing="0.3">EXPRESS</text>
+                </svg>
+              {%- endif -%}
+            </div>
           </div>
-        </div>
+        {%- endif -%}
 
       {%- endform -%}
 
@@ -308,9 +332,183 @@
 {
   "name": "Page produit",
   "settings": [
-    { "type": "number",   "id": "review_count",      "label": "Nombre d'avis (défaut si pas de metafield)", "default": 128 },
-    { "type": "checkbox", "id": "show_qty",           "label": "Afficher le sélecteur de quantité",         "default": false },
-    { "type": "text",     "id": "fallback_weights",   "label": "Poids de secours (si produit sans variantes)", "info": "Valeurs séparées par des virgules. Ex : 1g,3g,5g,10g,20g", "default": "1g,3g,5g,10g,20g" }
+    {
+      "type": "header",
+      "content": "⭐ Avis & note"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Afficher la note étoiles",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "review_count",
+      "label": "Nombre d'avis (si pas de metafield)",
+      "default": 128
+    },
+    {
+      "type": "text",
+      "id": "rating_label",
+      "label": "Texte à côté des étoiles",
+      "default": "avis vérifiés",
+      "info": "Ex : 'avis vérifiés' → '(128 avis vérifiés)'"
+    },
+    {
+      "type": "header",
+      "content": "📦 Variantes & quantité"
+    },
+    {
+      "type": "text",
+      "id": "fallback_weights",
+      "label": "Poids de secours (produit sans variantes)",
+      "info": "Séparés par des virgules. Ex : 1g,3g,5g,10g,20g",
+      "default": "1g,3g,5g,10g,20g"
+    },
+    {
+      "type": "text",
+      "id": "variant_selector_label",
+      "label": "Texte du sélecteur de poids (secours)",
+      "default": "Sélectionnez le poids"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_qty",
+      "label": "Afficher le sélecteur de quantité",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "🛒 Bouton Ajouter au panier"
+    },
+    {
+      "type": "text",
+      "id": "atc_text_available",
+      "label": "Texte bouton (disponible)",
+      "default": "Ajouter au panier"
+    },
+    {
+      "type": "text",
+      "id": "atc_text_unavailable",
+      "label": "Texte bouton (rupture)",
+      "default": "Rupture de stock"
+    },
+    {
+      "type": "header",
+      "content": "✅ Badges de confiance"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_badges",
+      "label": "Afficher les badges de confiance",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_1",
+      "label": "Badge confiance 1",
+      "default": "100% Bio & Pur"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_2",
+      "label": "Badge confiance 2",
+      "default": "Expédition 24h"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_3",
+      "label": "Badge confiance 3 (optionnel)",
+      "default": ""
+    },
+    {
+      "type": "header",
+      "content": "💳 Paiement sécurisé"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Afficher les icônes paiement",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "payment_label",
+      "label": "Texte paiement sécurisé",
+      "default": "🔒 Paiement sécurisé"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_visa",
+      "label": "Afficher Visa",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mastercard",
+      "label": "Afficher Mastercard",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cb",
+      "label": "Afficher CB",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_amex",
+      "label": "Afficher American Express",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "🖼️ Galerie images"
+    },
+    {
+      "type": "range",
+      "id": "gallery_images_limit",
+      "label": "Nombre max de vignettes",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "📐 Layout & style"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Disposition (desktop)",
+      "options": [
+        { "value": "image-left",  "label": "Image à gauche" },
+        { "value": "image-right", "label": "Image à droite" }
+      ],
+      "default": "image-left"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espacement haut",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espacement bas",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
   ]
 }
 {% endschema %}

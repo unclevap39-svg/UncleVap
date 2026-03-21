@@ -175,3 +175,61 @@
     });
   });
 })();
+
+/* ---- Scroll Reveal (IntersectionObserver) ---- */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  /* Sections principales */
+  var sectionSelectors = [
+    '.hero-banner',
+    '.featured-products',
+    '.featured-categories',
+    '.stats-counter',
+    '.testimonials-section',
+    '.newsletter-section',
+    '.promo-banner',
+    '.why-us-section',
+    '.blog-posts-section',
+    '.product-benefits',
+    '.product-profil',
+    '.product-gamme',
+    '.product-related',
+    '.product-guarantee',
+    '.product-urgency',
+    '.product-legal',
+    '.pym-section',
+    '.col-page'
+  ];
+
+  sectionSelectors.forEach(function (sel) {
+    document.querySelectorAll(sel).forEach(function (el) {
+      el.classList.add('anim-fade-up');
+      observer.observe(el);
+    });
+  });
+
+  /* Cartes produit (stagger) */
+  document.querySelectorAll('.product-card, .pym-card').forEach(function (card, i) {
+    card.classList.add('anim-fade-up');
+    card.classList.add('anim-delay-' + Math.min(i % 6 + 1, 6));
+    observer.observe(card);
+  });
+
+  /* Titre + sous-titre de sections */
+  document.querySelectorAll(
+    '.section-title, .section-subtitle, .pym-title, .col-title, .hero-title, .stats-title'
+  ).forEach(function (el) {
+    el.classList.add('anim-fade-in');
+    observer.observe(el);
+  });
+}());

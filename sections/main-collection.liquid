@@ -1,63 +1,440 @@
-<section class="collection-page" aria-label="{{ collection.title }}">
-  <div class="collection-header">
-    <h1 class="collection-title">{{ collection.title }}</h1>
-    {%- if collection.description != blank -%}
-      <p class="collection-description">{{ collection.description }}</p>
-    {%- endif -%}
-  </div>
+{%- liquid
+  assign col_mobile  = section.settings.columns_mobile  | default: 2
+  assign col_tablet  = section.settings.columns_tablet  | default: 3
+  assign col_desktop = section.settings.columns_desktop | default: 4
+  assign per_page    = section.settings.products_per_page | default: 24
+  assign show_banner = section.settings.show_banner
+  assign show_count  = section.settings.show_product_count
+  assign show_sort   = section.settings.show_sort
+  assign show_desc   = section.settings.show_description
+  assign show_filter_tags = section.settings.show_filter_tags
+  assign header_align = section.settings.header_alignment
+-%}
 
-  <div class="collection-grid">
-    {%- for product in collection.products -%}
-      {%- render 'product-card', product: product -%}
-    {%- else -%}
-      <p class="collection-empty">Aucun produit dans cette collection.</p>
-    {%- endfor -%}
-  </div>
+<style>
+.col-page {
+  padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  background: {{ section.settings.bg_color }};
+  max-width: 1200px; margin: 0 auto;
+}
+/* Bannière collection */
+.col-banner {
+  position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 40px;
+  min-height: {{ section.settings.banner_height }}px;
+  display: flex; align-items: {{ section.settings.banner_v_align }};
+  justify-content: {{ section.settings.header_alignment == 'left' ? 'flex-start' : section.settings.header_alignment == 'right' ? 'flex-end' : 'center' }};
+}
+.col-banner-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.col-banner-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,{{ section.settings.banner_overlay | divided_by: 100.0 }});
+}
+.col-banner-content { position: relative; z-index: 1; padding: 32px; text-align: {{ section.settings.header_alignment }}; }
+/* Header sans bannière */
+.col-header {
+  margin-bottom: {{ section.settings.header_mb }}px;
+  text-align: {{ section.settings.header_alignment }};
+}
+.col-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp({{ section.settings.title_size_min }}px, 6vw, {{ section.settings.title_size_max }}px);
+  letter-spacing: {{ section.settings.title_letter_spacing }}px;
+  color: {{ section.settings.title_color }};
+  margin-bottom: 10px;
+}
+.col-description { color: var(--text-muted); max-width: {{ section.settings.desc_max_width }}px; margin: 0 auto; font-size: 15px; line-height: 1.6; }
+/* Barre filtres / tri */
+.col-toolbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.col-count { font-size: 13px; color: var(--text-muted); }
+.col-sort-wrap { display: flex; align-items: center; gap: 8px; }
+.col-sort-label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+.col-sort-select {
+  background: var(--bg-card); border: 1px solid rgba(46,168,46,0.25); color: var(--text);
+  border-radius: 8px; padding: 6px 12px; font-family: 'Oswald', sans-serif; font-size: 13px; cursor: pointer;
+}
+.col-sort-select:focus { outline: none; border-color: var(--green); }
+/* Tags filtre */
+.col-filter-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.col-filter-tag {
+  padding: 4px 14px; border-radius: 99px;
+  border: 1px solid rgba(46,168,46,0.3); font-size: 12px; color: var(--text-muted);
+  font-family: 'Oswald', sans-serif; transition: all var(--transition); cursor: pointer;
+  background: transparent;
+}
+.col-filter-tag:hover, .col-filter-tag.is-active { border-color: var(--green); color: var(--green-lt); background: rgba(46,168,46,0.1); }
+/* Grille */
+.col-grid {
+  display: grid;
+  gap: {{ section.settings.gap_mobile }}px;
+  grid-template-columns: repeat({{ col_mobile }}, 1fr);
+}
+@media (min-width: 600px) {
+  .col-grid { grid-template-columns: repeat({{ col_tablet }}, 1fr); gap: {{ section.settings.gap_desktop }}px; }
+}
+@media (min-width: 1024px) {
+  .col-grid { grid-template-columns: repeat({{ col_desktop }}, 1fr); }
+}
+.col-empty { color: var(--text-muted); text-align: center; grid-column: 1/-1; padding: 60px 0; font-size: 18px; }
+/* Pagination */
+.col-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 48px; }
+.col-pag-btn {
+  padding: 10px 22px; border: 1px solid rgba(46,168,46,0.3);
+  border-radius: 8px; color: var(--text);
+  font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 0.5px;
+  transition: border-color var(--transition), background var(--transition);
+}
+.col-pag-btn:hover { border-color: var(--green); background: rgba(46,168,46,0.1); }
+.col-pag-info { color: var(--text-muted); font-size: 13px; }
+</style>
 
-  {%- if paginate.pages > 1 -%}
-    <div class="pagination">
-      {%- if paginate.previous -%}
-        <a href="{{ paginate.previous.url }}" class="pagination-btn">← Précédent</a>
-      {%- endif -%}
-      <span class="pagination-info">{{ paginate.current_page }} / {{ paginate.pages }}</span>
-      {%- if paginate.next -%}
-        <a href="{{ paginate.next.url }}" class="pagination-btn">Suivant →</a>
+<div class="col-page" id="col-{{ section.id }}">
+
+  {%- if show_banner and section.settings.banner_image != blank -%}
+    <div class="col-banner">
+      <img class="col-banner-img"
+        src="{{ section.settings.banner_image | image_url: width: 1400 }}"
+        alt="{{ collection.title | escape }}" loading="lazy" width="1400" height="{{ section.settings.banner_height }}">
+      <div class="col-banner-overlay"></div>
+      <div class="col-banner-content">
+        <h1 class="col-title">{{ collection.title }}</h1>
+        {%- if show_desc and collection.description != blank -%}
+          <p class="col-description">{{ collection.description }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- else -%}
+    <div class="col-header">
+      <h1 class="col-title">{{ collection.title }}</h1>
+      {%- if show_desc and collection.description != blank -%}
+        <p class="col-description">{{ collection.description }}</p>
       {%- endif -%}
     </div>
   {%- endif -%}
-</section>
 
-<style>
-.collection-page { padding: 32px 16px; max-width: 1200px; margin: 0 auto; }
-.collection-header { margin-bottom: 32px; text-align: center; }
-.collection-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(28px, 6vw, 48px);
-  letter-spacing: 2px; margin-bottom: 12px;
-}
-.collection-description { color: var(--text-muted); max-width: 600px; margin: 0 auto; }
-.collection-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-.collection-empty { color: var(--text-muted); text-align: center; grid-column: 1/-1; padding: 40px 0; }
-.pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 40px; }
-.pagination-btn {
-  padding: 10px 20px; border: 1px solid rgba(46,168,46,0.3);
-  border-radius: 8px; color: var(--text);
-  font-family: 'Oswald', sans-serif; font-size: 14px;
-  transition: border-color var(--transition), background var(--transition);
-}
-.pagination-btn:hover { border-color: var(--green); background: rgba(46,168,46,0.1); }
-.pagination-info { color: var(--text-muted); font-size: 14px; }
-@media (min-width: 640px) { .collection-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 1024px) { .collection-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
-</style>
+  {%- if show_filter_tags and collection.all_tags.size > 0 -%}
+    <div class="col-filter-tags">
+      <a href="{{ collection.url }}" class="col-filter-tag{% unless current_tags %} is-active{% endunless %}">Tous</a>
+      {%- for tag in collection.all_tags limit: 20 -%}
+        <a href="{{ collection.url }}/{{ tag | handle }}" class="col-filter-tag{% if current_tags contains tag %} is-active{% endif %}">{{ tag }}</a>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <div class="col-toolbar">
+    {%- if show_count -%}
+      <span class="col-count">{{ collection.products_count }} produit{{ collection.products_count | pluralize: '', 's' }}</span>
+    {%- else -%}
+      <span></span>
+    {%- endif -%}
+    {%- if show_sort -%}
+      <div class="col-sort-wrap">
+        <span class="col-sort-label">Trier par</span>
+        <select class="col-sort-select" id="col-sort">
+          <option value="manual">En vedette</option>
+          <option value="best-selling">Meilleures ventes</option>
+          <option value="title-ascending">A → Z</option>
+          <option value="title-descending">Z → A</option>
+          <option value="price-ascending">Prix croissant</option>
+          <option value="price-descending">Prix décroissant</option>
+          <option value="created-descending">Nouveautés</option>
+        </select>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- paginate collection.products by per_page -%}
+    <div class="col-grid">
+      {%- for product in collection.products -%}
+        {%- render 'product-card', product: product -%}
+      {%- else -%}
+        <p class="col-empty">{{ section.settings.empty_text | default: 'Aucun produit dans cette collection.' }}</p>
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <div class="col-pagination">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="col-pag-btn">← Précédent</a>
+        {%- endif -%}
+        <span class="col-pag-info">{{ paginate.current_page }} / {{ paginate.pages }}</span>
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="col-pag-btn">Suivant →</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+
+</div>
+
+<script>
+(function(){
+  var sel = document.getElementById('col-sort');
+  if(sel){
+    var url = new URL(window.location.href);
+    var cur = url.searchParams.get('sort_by') || 'manual';
+    sel.value = cur;
+    sel.addEventListener('change', function(){
+      url.searchParams.set('sort_by', sel.value);
+      window.location.href = url.toString();
+    });
+  }
+}());
+</script>
 
 {% schema %}
 {
-  "name": "Page collection",
-  "settings": []
+  "name": "Page catalogue",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Bannière"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_banner",
+      "label": "Afficher la bannière image",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Image de bannière"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "label": "Hauteur de la bannière",
+      "min": 180,
+      "max": 500,
+      "step": 20,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "banner_overlay",
+      "label": "Opacité de l'overlay",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "select",
+      "id": "banner_v_align",
+      "label": "Alignement vertical du contenu",
+      "options": [
+        { "value": "flex-start", "label": "Haut" },
+        { "value": "center",     "label": "Milieu" },
+        { "value": "flex-end",   "label": "Bas" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "header",
+      "content": "En-tête"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Alignement",
+      "options": [
+        { "value": "left",   "label": "Gauche" },
+        { "value": "center", "label": "Centre" },
+        { "value": "right",  "label": "Droite" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Couleur du titre",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_size_min",
+      "label": "Taille titre (min, mobile)",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "title_size_max",
+      "label": "Taille titre (max, desktop)",
+      "min": 32,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Espacement lettres titre",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Afficher la description",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "desc_max_width",
+      "label": "Largeur max description",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "header_mb",
+      "label": "Espace sous l'en-tête",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Filtres & tri"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filter_tags",
+      "label": "Afficher les filtres par tag",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Afficher le tri",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "Afficher le nombre de produits",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Texte si aucun produit",
+      "default": "Aucun produit dans cette collection."
+    },
+    {
+      "type": "header",
+      "content": "Grille produits"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Colonnes mobile",
+      "options": [
+        { "value": "1", "label": "1 colonne" },
+        { "value": "2", "label": "2 colonnes" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "columns_tablet",
+      "label": "Colonnes tablette",
+      "options": [
+        { "value": "2", "label": "2 colonnes" },
+        { "value": "3", "label": "3 colonnes" },
+        { "value": "4", "label": "4 colonnes" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Colonnes desktop",
+      "options": [
+        { "value": "2", "label": "2 colonnes" },
+        { "value": "3", "label": "3 colonnes" },
+        { "value": "4", "label": "4 colonnes" },
+        { "value": "5", "label": "5 colonnes" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "label": "Espacement entre les cartes (mobile)",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "gap_desktop",
+      "label": "Espacement entre les cartes (desktop)",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Produits par page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Style global"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "default": "#050e05"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espacement haut",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espacement bas",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
 }
 {% endschema %}

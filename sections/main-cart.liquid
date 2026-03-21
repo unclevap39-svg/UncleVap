@@ -249,6 +249,7 @@
 }
 .upsell-add-btn:hover { background: rgba(46,168,46,0.25); border-color: var(--green); }
 .upsell-add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.upsell-add-btn--added { background: rgba(46,168,46,0.3) !important; border-color: var(--green) !important; }
 /* ── Summary ── */
 .cart-summary {
   background: var(--bg-card); border: 1px solid rgba(46,168,46,0.2);
@@ -311,6 +312,29 @@
         '<a href="/" class="btn-checkout">Découvrir nos produits</a>' +
       '</div>';
   }
+
+  /* ── Bouton Ajouter (upsell) ── */
+  document.querySelectorAll('.btn-add-to-cart').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var vid = btn.dataset.productId;
+      if(!vid) return;
+      btn.disabled = true;
+      var origHTML = btn.innerHTML;
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: vid, quantity: 1 })
+      }).then(function(r){ return r.json(); }).then(function(){
+        btn.innerHTML = '✓ Ajouté';
+        btn.classList.add('upsell-add-btn--added');
+        fetch('/cart.js').then(function(r2){ return r2.json(); }).then(function(cart){
+          updateHeader(cart.item_count);
+          updateSubtotal(cart.total_price);
+        });
+        setTimeout(function(){ btn.disabled=false; btn.innerHTML=origHTML; btn.classList.remove('upsell-add-btn--added'); }, 2500);
+      }).catch(function(){ btn.disabled=false; btn.innerHTML=origHTML; });
+    });
+  });
 
   /* ── Délégation d'événements ── */
   document.addEventListener('click', function (e) {

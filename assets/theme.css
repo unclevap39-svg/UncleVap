@@ -79,8 +79,7 @@ button {
    ============================================================ */
 /* ── Barre d'annonce ── */
 .announcement-bar {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 200;
   background: #39FF14;
   color: #000;
@@ -113,7 +112,7 @@ button {
 
 .site-header {
   position: sticky;
-  top: var(--announcement-h);
+  top: 0;
   z-index: 100;
   background: rgba(5, 14, 5, 0.95);
   backdrop-filter: blur(12px);
@@ -196,7 +195,7 @@ button {
 /* Nav */
 .header-nav {
   position: fixed;
-  top: calc(var(--announcement-h) + var(--header-h));
+  top: var(--header-h);
   left: 0;
   right: 0;
   background: rgba(5, 14, 5, 0.98);
@@ -2815,7 +2814,7 @@ a.contact-detail-value:hover { color: var(--green); }
 @media (min-width: 768px) {
   .product-gallery {
     position: sticky;
-    top: calc(var(--announcement-h) + var(--header-h) + 20px);
+    top: calc(var(--header-h) + 20px);
   }
 }
 
@@ -5114,3 +5113,66 @@ a.labo-link:hover {
   color: var(--green-lt);
 }
 
+
+/* ============================================================
+   ANIMATIONS AU DÉFILEMENT (Scroll reveal)
+   ============================================================ */
+
+/* Classe de base : éléments cachés avant animation */
+.anim-fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.anim-fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.anim-fade-in {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.anim-fade-in.is-visible {
+  opacity: 1;
+}
+
+.anim-slide-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.anim-slide-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.anim-slide-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.anim-slide-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Délais d'animation (pour grilles, stagger) */
+.anim-delay-1 { transition-delay: 0.1s; }
+.anim-delay-2 { transition-delay: 0.2s; }
+.anim-delay-3 { transition-delay: 0.3s; }
+.anim-delay-4 { transition-delay: 0.4s; }
+.anim-delay-5 { transition-delay: 0.5s; }
+.anim-delay-6 { transition-delay: 0.6s; }
+
+/* Respect du mode réduit */
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up,
+  .anim-fade-in,
+  .anim-slide-left,
+  .anim-slide-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -1,0 +1,324 @@
+{%- if section.blocks.size > 0 -%}
+
+<section class="pym-section" id="pym-{{ section.id }}" aria-label="{{ section.settings.heading | escape }}">
+  <div class="pym-inner">
+
+    {%- if section.settings.heading != blank -%}
+      <div class="pym-header">
+        {%- if section.settings.show_emoji -%}
+          <span class="pym-emoji" aria-hidden="true">{{ section.settings.emoji }}</span>
+        {%- endif -%}
+        <h2 class="pym-title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="pym-subtitle">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="pym-grid pym-grid--{{ section.settings.columns }}">
+      {%- for block in section.blocks -%}
+        {%- assign prod = block.settings.product -%}
+        {%- if prod != blank -%}
+          {%- assign bv = prod.selected_or_first_available_variant -%}
+          <div class="pym-card" {{ block.shopify_attributes }}>
+            <a href="{{ prod.url }}" class="pym-card-img-wrap" tabindex="-1" aria-hidden="true">
+              {%- if prod.featured_image -%}
+                <img
+                  src="{{ prod.featured_image | image_url: width: 400 }}"
+                  alt="{{ prod.featured_image.alt | default: prod.title | escape }}"
+                  width="400" height="400"
+                  loading="lazy"
+                  class="pym-card-img"
+                >
+              {%- else -%}
+                <div class="pym-card-img-placeholder"></div>
+              {%- endif -%}
+
+              {%- if bv.compare_at_price > bv.price -%}
+                <span class="pym-badge-sale">
+                  -{{ bv.compare_at_price | minus: bv.price | times: 100 | divided_by: bv.compare_at_price | round }}%
+                </span>
+              {%- endif -%}
+
+              {%- unless bv.available -%}
+                <span class="pym-badge-oos">Rupture</span>
+              {%- endunless -%}
+            </a>
+
+            <div class="pym-card-body">
+              <a href="{{ prod.url }}" class="pym-card-name">{{ prod.title }}</a>
+
+              {%- if prod.type != blank -%}
+                <p class="pym-card-type">{{ prod.type }}</p>
+              {%- endif -%}
+
+              <div class="pym-card-footer">
+                <div class="pym-card-price">
+                  {%- if bv.compare_at_price > bv.price -%}
+                    <span class="pym-price-compare">{{ bv.compare_at_price | money }}</span>
+                  {%- endif -%}
+                  <span class="pym-price-main{% if bv.compare_at_price > bv.price %} pym-price-main--sale{% endif %}">
+                    {{ bv.price | money }}
+                  </span>
+                </div>
+
+                {%- if section.settings.show_atc -%}
+                  {%- if bv.available -%}
+                    <button
+                      type="button"
+                      class="pym-atc-btn"
+                      data-variant-id="{{ bv.id }}"
+                      aria-label="Ajouter {{ prod.title | escape }} au panier"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                      {{ section.settings.atc_label | default: 'Ajouter' }}
+                    </button>
+                  {%- else -%}
+                    <span class="pym-oos-label">Indisponible</span>
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+<style>
+.pym-section {
+  padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  background: {{ section.settings.bg_color }};
+}
+.pym-inner { max-width: 1200px; margin: 0 auto; }
+.pym-header { text-align: center; margin-bottom: 32px; }
+.pym-emoji { font-size: 28px; display: block; margin-bottom: 8px; }
+.pym-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(24px, 5vw, 38px);
+  letter-spacing: 2px;
+  color: {{ section.settings.title_color }};
+  margin-bottom: 8px;
+}
+.pym-subtitle { color: var(--text-muted); font-size: 14px; }
+
+/* Grilles */
+.pym-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 600px) {
+  .pym-grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .pym-grid--4 { grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 900px) {
+  .pym-grid--2 { grid-template-columns: repeat(2, 1fr); }
+  .pym-grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .pym-grid--4 { grid-template-columns: repeat(4, 1fr); }
+  .pym-grid { gap: 24px; }
+}
+
+/* Carte */
+.pym-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(46,168,46,0.15);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+.pym-card:hover {
+  border-color: rgba(46,168,46,0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.pym-card-img-wrap { position: relative; display: block; aspect-ratio: 1; overflow: hidden; }
+.pym-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.pym-card:hover .pym-card-img { transform: scale(1.05); }
+.pym-card-img-placeholder { width: 100%; height: 100%; background: rgba(46,168,46,0.05); }
+.pym-badge-sale, .pym-badge-oos {
+  position: absolute; top: 8px; left: 8px;
+  padding: 2px 8px; border-radius: 4px;
+  font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600;
+}
+.pym-badge-sale { background: var(--green); color: #fff; }
+.pym-badge-oos { background: rgba(255,107,107,0.85); color: #fff; }
+.pym-card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.pym-card-name {
+  font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  display: block; transition: color var(--transition);
+}
+.pym-card-name:hover { color: var(--green-lt); }
+.pym-card-type { font-size: 11px; color: var(--text-muted); }
+.pym-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 8px; }
+.pym-card-price { display: flex; flex-direction: column; gap: 1px; }
+.pym-price-compare { font-size: 11px; color: var(--text-muted); text-decoration: line-through; }
+.pym-price-main { font-family: 'Bebas Neue', sans-serif; font-size: 17px; color: var(--green-lt); }
+.pym-price-main--sale { color: #ff6b6b; }
+.pym-atc-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 8px;
+  background: rgba(46,168,46,0.15); border: 1px solid rgba(46,168,46,0.35);
+  color: var(--green-lt); font-family: 'Oswald', sans-serif; font-size: 12px;
+  letter-spacing: 0.5px; cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+  white-space: nowrap;
+}
+.pym-atc-btn:hover { background: rgba(46,168,46,0.28); border-color: var(--green); }
+.pym-atc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.pym-atc-btn.is-added { background: rgba(46,168,46,0.3); border-color: var(--green); }
+.pym-oos-label { font-size: 11px; color: var(--text-muted); }
+</style>
+
+<script>
+(function(){
+  document.querySelectorAll('.pym-atc-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var vid = btn.dataset.variantId;
+      if(!vid) return;
+      btn.disabled = true;
+      fetch('/cart/add.js', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({id: vid, quantity: 1})
+      }).then(function(r){ return r.json(); }).then(function(){
+        btn.textContent = '✓ Ajouté';
+        btn.classList.add('is-added');
+        var count = document.querySelector('.cart-count');
+        if(count){ var c=parseInt(count.textContent||'0',10); count.textContent=c+1; count.style.display='flex'; }
+        setTimeout(function(){ btn.disabled=false; btn.classList.remove('is-added'); btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> {{ section.settings.atc_label | default: "Ajouter" }}'; }, 2500);
+      }).catch(function(){ btn.disabled=false; });
+    });
+  });
+}());
+</script>
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Vous pourriez aimer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "En-tête de la section"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Vous pourriez aimer"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Sous-titre",
+      "default": "Découvrez d'autres produits sélectionnés pour vous"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_emoji",
+      "label": "Afficher un émoji",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "emoji",
+      "label": "Émoji",
+      "default": "🌿"
+    },
+    {
+      "type": "header",
+      "content": "Affichage"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Nombre de colonnes",
+      "options": [
+        { "value": "2", "label": "2 colonnes" },
+        { "value": "3", "label": "3 colonnes" },
+        { "value": "4", "label": "4 colonnes" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_atc",
+      "label": "Afficher le bouton Ajouter au panier",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "atc_label",
+      "label": "Texte du bouton panier",
+      "default": "Ajouter"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Couleur de fond",
+      "default": "#060f06"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Couleur du titre",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Espacement haut",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Espacement bas",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Produit",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Produit à afficher"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Vous pourriez aimer",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}
