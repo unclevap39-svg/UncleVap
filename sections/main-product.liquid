@@ -155,13 +155,7 @@
       {%- endif -%}
 
       <!-- ═ FORMULAIRE VARIANTS + PANIER ═ -->
-      <form
-        action="{{ routes.cart_add_url }}"
-        method="post"
-        id="product-form"
-        class="product-form"
-        enctype="multipart/form-data"
-      >
+      {%- form 'product', product, id: 'product-form', class: 'product-form' -%}
         <input type="hidden" name="id" id="variant-id" value="{{ current_variant.id }}">
 
         {%- unless product.has_only_default_variant -%}
@@ -250,7 +244,7 @@
           </div>
         </div>
 
-      </form>
+      {%- endform -%}
 
       <!-- ═ BANDE EXPÉDITION ═ -->
       <div class="shipping-band">
