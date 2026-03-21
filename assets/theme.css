@@ -4556,3 +4556,529 @@ a.contact-detail-value:hover { color: var(--green); }
   line-height: 1.6;
   margin: 0;
 }
+
+/* ============================================================
+   PRODUCT PAGE REDESIGN — Hero v2
+   ============================================================ */
+
+/* Note / étoiles */
+.product-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.product-stars {
+  color: #f5c518;
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.product-rating-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Bloc titre + sous-titre cosmique */
+.product-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.product-cosmic-sub {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(22px, 3.5vw, 36px);
+  color: var(--green-lt);
+  letter-spacing: 2px;
+  line-height: 1.1;
+}
+
+.product-cosmic-sub em {
+  font-style: italic;
+}
+
+/* Tags ligne : SATIVA DOMINANT • INDOOR HYDRO */
+.product-cosmos-tags {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+.cosmos-tag-sep {
+  color: var(--green);
+  margin: 0 2px;
+}
+
+/* Label TTC */
+.price-ttc-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  color: var(--text-muted);
+  align-self: flex-end;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* Variant pills (remplace variant-grid-btn) */
+.variant-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.variant-pill {
+  padding: 9px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 99px;
+  color: var(--text);
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition), color var(--transition);
+}
+
+.variant-pill:hover {
+  border-color: var(--green);
+  background: rgba(46, 168, 46, 0.1);
+}
+
+.variant-pill.is-active {
+  border-color: var(--green);
+  background: rgba(46, 168, 46, 0.15);
+  color: var(--green-lt);
+  font-weight: 700;
+}
+
+/* ATC v2 : pleine largeur, majuscules, sans icône */
+.btn-atc--v2 {
+  width: 100%;
+  padding: 18px 24px;
+  background: var(--green);
+  border: none;
+  border-radius: 99px;
+  color: #fff;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+  box-shadow: 0 4px 24px rgba(46, 168, 46, 0.35);
+}
+
+.btn-atc--v2:hover:not(:disabled) {
+  background: var(--green-lt);
+  box-shadow: 0 6px 32px rgba(46, 168, 46, 0.55);
+  transform: translateY(-1px);
+}
+
+.btn-atc--v2:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Trust badges inline sous le CTA */
+.product-hero-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.hero-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.hero-trust-item svg {
+  color: var(--green-lt);
+  flex-shrink: 0;
+}
+
+.hero-trust-sep {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+}
+
+/* ============================================================
+   ANALYSE COSMIQUE
+   ============================================================ */
+
+.analyse-cosmique {
+  background: var(--bg);
+  padding: 80px 20px;
+}
+
+.analyse-cosmique-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.analyse-cosmique-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 5vw, 44px);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text);
+}
+
+.analyse-cosmique-accent {
+  color: var(--green-lt);
+}
+
+/* Grille haute */
+.analyse-top-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .analyse-top-grid {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+/* Grille basse */
+.analyse-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .analyse-bottom-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Cartes */
+.analyse-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 168, 46, 0.15);
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.analyse-card--experience {
+  border-color: rgba(46, 168, 46, 0.2);
+}
+
+.analyse-card-experience-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green-lt);
+  font-weight: 600;
+}
+
+.analyse-card-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.analyse-card-text p { margin-bottom: 8px; }
+
+/* Carte labo */
+.analyse-card--labo {
+  background: rgba(13, 31, 13, 0.9);
+  border-color: rgba(46, 168, 46, 0.3);
+  align-items: center;
+  text-align: center;
+}
+
+.labo-icon {
+  color: var(--green-lt);
+  margin-bottom: 4px;
+}
+
+.labo-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+
+.labo-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.labo-thc {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 2px;
+  color: var(--green-lt);
+  margin: 4px 0;
+}
+
+.labo-link {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+a.labo-link:hover {
+  color: var(--green-lt);
+}
+
+/* Petites cartes */
+.analyse-card--sm {
+  padding: 22px;
+  gap: 8px;
+}
+
+.analyse-sm-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.analyse-sm-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.analyse-sm-title--green {
+  color: var(--green-lt);
+}
+
+.analyse-sm-text {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Carte image */
+.analyse-card--img {
+  padding: 0;
+  overflow: hidden;
+  min-height: 160px;
+}
+
+.analyse-card--img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.analyse-img-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  background: linear-gradient(135deg, #0a1a0a, #0d2a0d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   GUIDE DE DÉGUSTATION
+   ============================================================ */
+
+.guide-degustation {
+  background: var(--bg-mid);
+  padding: 80px 20px;
+}
+
+.guide-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .guide-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Colonne gauche */
+.guide-left {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.guide-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 5vw, 44px);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.guide-title-accent {
+  color: var(--green-lt);
+}
+
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.guide-step {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.guide-step-num {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--green-lt);
+  background: rgba(46, 168, 46, 0.08);
+}
+
+.guide-step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.guide-step-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+.guide-step-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* Colonne droite */
+.guide-right {
+  position: relative;
+}
+
+.guide-img-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 168, 46, 0.15);
+}
+
+.guide-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  aspect-ratio: 4/5;
+}
+
+.guide-img-placeholder {
+  aspect-ratio: 4/5;
+  background: linear-gradient(135deg, #0a1a0a, #0d2a0d);
+}
+
+.guide-quote-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 28px;
+  background: linear-gradient(to top, rgba(5, 14, 5, 0.92) 0%, transparent 100%);
+}
+
+.guide-quote-text {
+  font-family: 'Open Sans', sans-serif;
+  font-style: italic;
+  font-size: clamp(13px, 2vw, 16px);
+  color: var(--green-lt);
+  line-height: 1.6;
+  text-align: center;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+}
+
+/* ============================================================
+   VOUS AIMEREZ AUSSI — Header avec flèches
+   ============================================================ */
+
+.product-related-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.product-related-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.related-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: var(--bg-card);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.related-nav-btn:hover {
+  border-color: var(--green);
+  background: rgba(46, 168, 46, 0.1);
+  color: var(--green-lt);
+}
+

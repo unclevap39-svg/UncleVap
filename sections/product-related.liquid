@@ -1,5 +1,5 @@
 {%- liquid
-  assign title  = section.settings.title | default: 'Découvrez également'
+  assign title  = section.settings.title | default: 'Vous Aimerez Aussi'
   assign col    = product.collections.first
   assign limit  = section.settings.products_limit | default: 5
 -%}
@@ -7,8 +7,20 @@
 {%- if col != blank and col.products.size > 1 -%}
 <section class="product-related">
   <div class="product-related-inner">
-    <h2 class="product-related-title">{{ title }}</h2>
-    <div class="product-related-scroll" role="list">
+
+    <div class="product-related-header">
+      <h2 class="product-related-title">{{ title }}</h2>
+      <div class="product-related-nav">
+        <button class="related-nav-btn" id="related-prev" aria-label="Précédent">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="related-nav-btn" id="related-next" aria-label="Suivant">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="product-related-scroll" id="related-scroll" role="list">
       {%- assign shown = 0 -%}
       {%- for rel in col.products -%}
         {%- if rel.id != product.id and shown < limit -%}
@@ -22,10 +34,7 @@
                   <img
                     src="{{ rel.featured_image | image_url: width: 300 }}"
                     alt="{{ rel.featured_image.alt | default: rel.title | escape }}"
-                    width="300"
-                    height="300"
-                    loading="lazy"
-                  >
+                    width="300" height="300" loading="lazy">
                 {%- else -%}
                   <div class="product-related-placeholder">
                     <svg viewBox="0 0 60 60" fill="none" width="40" height="40">
@@ -49,17 +58,31 @@
         {%- endif -%}
       {%- endfor -%}
     </div>
+
   </div>
 </section>
+
+<script>
+(function(){
+  var scroll = document.getElementById('related-scroll');
+  var prev   = document.getElementById('related-prev');
+  var next   = document.getElementById('related-next');
+  if (!scroll || !prev || !next) return;
+  var step = 220;
+  prev.addEventListener('click', function(){ scroll.scrollBy({ left: -step, behavior: 'smooth' }); });
+  next.addEventListener('click', function(){ scroll.scrollBy({ left:  step, behavior: 'smooth' }); });
+})();
+</script>
+
 {%- endif -%}
 
 {% schema %}
 {
-  "name": "Produits similaires",
+  "name": "Vous Aimerez Aussi",
   "settings": [
-    { "type": "text",  "id": "title",          "label": "Titre",                    "default": "Découvrez également" },
+    { "type": "text",  "id": "title",          "label": "Titre",                  "default": "Vous Aimerez Aussi" },
     { "type": "range", "id": "products_limit",  "label": "Nombre de produits max", "min": 3, "max": 8, "step": 1, "default": 5 }
   ],
-  "presets": [{ "name": "Produits similaires" }]
+  "presets": [{ "name": "Vous Aimerez Aussi" }]
 }
 {% endschema %}

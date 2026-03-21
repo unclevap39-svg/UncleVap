@@ -1,15 +1,18 @@
-{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign current_variant   = product.selected_or_first_available_variant -%}
+{%- assign mf_cosmic_sub     = product.metafields.custom.cosmic_subtitle -%}
+{%- assign mf_prod_tags      = product.metafields.custom.product_tags -%}
+{%- assign mf_badge_label    = product.metafields.custom.badge_label -%}
+{%- assign mf_badge_emoji    = product.metafields.custom.badge_emoji -%}
+{%- assign mf_review_rating  = product.metafields.custom.review_rating -%}
+{%- assign mf_review_count   = product.metafields.custom.review_count -%}
 
 <section class="product-page" aria-label="{{ product.title | escape }}">
   <div class="product-page-inner">
 
-    <!-- GALERIE -->
+    <!-- ── GALERIE ── -->
     <div class="product-gallery">
       <div class="product-gallery-main">
 
-        {%- comment %} Badge catégorie depuis metafield {%- endcomment %}
-        {%- assign mf_badge_label = product.metafields.custom.badge_label -%}
-        {%- assign mf_badge_emoji = product.metafields.custom.badge_emoji -%}
         {%- if mf_badge_label != blank or mf_badge_emoji != blank -%}
           <div class="product-cat-badge">
             {%- if mf_badge_emoji != blank -%}<span class="product-cat-badge-emoji">{{ mf_badge_emoji }}</span>{%- endif -%}
@@ -22,10 +25,7 @@
             id="product-main-img"
             src="{{ current_variant.featured_image | default: product.featured_image | image_url: width: 800 }}"
             alt="{{ product.featured_image.alt | default: product.title | escape }}"
-            width="800"
-            height="800"
-            loading="eager"
-          >
+            width="800" height="800" loading="eager">
         {%- else -%}
           <div class="product-img-placeholder">
             <svg viewBox="0 0 80 80" fill="none" width="80" height="80">
@@ -48,48 +48,39 @@
       {%- endif -%}
     </div>
 
-    <!-- INFOS PRODUIT -->
+    <!-- ── INFOS PRODUIT ── -->
     <div class="product-info">
 
-      {%- if product.type != blank -%}
-        <p class="product-type-tag">{{ product.type }}</p>
-      {%- endif -%}
-
-      <h1 class="product-title">{{ product.title }}</h1>
-
-      {%- comment %} Bloc intensité depuis metafield {%- endcomment %}
-      {%- assign mf_intensity = product.metafields.custom.intensity_level -%}
-      {%- assign mf_intensity_lbl = product.metafields.custom.intensity_label -%}
-      {%- assign mf_catchphrase = product.metafields.custom.catchphrase -%}
-      {%- assign mf_short_desc = product.metafields.custom.short_description -%}
-      {%- assign mf_prod_tags = product.metafields.custom.product_tags -%}
-
-      {%- if mf_intensity != blank or mf_catchphrase != blank -%}
-        <div class="product-intensity-block">
-          {%- if mf_intensity != blank -%}
-            {%- assign int_pct = mf_intensity | times: 1 -%}
-            <div class="intensity-slider-wrap">
-              <div class="intensity-track">
-                <div class="intensity-fill" style="width: {{ int_pct }}%;"></div>
-                <div class="intensity-thumb" style="left: calc({{ int_pct }}% - 10px);"></div>
-              </div>
-              <div class="intensity-labels">
-                <span>Douce</span><span>Forte</span><span>Très forte</span>
-              </div>
-              {%- if mf_intensity_lbl != blank -%}
-                <p class="intensity-current-label">Intensité : <strong>{{ mf_intensity_lbl }}</strong></p>
-              {%- endif -%}
-            </div>
+      <!-- Note / Avis -->
+      <div class="product-rating-row">
+        <span class="product-stars" aria-hidden="true">★★★★★</span>
+        <span class="product-rating-count">
+          {%- if mf_review_count != blank -%}
+            ({{ mf_review_count }} avis vérifiés)
+          {%- else -%}
+            ({{ section.settings.review_count | default: 128 }} avis vérifiés)
           {%- endif -%}
-          {%- if mf_catchphrase != blank -%}<p class="product-catchphrase">{{ mf_catchphrase }}</p>{%- endif -%}
-          {%- if mf_short_desc != blank -%}<p class="product-short-desc">{{ mf_short_desc }}</p>{%- endif -%}
-          {%- if mf_prod_tags != blank -%}
-            <div class="product-pill-tags">
-              {%- assign mf_tags_arr = mf_prod_tags | split: ',' -%}
-              {%- for t in mf_tags_arr -%}<span class="product-pill-tag">{{ t | strip }}</span>{%- endfor -%}
-            </div>
-          {%- endif -%}
-        </div>
+        </span>
+      </div>
+
+      <!-- Titre + Sous-titre cosmique -->
+      <div class="product-title-block">
+        <h1 class="product-title">{{ product.title }}</h1>
+        {%- if mf_cosmic_sub != blank -%}
+          <p class="product-cosmic-sub">— <em>{{ mf_cosmic_sub }}</em></p>
+        {%- endif -%}
+      </div>
+
+      <!-- Tags produit (SATIVA DOMINANT • INDOOR HYDRO …) -->
+      {%- if mf_prod_tags != blank -%}
+        <p class="product-cosmos-tags">
+          {%- assign tags_arr = mf_prod_tags | split: ',' -%}
+          {%- for t in tags_arr -%}
+            <span>{{ t | strip | upcase }}</span>{% unless forloop.last %}<span class="cosmos-tag-sep"> • </span>{% endunless %}
+          {%- endfor -%}
+        </p>
+      {%- elsif product.type != blank -%}
+        <p class="product-cosmos-tags"><span>{{ product.type | upcase }}</span></p>
       {%- endif -%}
 
       <!-- Prix -->
@@ -103,48 +94,24 @@
           <span class="price-main" id="product-price">{{ current_variant.price | money }}</span>
           <span class="price-badge-saved" id="price-saved-badge" style="display:none;"></span>
         {%- endif -%}
+        <span class="price-ttc-label">TTC</span>
       </div>
-
-      {%- comment %} Sélecteur dégressif optionnel {%- endcomment %}
-      {%- if section.settings.show_tiers and product.variants.size > 1 -%}
-        {%- assign per_g_arr = section.settings.tier_per_g | split: ',' -%}
-        {%- assign badge_arr = section.settings.tier_badges | split: ',' -%}
-        <div class="tiers-section">
-          <p class="tiers-label">{{ section.settings.tiers_title | default: 'Choisissez votre quantité' }}</p>
-          <div class="tiers-grid" id="tiers-grid">
-            {%- for variant in product.variants -%}
-              {%- assign pg = per_g_arr[forloop.index0] | strip -%}
-              {%- assign vbadge = badge_arr[forloop.index0] | strip -%}
-              <button type="button"
-                class="tier-tile{% if variant.id == current_variant.id %} is-active{% endif %}"
-                data-variant-id="{{ variant.id }}"
-                data-val="{{ variant.options.first | escape }}"
-                data-opt-index="0">
-                {%- if vbadge != blank -%}<span class="tier-badge">{{ vbadge }}</span>{%- endif -%}
-                <span class="tier-qty">{{ variant.options.first }}</span>
-                <span class="tier-total">{{ variant.price | money }}</span>
-                {%- if pg != blank -%}<span class="tier-per-g">{{ pg }}€/g</span>{%- endif -%}
-              </button>
-            {%- endfor -%}
-          </div>
-        </div>
-      {%- endif -%}
 
       <!-- Formulaire -->
       {%- form 'product', product, id: 'product-form', class: 'product-form' -%}
         <input type="hidden" name="id" id="variant-id" value="{{ current_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
 
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
             <div class="variant-group">
-              <p class="variant-label">{{ option.name }} <span class="variant-selected-val" id="opt-val-{{ forloop.index0 }}">— {{ option.selected_value }}</span></p>
+              <p class="variant-label">Sélectionnez le {{ option.name }} <span class="variant-selected-val" id="opt-val-{{ forloop.index0 }}">— {{ option.selected_value }}</span></p>
               <div class="variant-grid" data-opt="{{ forloop.index0 }}">
                 {%- for value in option.values -%}
                   <button type="button"
-                    class="variant-grid-btn{% if option.selected_value == value %} is-active{% endif %}"
+                    class="variant-pill{% if option.selected_value == value %} is-active{% endif %}"
                     data-val="{{ value | escape }}">
-                    <span class="variant-grid-qty">{{ value }}</span>
-                    <span class="variant-grid-per-g js-per-g" data-val="{{ value | escape }}"></span>
+                    {{ value }}
                   </button>
                 {%- endfor -%}
               </div>
@@ -152,67 +119,45 @@
           {%- endfor -%}
         {%- endunless -%}
 
-        <div class="qty-group">
-          <p class="variant-label">Quantité</p>
-          <div class="qty-stepper">
-            <button type="button" class="qty-btn" id="qty-minus" aria-label="Diminuer">−</button>
-            <input type="number" name="quantity" id="qty-input" value="1" min="1" class="qty-input">
-            <button type="button" class="qty-btn" id="qty-plus" aria-label="Augmenter">+</button>
+        <!-- Sélecteur de quantité si activé dans les settings -->
+        {%- if section.settings.show_qty -%}
+          <div class="qty-group">
+            <p class="variant-label">Quantité</p>
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn" id="qty-minus" aria-label="Diminuer">−</button>
+              <input type="number" name="quantity" id="qty-input" value="1" min="1" class="qty-input">
+              <button type="button" class="qty-btn" id="qty-plus" aria-label="Augmenter">+</button>
+            </div>
           </div>
-        </div>
+        {%- endif -%}
 
-        <button type="submit" class="btn-atc btn-atc--enriched" id="btn-atc"
+        <button type="submit" class="btn-atc btn-atc--v2" id="btn-atc"
           {% unless current_variant.available %}disabled{% endunless %}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-          </svg>
           <span id="atc-label">
-            {%- if current_variant.available -%}
-              Ajouter au panier
-              {%- if current_variant.compare_at_price > current_variant.price -%}
-                <span class="atc-price-sep">|</span>
-                <span class="atc-price-compare">{{ current_variant.compare_at_price | money }}</span>
-                <span class="atc-price-current">{{ current_variant.price | money }}</span>
-              {%- else -%}
-                <span class="atc-price-sep">|</span>
-                <span class="atc-price-current">{{ current_variant.price | money }}</span>
-              {%- endif -%}
-            {%- else -%}
-              Rupture de stock
-            {%- endif -%}
+            {%- if current_variant.available -%}Ajouter au panier{%- else -%}Rupture de stock{%- endif -%}
           </span>
         </button>
 
-        <div class="payment-icons">
-          <span class="payment-icons-label">🔒 Paiement 100% sécurisé</span>
-          <div class="payment-icons-row">
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Visa" role="img"><rect width="48" height="30" rx="4" fill="#1a1f71"/><path d="M20.5 20H17.8l1.7-10H22l-1.5 10zm-6.5 0l-2.6-6.9-.3 1.5-1 5.4H8l2.6-10h2.9l3.2 8.2.3-8.2H19l-1.6 10h-3.4zm22.2 0h-2.7l-.3-1.3h-3.3l-.5 1.3h-2.8l4-10h3l2.6 10zm-5.6-3.3h2.1l-.8-4-1.3 4zM39 15.3c0-.7-.5-1.2-1.6-1.7-1.1-.5-1.1-.5-1.1-.8 0-.3.3-.5.9-.5.9 0 1.5.2 2 .4l.3-1.7c-.5-.2-1.3-.4-2.3-.4-2.5 0-4.2 1.3-4.2 3.1 0 1.4 1.3 2.1 2.2 2.6.9.5 1.3.8 1.3 1.2 0 .7-.8 1-1.5 1-1.1 0-1.9-.3-2.5-.5l-.3 1.8c.6.3 1.6.5 2.7.5 2.7.1 4.2-1.3 4.1-3z" fill="#fff"/></svg>
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Mastercard" role="img"><rect width="48" height="30" rx="4" fill="#252525"/><circle cx="19" cy="15" r="8" fill="#eb001b"/><circle cx="29" cy="15" r="8" fill="#f79e1b"/><path d="M24 9.3a8 8 0 0 1 0 11.4A8 8 0 0 1 24 9.3z" fill="#ff5f00"/></svg>
-            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="CB" role="img"><rect width="48" height="30" rx="4" fill="#0054a6"/><text x="8" y="21" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#fff" letter-spacing="1">CB</text></svg>
-          </div>
+        <!-- Trust badges inline -->
+        <div class="product-hero-trust">
+          <span class="hero-trust-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            100% Bio &amp; Pur
+          </span>
+          <span class="hero-trust-sep">|</span>
+          <span class="hero-trust-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Expédition 24h
+          </span>
         </div>
 
       {%- endform -%}
-
-      <!-- Bande expédition -->
-      <div class="shipping-band">
-        <span class="shipping-dot" aria-hidden="true"></span>
-        <div class="shipping-band-text">
-          <span class="shipping-band-main">🇫🇷 Livraison La Poste 24/48H</span>
-          <span class="shipping-date-line">Commandez avant 14h — Expédié <strong id="shipping-date-display">aujourd'hui</strong></span>
-        </div>
-      </div>
-
-      {%- if product.description != blank -%}
-        <div class="product-desc rte">{{ product.description }}</div>
-      {%- endif -%}
 
     </div>
   </div>
 </section>
 
-<!-- Sticky ATC -->
+<!-- ── Sticky ATC ── -->
 <div class="sticky-atc" id="sticky-atc" aria-hidden="true">
   <div class="sticky-atc-inner">
     <div class="sticky-atc-product">
@@ -237,11 +182,6 @@
   var curId    = {{ current_variant.id | json }};
   var selOpts  = [{% for opt in product.options_with_values %}{{ opt.selected_value | json }}{% unless forloop.last %},{% endunless %}{% endfor %}];
 
-  function parseGrams(s){ var m=(s||'').match(/(\d+(?:[.,]\d+)?)\s*gr?(?:\b|$)/i); return m?parseFloat(m[1].replace(',','.')):null; }
-  var perGMap = {};
-  variants.forEach(function(v){ var g=parseGrams((v.options&&v.options[0])||v.title||''); if(g) perGMap[v.options[0]]=(v.price/g/100).toFixed(2); });
-  document.querySelectorAll('.js-per-g').forEach(function(el){ var pg=perGMap[el.dataset.val]; if(pg){el.textContent=pg+'\u00a0€/g';el.style.display='';}else{el.style.display='none';} });
-
   function money(c){ return (c/100).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+'\u00a0€'; }
   function findVariant(){ return variants.find(function(v){ return v.options.every(function(o,i){return o===selOpts[i];}); }); }
 
@@ -255,33 +195,24 @@
     if(se){ if(v.compare_at_price&&v.compare_at_price>v.price){se.textContent='-'+Math.round((v.compare_at_price-v.price)*100/v.compare_at_price)+'%';se.style.display='';}else{se.style.display='none';} }
     var btn=document.getElementById('btn-atc'),lbl=document.getElementById('atc-label');
     if(btn){btn.disabled=!v.available;}
-    if(lbl){
-      if(!v.available){lbl.innerHTML='Rupture de stock';}
-      else{
-        var ph='<span class="atc-price-sep">|</span>';
-        if(v.compare_at_price&&v.compare_at_price>v.price) ph+='<span class="atc-price-compare">'+money(v.compare_at_price)+'</span>';
-        ph+='<span class="atc-price-current">'+money(v.price)+'</span>';
-        lbl.innerHTML='Ajouter au panier'+ph;
-      }
-    }
+    if(lbl){ lbl.textContent=v.available?'Ajouter au panier':'Rupture de stock'; }
     var sp=document.getElementById('sticky-price'); if(sp) sp.textContent=money(v.price);
     var sb=document.getElementById('sticky-atc-btn'); if(sb) sb.disabled=!v.available;
     if(v.featured_image){var im=document.getElementById('product-main-img');if(im)im.src=v.featured_image.src;}
     var url=new URL(window.location.href); url.searchParams.set('variant',v.id); history.replaceState({},'',url.toString());
-    syncGrid(); syncTiles();
+    syncPills();
   }
 
-  function syncGrid(){
+  function syncPills(){
     document.querySelectorAll('.variant-grid').forEach(function(g){
       var i=parseInt(g.dataset.opt,10);
-      g.querySelectorAll('.variant-grid-btn').forEach(function(b){ b.classList.toggle('is-active',b.dataset.val===selOpts[i]); });
+      g.querySelectorAll('.variant-pill').forEach(function(b){ b.classList.toggle('is-active',b.dataset.val===selOpts[i]); });
     });
   }
-  function syncTiles(){ document.querySelectorAll('.tier-tile').forEach(function(t){ t.classList.toggle('is-active',String(curId)===t.dataset.variantId); }); }
 
   document.querySelectorAll('.variant-grid').forEach(function(g){
     var i=parseInt(g.dataset.opt,10);
-    g.querySelectorAll('.variant-grid-btn').forEach(function(b){
+    g.querySelectorAll('.variant-pill').forEach(function(b){
       b.addEventListener('click',function(){
         selOpts[i]=b.dataset.val;
         var vd=document.getElementById('opt-val-'+i); if(vd) vd.textContent='— '+b.dataset.val;
@@ -290,19 +221,11 @@
     });
   });
 
-  document.querySelectorAll('.tier-tile').forEach(function(t){
-    t.addEventListener('click',function(){
-      var val=t.dataset.val, oi=parseInt(t.dataset.optIndex||'0',10);
-      var tb=null;
-      document.querySelectorAll('.variant-grid[data-opt="'+oi+'"] .variant-grid-btn').forEach(function(b){if(b.dataset.val===val)tb=b;});
-      if(tb){tb.click();}else{var vid=t.dataset.variantId;var vv=variants.find(function(v){return String(v.id)===vid;});if(vv){selOpts=vv.options.slice();applyVariant(vv);}}
-    });
-  });
-
   var qi=document.getElementById('qty-input');
   if(qi){
-    document.getElementById('qty-minus').addEventListener('click',function(){var n=parseInt(qi.value,10);if(n>1)qi.value=n-1;});
-    document.getElementById('qty-plus').addEventListener('click',function(){qi.value=parseInt(qi.value,10)+1;});
+    var qm=document.getElementById('qty-minus'),qp=document.getElementById('qty-plus');
+    if(qm) qm.addEventListener('click',function(){var n=parseInt(qi.value,10);if(n>1)qi.value=n-1;});
+    if(qp) qp.addEventListener('click',function(){qi.value=parseInt(qi.value,10)+1;});
   }
 
   document.querySelectorAll('.product-thumb-btn').forEach(function(b){
@@ -320,17 +243,6 @@
   }
   var sb2=document.getElementById('sticky-atc-btn');
   if(sb2) sb2.addEventListener('click',function(){var f=document.getElementById('product-form');if(f){if(f.requestSubmit)f.requestSubmit();else f.submit();}});
-
-  (function(){
-    var el=document.getElementById('shipping-date-display'); if(!el) return;
-    var now=new Date(), cut=new Date(now.getFullYear(),now.getMonth(),now.getDate(),14,0,0);
-    var tgt=now<cut?now:new Date(now.getTime()+86400000);
-    if(tgt.getDay()===0) tgt=new Date(tgt.getTime()+86400000);
-    if(tgt.getDay()===6&&now>=cut) tgt=new Date(tgt.getTime()+2*86400000);
-    var days=['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
-    var same=tgt.toDateString()===now.toDateString();
-    el.textContent=same?"aujourd'hui":'le '+days[tgt.getDay()]+' '+tgt.getDate()+'/'+(tgt.getMonth()+1);
-  })();
 }());
 </script>
 
@@ -338,10 +250,8 @@
 {
   "name": "Page produit",
   "settings": [
-    { "type": "checkbox", "id": "show_tiers",   "label": "Afficher le sélecteur de quantité", "default": false },
-    { "type": "text",     "id": "tiers_title",  "label": "Titre du sélecteur", "default": "Choisissez votre quantité" },
-    { "type": "text",     "id": "tier_per_g",   "label": "Prix/g par variante (séparés par virgule)", "info": "Ex : 5.00,4.40,3.80" },
-    { "type": "text",     "id": "tier_badges",  "label": "Badges par variante (séparés par virgule)", "info": "Ex : ,-12%,Meilleure valeur" }
+    { "type": "number",   "id": "review_count", "label": "Nombre d'avis (défaut si pas de metafield)", "default": 128 },
+    { "type": "checkbox", "id": "show_qty",      "label": "Afficher le sélecteur de quantité", "default": false }
   ]
 }
 {% endschema %}

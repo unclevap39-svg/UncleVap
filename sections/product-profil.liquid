@@ -1,73 +1,91 @@
-{%- assign profil_ressenti       = product.metafields.custom.profil_ressenti -%}
-{%- assign aromes_qualite        = product.metafields.custom.aromes_qualite -%}
-{%- assign effet_ressenti        = product.metafields.custom.effet_ressenti -%}
-{%- assign puissance_aromatique  = product.metafields.custom.puissance_aromatique -%}
-{%- assign odeur                 = product.metafields.custom.odeur -%}
-{%- assign gout                  = product.metafields.custom.gout -%}
+{%- assign experience_text  = product.metafields.custom.experience_text -%}
+{%- assign relaxation_title = product.metafields.custom.relaxation_title -%}
+{%- assign relaxation_text  = product.metafields.custom.relaxation_text -%}
+{%- assign terroir_title    = product.metafields.custom.terroir_title -%}
+{%- assign terroir_text     = product.metafields.custom.terroir_text -%}
+{%- assign thc_rate         = product.metafields.custom.thc_rate -%}
+{%- assign lab_url          = product.metafields.custom.lab_report_url -%}
 
-{%- if profil_ressenti != blank or aromes_qualite != blank or effet_ressenti != blank or puissance_aromatique != blank or odeur != blank or gout != blank -%}
-<section class="product-profil">
-  <div class="product-profil-inner">
-    <h2 class="product-profil-title">Profil &amp; Ressenti</h2>
-    <div class="product-profil-grid">
+{%- comment %} Fallbacks sur les anciens metafields {%- endcomment %}
+{%- if experience_text == blank -%}
+  {%- assign experience_text = product.description -%}
+{%- endif -%}
 
-      {%- if profil_ressenti != blank -%}
-        <div class="profil-item">
-          <span class="profil-icon" aria-hidden="true">🌿</span>
-          <span class="profil-label">Profil</span>
-          <span class="profil-value">{{ profil_ressenti }}</span>
+<section class="analyse-cosmique">
+  <div class="analyse-cosmique-inner">
+
+    <h2 class="analyse-cosmique-title">Analyse <span class="analyse-cosmique-accent">Cosmique</span></h2>
+
+    <!-- Grille haute : expérience (large) + certificat labo -->
+    <div class="analyse-top-grid">
+
+      <div class="analyse-card analyse-card--experience">
+        <h3 class="analyse-card-experience-label">
+          L'Expérience
+          {%- if product.vendor != blank -%} {{ product.vendor }}{%- else -%} {{ product.title | truncate: 20, '' }}{%- endif -%}
+        </h3>
+        {%- if experience_text != blank -%}
+          <div class="analyse-card-text rte">{{ experience_text }}</div>
+        {%- else -%}
+          <p class="analyse-card-text">Découvrez ce produit d'exception, cultivé et sélectionné avec soin pour vous offrir une expérience sensorielle unique.</p>
+        {%- endif -%}
+      </div>
+
+      <div class="analyse-card analyse-card--labo">
+        <div class="labo-icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 3H15M9 3v8l-4 7h14l-4-7V3M9 3h6M9 11h6"/>
+          </svg>
         </div>
-      {%- endif -%}
-
-      {%- if aromes_qualite != blank -%}
-        <div class="profil-item">
-          <span class="profil-icon" aria-hidden="true">✨</span>
-          <span class="profil-label">Qualité des arômes</span>
-          <span class="profil-value">{{ aromes_qualite }}</span>
-        </div>
-      {%- endif -%}
-
-      {%- if effet_ressenti != blank -%}
-        <div class="profil-item">
-          <span class="profil-icon" aria-hidden="true">💫</span>
-          <span class="profil-label">Effet ressenti</span>
-          <span class="profil-value">{{ effet_ressenti }}</span>
-        </div>
-      {%- endif -%}
-
-      {%- if puissance_aromatique != blank -%}
-        <div class="profil-item">
-          <span class="profil-icon" aria-hidden="true">🌡️</span>
-          <span class="profil-label">Puissance aromatique</span>
-          <span class="profil-value">{{ puissance_aromatique }}</span>
-        </div>
-      {%- endif -%}
-
-      {%- if odeur != blank -%}
-        <div class="profil-item">
-          <span class="profil-icon" aria-hidden="true">👃</span>
-          <span class="profil-label">Odeur</span>
-          <span class="profil-value">{{ odeur }}</span>
-        </div>
-      {%- endif -%}
-
-      {%- if gout != blank -%}
-        <div class="profil-item">
-          <span class="profil-icon" aria-hidden="true">👅</span>
-          <span class="profil-label">Goût</span>
-          <span class="profil-value">{{ gout }}</span>
-        </div>
-      {%- endif -%}
+        <h3 class="labo-title">Certificat de Labo</h3>
+        <p class="labo-sub">Analysé par un tiers indépendant pour une pureté garantie.</p>
+        <div class="labo-thc">THC {{ thc_rate | default: '< 0.3%' }}</div>
+        {%- if lab_url != blank -%}
+          <a href="{{ lab_url }}" class="labo-link" target="_blank" rel="noopener noreferrer">↗ Voir le rapport complet</a>
+        {%- else -%}
+          <span class="labo-link">Rapport disponible sur demande</span>
+        {%- endif -%}
+      </div>
 
     </div>
-    <p class="profil-legal">Ces informations sont fournies à titre indicatif. Les produits CBD ne sont pas des médicaments et ne peuvent se substituer à un traitement médical.</p>
+
+    <!-- Grille basse : 3 petites cartes -->
+    <div class="analyse-bottom-grid">
+
+      <div class="analyse-card analyse-card--sm">
+        <span class="analyse-sm-icon" aria-hidden="true">🌱</span>
+        <h4 class="analyse-sm-title">{{ relaxation_title | default: 'Relaxation Profonde' }}</h4>
+        <p class="analyse-sm-text">{{ relaxation_text | default: 'Apaise l\'esprit et libère les tensions musculaires instantanément.' }}</p>
+      </div>
+
+      <div class="analyse-card analyse-card--sm analyse-card--terroir">
+        <h4 class="analyse-sm-title analyse-sm-title--green">{{ terroir_title | default: 'Terroir Céleste' }}</h4>
+        <p class="analyse-sm-text">{{ terroir_text | default: 'Cultivé en conditions optimales, chaque lot est soigneusement sélectionné pour préserver son profil aromatique unique.' }}</p>
+      </div>
+
+      <div class="analyse-card analyse-card--img">
+        {%- if product.images.size > 1 -%}
+          <img src="{{ product.images[1] | image_url: width: 400 }}" alt="" loading="lazy" width="400" height="400">
+        {%- elsif product.featured_image -%}
+          <img src="{{ product.featured_image | image_url: width: 400 }}" alt="" loading="lazy" width="400" height="400">
+        {%- else -%}
+          <div class="analyse-img-placeholder">
+            <svg viewBox="0 0 60 60" fill="none" width="40" height="40">
+              <circle cx="30" cy="30" r="25" stroke="#2ea82e" stroke-width="1.5" opacity="0.4"/>
+              <circle cx="30" cy="30" r="12" fill="#2ea82e" opacity="0.2"/>
+            </svg>
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>
+
   </div>
 </section>
-{%- endif -%}
 
 {% schema %}
 {
-  "name": "Profil & Ressenti",
+  "name": "Analyse Cosmique",
   "settings": []
 }
 {% endschema %}

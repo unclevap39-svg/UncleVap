@@ -3,76 +3,8 @@
     "main": {
       "type": "main-product",
       "settings": {
-        "show_tiers": false,
-        "tiers_title": "Choisissez votre quantité",
-        "tier_per_g": "",
-        "tier_badges": ""
-      }
-    },
-    "urgency": {
-      "type": "product-urgency",
-      "settings": {
-        "enabled": true,
-        "badge_text": "Offre limitée — Stock en cours d'épuisement",
-        "viewers_text": "<strong>23 personnes</strong> consultent ce produit en ce moment",
-        "show_stock_bar": true,
-        "stock_label": "Stock disponible",
-        "stock_remaining": "12",
-        "stock_percent": 20,
-        "delivery_text": "Commandez avant 14h — Expédition aujourd'hui"
-      }
-    },
-    "guarantee": {
-      "type": "product-guarantee",
-      "settings": {
-        "enabled": true,
-        "title": "Achetez en toute confiance",
-        "g1_icon": "🔒",
-        "g1_text": "Paiement 100% sécurisé",
-        "g2_icon": "↩️",
-        "g2_text": "Retours sous 14 jours",
-        "g3_icon": "🚚",
-        "g3_text": "Livraison express 24-48h",
-        "g4_icon": "🌿",
-        "g4_text": "Qualité certifiée, lot analysé"
-      }
-    },
-    "benefits": {
-      "type": "product-benefits",
-      "settings": {
-        "enabled": true,
-        "title": "Pourquoi choisir ce produit ?",
-        "subtitle": "Une qualité supérieure à chaque étape",
-        "benefit1_icon": "🌿",
-        "benefit1_title": "100% Naturel",
-        "benefit1_desc": "Cultivé sans pesticides ni engrais chimiques, en agriculture raisonnée.",
-        "benefit2_icon": "🔬",
-        "benefit2_title": "Testé en laboratoire",
-        "benefit2_desc": "Chaque lot est analysé par un laboratoire indépendant. Certificats disponibles.",
-        "benefit3_icon": "⚡",
-        "benefit3_title": "Effet rapide",
-        "benefit3_desc": "Formule concentrée pour une absorption optimale et des effets ressentis rapidement.",
-        "benefit4_icon": "🚚",
-        "benefit4_title": "Livraison discrète",
-        "benefit4_desc": "Emballage neutre et expédition en 24-48h, partout en France."
-      }
-    },
-    "social-proof": {
-      "type": "product-social-proof",
-      "settings": {
-        "enabled": true,
-        "title": "Ce que disent nos clients",
-        "rating": "4.8",
-        "review_count": "(124 avis vérifiés)",
-        "r1_text": "Qualité exceptionnelle, arôme agréable et effet relaxant. Je recommande vraiment !",
-        "r1_name": "Sophie M.",
-        "r1_date": "Il y a 3 jours",
-        "r2_text": "Livraison ultra rapide, emballage soigné et produit conforme à la description. Top !",
-        "r2_name": "Thomas R.",
-        "r2_date": "Il y a 1 semaine",
-        "r3_text": "Mon meilleur achat CBD. La grille de prix est très intéressante pour les grosses quantités.",
-        "r3_name": "Marie L.",
-        "r3_date": "Il y a 2 semaines"
+        "review_count": 128,
+        "show_qty": false
       }
     },
     "profil": {
@@ -82,30 +14,21 @@
     "gamme": {
       "type": "product-gamme",
       "settings": {
-        "title": "Notre Gamme",
-        "subtitle": "Découvrez nos niveaux d'intensité",
-        "level1_label": "Douce",
-        "level1_fill": 33,
-        "level2_label": "Forte",
-        "level2_fill": 66,
-        "level3_label": "Très forte",
-        "level3_fill": 95
+        "title": "Guide de Dégustation",
+        "step1_title": "Infusion Stellaire",
+        "step1_desc": "Laissez infuser 10 min dans une eau à 85°C avec un corps gras (lait, coco) pour activer les molécules.",
+        "step2_title": "Vaporisation",
+        "step2_desc": "Température idéale : 180°C. Préserve les terpènes et évite la combustion toxique.",
+        "step3_title": "",
+        "step3_desc": "",
+        "quote": "Un nuage de pureté dans l'immensité du vide."
       }
     },
     "related": {
       "type": "product-related",
       "settings": {
-        "title": "Découvrez également",
+        "title": "Vous Aimerez Aussi",
         "products_limit": 5
-      }
-    },
-    "reassurance": {
-      "type": "product-reassurance",
-      "settings": {
-        "r1_text": "Livraison 24-48h",
-        "r2_text": "Paiement sécurisé",
-        "r3_text": "Service client réactif",
-        "r4_text": "Traçabilité garantie"
       }
     },
     "legal": {
@@ -117,14 +40,9 @@
   },
   "order": [
     "main",
-    "urgency",
-    "guarantee",
-    "benefits",
-    "social-proof",
     "profil",
     "gamme",
     "related",
-    "reassurance",
     "legal"
   ]
 }
