@@ -1,0 +1,73 @@
+{%- assign profil_ressenti       = product.metafields.custom.profil_ressenti -%}
+{%- assign aromes_qualite        = product.metafields.custom.aromes_qualite -%}
+{%- assign effet_ressenti        = product.metafields.custom.effet_ressenti -%}
+{%- assign puissance_aromatique  = product.metafields.custom.puissance_aromatique -%}
+{%- assign odeur                 = product.metafields.custom.odeur -%}
+{%- assign gout                  = product.metafields.custom.gout -%}
+
+{%- if profil_ressenti != blank or aromes_qualite != blank or effet_ressenti != blank or puissance_aromatique != blank or odeur != blank or gout != blank -%}
+<section class="product-profil">
+  <div class="product-profil-inner">
+    <h2 class="product-profil-title">Profil &amp; Ressenti</h2>
+    <div class="product-profil-grid">
+
+      {%- if profil_ressenti != blank -%}
+        <div class="profil-item">
+          <span class="profil-icon" aria-hidden="true">🌿</span>
+          <span class="profil-label">Profil</span>
+          <span class="profil-value">{{ profil_ressenti }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if aromes_qualite != blank -%}
+        <div class="profil-item">
+          <span class="profil-icon" aria-hidden="true">✨</span>
+          <span class="profil-label">Qualité des arômes</span>
+          <span class="profil-value">{{ aromes_qualite }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if effet_ressenti != blank -%}
+        <div class="profil-item">
+          <span class="profil-icon" aria-hidden="true">💫</span>
+          <span class="profil-label">Effet ressenti</span>
+          <span class="profil-value">{{ effet_ressenti }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if puissance_aromatique != blank -%}
+        <div class="profil-item">
+          <span class="profil-icon" aria-hidden="true">🌡️</span>
+          <span class="profil-label">Puissance aromatique</span>
+          <span class="profil-value">{{ puissance_aromatique }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if odeur != blank -%}
+        <div class="profil-item">
+          <span class="profil-icon" aria-hidden="true">👃</span>
+          <span class="profil-label">Odeur</span>
+          <span class="profil-value">{{ odeur }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if gout != blank -%}
+        <div class="profil-item">
+          <span class="profil-icon" aria-hidden="true">👅</span>
+          <span class="profil-label">Goût</span>
+          <span class="profil-value">{{ gout }}</span>
+        </div>
+      {%- endif -%}
+
+    </div>
+    <p class="profil-legal">Ces informations sont fournies à titre indicatif. Les produits CBD ne sont pas des médicaments et ne peuvent se substituer à un traitement médical.</p>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Profil & Ressenti",
+  "settings": []
+}
+{% endschema %}

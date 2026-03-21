@@ -2,12 +2,29 @@
 {%- assign per_g_arr = section.settings.tier_per_g | split: ',' -%}
 {%- assign badge_arr = section.settings.tier_badges | split: ',' -%}
 
+{%- comment %} Metafields produit {%- endcomment %}
+{%- assign badge_label   = product.metafields.custom.badge_label -%}
+{%- assign badge_emoji   = product.metafields.custom.badge_emoji -%}
+{%- assign intensity_lvl = product.metafields.custom.intensity_level -%}
+{%- assign intensity_lbl = product.metafields.custom.intensity_label -%}
+{%- assign prod_tags     = product.metafields.custom.product_tags -%}
+{%- assign catchphrase   = product.metafields.custom.catchphrase -%}
+{%- assign short_desc    = product.metafields.custom.short_description -%}
+
 <section class="product-page" aria-label="{{ product.title | escape }}">
   <div class="product-page-inner">
 
     <!-- ═══ GALERIE ═══ -->
     <div class="product-gallery">
       <div class="product-gallery-main">
+
+        {%- if badge_label != blank or badge_emoji != blank -%}
+          <div class="product-cat-badge">
+            {%- if badge_emoji != blank -%}<span class="product-cat-badge-emoji">{{ badge_emoji }}</span>{%- endif -%}
+            {%- if badge_label != blank -%}<span>{{ badge_label }}</span>{%- endif -%}
+          </div>
+        {%- endif -%}
+
         {%- if product.images.size > 0 -%}
           <img
             id="product-main-img"
@@ -53,16 +70,55 @@
 
       <h1 class="product-title">{{ product.title }}</h1>
 
+      <!-- ═ BLOC INTENSITÉ ═ -->
+      {%- if intensity_lvl != blank or catchphrase != blank -%}
+        <div class="product-intensity-block">
+          {%- if intensity_lvl != blank -%}
+            {%- assign int_val = intensity_lvl | times: 1 -%}
+            <div class="intensity-slider-wrap" aria-label="Niveau d'intensité : {{ intensity_lbl | default: intensity_lvl }}">
+              <div class="intensity-track">
+                <div class="intensity-fill" style="width: {{ int_val }}%;"></div>
+                <div class="intensity-thumb" style="left: calc({{ int_val }}% - 10px);"></div>
+              </div>
+              <div class="intensity-labels">
+                <span>Douce</span>
+                <span>Forte</span>
+                <span>Très forte</span>
+              </div>
+              {%- if intensity_lbl != blank -%}
+                <p class="intensity-current-label">Intensité : <strong>{{ intensity_lbl }}</strong></p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          {%- if catchphrase != blank -%}
+            <p class="product-catchphrase">{{ catchphrase }}</p>
+          {%- endif -%}
+          {%- if short_desc != blank -%}
+            <p class="product-short-desc">{{ short_desc }}</p>
+          {%- endif -%}
+          {%- if prod_tags != blank -%}
+            <div class="product-pill-tags">
+              {%- assign tags_arr = prod_tags | split: ',' -%}
+              {%- for tag in tags_arr -%}
+                <span class="product-pill-tag">{{ tag | strip }}</span>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
       <!-- Prix -->
       <div class="product-price-row" id="product-price-wrap">
         {%- if current_variant.compare_at_price > current_variant.price -%}
-          <span class="price-compare">{{ current_variant.compare_at_price | money }}</span>
+          <span class="price-compare" id="product-price-compare">{{ current_variant.compare_at_price | money }}</span>
           <span class="price-main price-main--sale" id="product-price">{{ current_variant.price | money }}</span>
-          <span class="price-badge-saved">
+          <span class="price-badge-saved" id="price-saved-badge">
             -{{ current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price | round }}%
           </span>
         {%- else -%}
+          <span class="price-compare" id="product-price-compare" style="display:none;"></span>
           <span class="price-main" id="product-price">{{ current_variant.price | money }}</span>
+          <span class="price-badge-saved" id="price-saved-badge" style="display:none;"></span>
         {%- endif -%}
       </div>
 
@@ -115,13 +171,16 @@
                 {{ option.name }}
                 <span class="variant-selected-val" id="opt-val-{{ forloop.index0 }}">— {{ option.selected_value }}</span>
               </p>
-              <div class="variant-btns" data-opt="{{ forloop.index0 }}">
+              <div class="variant-grid" data-opt="{{ forloop.index0 }}">
                 {%- for value in option.values -%}
                   <button
                     type="button"
-                    class="variant-btn{% if option.selected_value == value %} is-active{% endif %}"
+                    class="variant-grid-btn{% if option.selected_value == value %} is-active{% endif %}"
                     data-val="{{ value | escape }}"
-                  >{{ value }}</button>
+                  >
+                    <span class="variant-grid-qty">{{ value }}</span>
+                    <span class="variant-grid-per-g js-per-g" data-val="{{ value | escape }}"></span>
+                  </button>
                 {%- endfor -%}
               </div>
             </div>
@@ -138,10 +197,10 @@
           </div>
         </div>
 
-        <!-- Bouton panier -->
+        <!-- Bouton ATC enrichi -->
         <button
           type="submit"
-          class="btn-atc"
+          class="btn-atc btn-atc--enriched"
           id="btn-atc"
           {% unless current_variant.available %}disabled{% endunless %}
         >
@@ -150,11 +209,57 @@
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
           </svg>
           <span id="atc-label">
-            {%- if current_variant.available -%}Ajouter au panier{%- else -%}Rupture de stock{%- endif -%}
+            {%- if current_variant.available -%}
+              Ajouter au panier
+              {%- if current_variant.compare_at_price > current_variant.price -%}
+                <span class="atc-price-sep">|</span>
+                <span class="atc-price-compare">{{ current_variant.compare_at_price | money }}</span>
+                <span class="atc-price-current">{{ current_variant.price | money }}</span>
+              {%- else -%}
+                <span class="atc-price-sep">|</span>
+                <span class="atc-price-current">{{ current_variant.price | money }}</span>
+              {%- endif -%}
+            {%- else -%}
+              Rupture de stock
+            {%- endif -%}
           </span>
         </button>
 
+        <!-- Icônes paiement -->
+        <div class="payment-icons">
+          <span class="payment-icons-label">🔒 Paiement 100% sécurisé</span>
+          <div class="payment-icons-row">
+            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Visa" role="img">
+              <rect width="48" height="30" rx="4" fill="#1a1f71"/>
+              <path d="M20.5 20H17.8l1.7-10H22l-1.5 10zm-6.5 0l-2.6-6.9-.3 1.5-1 5.4H8l2.6-10h2.9l3.2 8.2.3-8.2H19l-1.6 10h-3.4zm22.2 0h-2.7l-.3-1.3h-3.3l-.5 1.3h-2.8l4-10h3l2.6 10zm-5.6-3.3h2.1l-.8-4-1.3 4zM39 15.3c0-.7-.5-1.2-1.6-1.7-1.1-.5-1.1-.5-1.1-.8 0-.3.3-.5.9-.5.9 0 1.5.2 2 .4l.3-1.7c-.5-.2-1.3-.4-2.3-.4-2.5 0-4.2 1.3-4.2 3.1 0 1.4 1.3 2.1 2.2 2.6.9.5 1.3.8 1.3 1.2 0 .7-.8 1-1.5 1-1.1 0-1.9-.3-2.5-.5l-.3 1.8c.6.3 1.6.5 2.7.5 2.7.1 4.2-1.3 4.1-3z" fill="#fff"/>
+            </svg>
+            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Mastercard" role="img">
+              <rect width="48" height="30" rx="4" fill="#252525"/>
+              <circle cx="19" cy="15" r="8" fill="#eb001b"/>
+              <circle cx="29" cy="15" r="8" fill="#f79e1b"/>
+              <path d="M24 9.3a8 8 0 0 1 0 11.4A8 8 0 0 1 24 9.3z" fill="#ff5f00"/>
+            </svg>
+            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="American Express" role="img">
+              <rect width="48" height="30" rx="4" fill="#2e77bc"/>
+              <path d="M7 18l1-2.4 1 2.4H7zm27.3-3.5v-.8H37v.8h-2.7zm-4.5 0v-.8h2.7v.8H29.8zM11.5 12l-3 7h2l.5-1.3H14l.5 1.3h2.1l-3-7h-2.1zm10.5 0l-2 4.5-2-4.5H16v7h1.8V15l2 4.5h1.4l2-4.5V19H25v-7h-3zm9.7 0v7h6.4v-1.6h-4.5v-1.2h4.4V15h-4.4v-1.4h4.5V12h-6.4z" fill="#fff"/>
+            </svg>
+            <svg class="pay-icon" viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg" aria-label="Carte Bancaire" role="img">
+              <rect width="48" height="30" rx="4" fill="#0054a6"/>
+              <text x="8" y="21" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#fff" letter-spacing="1">CB</text>
+            </svg>
+          </div>
+        </div>
+
       </form>
+
+      <!-- ═ BANDE EXPÉDITION ═ -->
+      <div class="shipping-band">
+        <span class="shipping-dot" aria-hidden="true"></span>
+        <div class="shipping-band-text">
+          <span class="shipping-band-main">🇫🇷 Livraison La Poste 24/48H</span>
+          <span class="shipping-date-line">Commandez avant 14h — Expédié <strong id="shipping-date-display">aujourd'hui</strong></span>
+        </div>
+      </div>
 
       <!-- Description -->
       {%- if product.description != blank -%}
@@ -165,15 +270,57 @@
   </div><!-- /product-page-inner -->
 </section>
 
+<!-- ═══ STICKY ATC BAR ═══ -->
+<div class="sticky-atc" id="sticky-atc" aria-hidden="true">
+  <div class="sticky-atc-inner">
+    <div class="sticky-atc-product">
+      {%- if product.featured_image -%}
+        <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title | escape }}" width="40" height="40" loading="lazy" class="sticky-atc-img">
+      {%- endif -%}
+      <div class="sticky-atc-info">
+        <span class="sticky-atc-name">{{ product.title }}</span>
+        <span class="sticky-atc-price" id="sticky-price">{{ current_variant.price | money }}</span>
+      </div>
+    </div>
+    <button type="button" class="sticky-atc-btn" id="sticky-atc-btn"
+      {%- unless current_variant.available %} disabled{%- endunless -%}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Ajouter au panier
+    </button>
+  </div>
+</div>
+
 <script>
 (function () {
-  var variants          = {{ product.variants | json }};
-  var currentVariantId  = {{ current_variant.id }};
-  var selOptions        = [
+  var variants         = {{ product.variants | json }};
+  var currentVariantId = {{ current_variant.id }};
+  var selOptions       = [
     {%- for option in product.options_with_values -%}
       {{ option.selected_value | json }}{%- unless forloop.last -%},{%- endunless -%}
     {%- endfor -%}
   ];
+
+  /* ── Prix au gramme — calculé depuis le titre de la variante ── */
+  function parseGrams(str) {
+    var m = (str || '').match(/(\d+(?:[.,]\d+)?)\s*g(?:r)?(?:\b|$)/i);
+    return m ? parseFloat(m[1].replace(',', '.')) : null;
+  }
+  function buildPerGMap() {
+    var map = {};
+    variants.forEach(function(v) {
+      var label = (v.options && v.options[0]) || v.title || '';
+      var g = parseGrams(label);
+      if (g) map[v.options[0]] = (v.price / g / 100).toFixed(2);
+    });
+    return map;
+  }
+  var perGMap = buildPerGMap();
+  document.querySelectorAll('.js-per-g').forEach(function(el) {
+    var pg = perGMap[el.dataset.val];
+    if (pg) { el.textContent = pg + '\u00a0€/g'; el.style.display = ''; }
+    else     { el.style.display = 'none'; }
+  });
 
   function findVariant() {
     return variants.find(function(v) {
@@ -189,38 +336,90 @@
     if (!v) return;
     document.getElementById('variant-id').value = v.id;
     currentVariantId = v.id;
-    var priceEl = document.getElementById('product-price');
+
+    /* Prix */
+    var priceEl   = document.getElementById('product-price');
+    var compareEl = document.getElementById('product-price-compare');
+    var savedEl   = document.getElementById('price-saved-badge');
     if (priceEl) priceEl.textContent = money(v.price);
-    var btn   = document.getElementById('btn-atc');
-    var label = document.getElementById('atc-label');
-    if (btn && label) {
-      btn.disabled = !v.available;
-      label.textContent = v.available ? 'Ajouter au panier' : 'Rupture de stock';
+    if (compareEl) {
+      if (v.compare_at_price && v.compare_at_price > v.price) {
+        compareEl.textContent = money(v.compare_at_price);
+        compareEl.style.display = '';
+      } else {
+        compareEl.textContent = '';
+        compareEl.style.display = 'none';
+      }
     }
+    if (savedEl) {
+      if (v.compare_at_price && v.compare_at_price > v.price) {
+        savedEl.textContent = '-' + Math.round((v.compare_at_price - v.price) * 100 / v.compare_at_price) + '%';
+        savedEl.style.display = '';
+      } else {
+        savedEl.style.display = 'none';
+      }
+    }
+
+    /* ATC enrichi */
+    var btn = document.getElementById('btn-atc');
+    if (btn) {
+      btn.disabled = !v.available;
+      var atcLabel = document.getElementById('atc-label');
+      if (atcLabel) {
+        if (!v.available) {
+          atcLabel.innerHTML = 'Rupture de stock';
+        } else {
+          var priceHtml = '<span class="atc-price-sep">|</span>';
+          if (v.compare_at_price && v.compare_at_price > v.price) {
+            priceHtml += '<span class="atc-price-compare">' + money(v.compare_at_price) + '</span>';
+          }
+          priceHtml += '<span class="atc-price-current">' + money(v.price) + '</span>';
+          atcLabel.innerHTML = 'Ajouter au panier' + priceHtml;
+        }
+      }
+    }
+
+    /* Sticky */
+    var stickyPrice = document.getElementById('sticky-price');
+    if (stickyPrice) stickyPrice.textContent = money(v.price);
+    var stickyBtn = document.getElementById('sticky-atc-btn');
+    if (stickyBtn) stickyBtn.disabled = !v.available;
+
+    /* Image */
     if (v.featured_image) {
       var imgEl = document.getElementById('product-main-img');
       if (imgEl) imgEl.src = v.featured_image.src;
     }
+
+    /* URL */
     var url = new URL(window.location.href);
     url.searchParams.set('variant', v.id);
     window.history.replaceState({}, '', url.toString());
+
+    syncGridBtns();
     syncTiles();
   }
 
-  /* ── Synchronisation des tuiles dégressives ── */
+  function syncGridBtns() {
+    document.querySelectorAll('.variant-grid').forEach(function(group) {
+      var optIdx = parseInt(group.dataset.opt, 10);
+      group.querySelectorAll('.variant-grid-btn').forEach(function(btn) {
+        btn.classList.toggle('is-active', btn.dataset.val === selOptions[optIdx]);
+      });
+    });
+  }
+
   function syncTiles() {
     document.querySelectorAll('.tier-tile').forEach(function(tile) {
       tile.classList.toggle('is-active', String(currentVariantId) === tile.dataset.variantId);
     });
   }
 
-  /* ── Boutons variantes classiques ── */
-  document.querySelectorAll('.variant-btns').forEach(function(group) {
+  /* ── Grille variantes ── */
+  document.querySelectorAll('.variant-grid').forEach(function(group) {
     var optIdx = parseInt(group.dataset.opt, 10);
-    group.querySelectorAll('.variant-btn').forEach(function(btn) {
+    group.querySelectorAll('.variant-grid-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
-        group.querySelectorAll('.variant-btn').forEach(function(b) { b.classList.remove('is-active'); });
-        btn.classList.add('is-active');
         selOptions[optIdx] = btn.dataset.val;
         var valDisplay = document.getElementById('opt-val-' + optIdx);
         if (valDisplay) valDisplay.textContent = '— ' + btn.dataset.val;
@@ -234,15 +433,13 @@
     tile.addEventListener('click', function() {
       var val    = tile.dataset.val;
       var optIdx = parseInt(tile.dataset.optIndex || '0', 10);
-      /* Déclencher le bouton variante correspondant s'il existe */
       var targetBtn = null;
-      document.querySelectorAll('.variant-btns[data-opt="' + optIdx + '"] .variant-btn').forEach(function(b) {
+      document.querySelectorAll('.variant-grid[data-opt="' + optIdx + '"] .variant-grid-btn').forEach(function(b) {
         if (b.dataset.val === val) targetBtn = b;
       });
       if (targetBtn) {
         targetBtn.click();
       } else {
-        /* Fallback : sélection directe par ID de variante */
         var vid = tile.dataset.variantId;
         var v = variants.find(function(vv) { return String(vv.id) === vid; });
         if (v) { selOptions = v.options.slice(); applyVariant(v); }
@@ -270,6 +467,40 @@
       if (imgEl) imgEl.src = btn.dataset.src;
     });
   });
+
+  /* ── Sticky ATC bar ── */
+  var stickyBar  = document.getElementById('sticky-atc');
+  var mainAtcBtn = document.getElementById('btn-atc');
+  if (stickyBar && mainAtcBtn && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        stickyBar.classList.toggle('sticky-atc--visible', !e.isIntersecting);
+        stickyBar.setAttribute('aria-hidden', String(e.isIntersecting));
+      });
+    }, { threshold: 0 });
+    io.observe(mainAtcBtn);
+  }
+  var stickyBtn2 = document.getElementById('sticky-atc-btn');
+  if (stickyBtn2) {
+    stickyBtn2.addEventListener('click', function() {
+      var form = document.getElementById('product-form');
+      if (form) { if (form.requestSubmit) form.requestSubmit(); else form.submit(); }
+    });
+  }
+
+  /* ── Date expédition dynamique ── */
+  (function() {
+    var el = document.getElementById('shipping-date-display');
+    if (!el) return;
+    var now     = new Date();
+    var cutoff  = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0);
+    var target  = now < cutoff ? now : new Date(now.getTime() + 86400000);
+    if (target.getDay() === 0) target = new Date(target.getTime() + 86400000); /* skip sunday */
+    if (target.getDay() === 6 && now >= cutoff) target = new Date(target.getTime() + 2 * 86400000); /* skip saturday */
+    var days = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+    var isToday = target.toDateString() === now.toDateString();
+    el.textContent = isToday ? 'aujourd\'hui' : 'le ' + days[target.getDay()] + ' ' + target.getDate() + '/' + String(target.getMonth() + 1).padStart(2, '0');
+  })();
 
 }());
 </script>

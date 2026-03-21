@@ -1,0 +1,65 @@
+{%- liquid
+  assign title  = section.settings.title | default: 'Découvrez également'
+  assign col    = product.collections.first
+  assign limit  = section.settings.products_limit | default: 5
+-%}
+
+{%- if col != blank and col.products.size > 1 -%}
+<section class="product-related">
+  <div class="product-related-inner">
+    <h2 class="product-related-title">{{ title }}</h2>
+    <div class="product-related-scroll" role="list">
+      {%- assign shown = 0 -%}
+      {%- for rel in col.products -%}
+        {%- if rel.id != product.id and shown < limit -%}
+          {%- assign shown = shown | plus: 1 -%}
+          {%- assign rel_badge_label = rel.metafields.custom.badge_label -%}
+          {%- assign rel_badge_emoji = rel.metafields.custom.badge_emoji -%}
+          <article class="product-related-card" role="listitem">
+            <a href="{{ rel.url }}" class="product-related-link">
+              <div class="product-related-img-wrap">
+                {%- if rel.featured_image -%}
+                  <img
+                    src="{{ rel.featured_image | image_url: width: 300 }}"
+                    alt="{{ rel.featured_image.alt | default: rel.title | escape }}"
+                    width="300"
+                    height="300"
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  <div class="product-related-placeholder">
+                    <svg viewBox="0 0 60 60" fill="none" width="40" height="40">
+                      <path d="M30 6C30 6 16 16 14 30C12 44 24 54 30 54C36 54 48 44 46 30C44 16 30 6 30 6Z" fill="#2ea82e" opacity="0.4"/>
+                    </svg>
+                  </div>
+                {%- endif -%}
+                {%- if rel_badge_label != blank or rel_badge_emoji != blank -%}
+                  <div class="product-cat-badge product-cat-badge--sm">
+                    {%- if rel_badge_emoji != blank -%}<span>{{ rel_badge_emoji }}</span>{%- endif -%}
+                    {%- if rel_badge_label != blank -%}<span>{{ rel_badge_label }}</span>{%- endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="product-related-info">
+                <p class="product-related-name">{{ rel.title }}</p>
+                <p class="product-related-price">{{ rel.price_min | money }}</p>
+              </div>
+            </a>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Produits similaires",
+  "settings": [
+    { "type": "text",  "id": "title",          "label": "Titre",                    "default": "Découvrez également" },
+    { "type": "range", "id": "products_limit",  "label": "Nombre de produits max", "min": 3, "max": 8, "step": 1, "default": 5 }
+  ],
+  "presets": [{ "name": "Produits similaires" }]
+}
+{% endschema %}

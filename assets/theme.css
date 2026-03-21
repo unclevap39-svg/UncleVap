@@ -3799,3 +3799,760 @@ a.contact-detail-value:hover { color: var(--green); }
 .blog-posts:not(.section--has-bg) {
   background: linear-gradient(180deg, #0e2410 0%, #112208 100%);
 }
+
+/* ============================================================
+   BADGE CATÉGORIE SUR IMAGE PRODUIT
+   ============================================================ */
+
+.product-gallery-main {
+  position: relative;
+}
+
+.product-cat-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(5, 14, 5, 0.82);
+  border: 1px solid rgba(46, 168, 46, 0.4);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #fff;
+  backdrop-filter: blur(6px);
+}
+
+.product-cat-badge-emoji {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.product-cat-badge--sm {
+  font-size: 9px;
+  padding: 3px 8px;
+  top: 8px;
+  left: 8px;
+}
+
+/* ============================================================
+   BLOC INTENSITÉ
+   ============================================================ */
+
+.product-intensity-block {
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 168, 46, 0.2);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 16px 0;
+}
+
+.intensity-slider-wrap {
+  margin-bottom: 12px;
+}
+
+.intensity-track {
+  position: relative;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: visible;
+  margin-bottom: 8px;
+}
+
+.intensity-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green) 0%, var(--green-lt) 100%);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.intensity-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: var(--green-lt);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(46, 168, 46, 0.6);
+  pointer-events: none;
+}
+
+.intensity-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.intensity-current-label {
+  font-size: 12px;
+  color: var(--green-lt);
+  margin: 0;
+}
+
+.product-catchphrase {
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 8px 0 4px;
+  line-height: 1.3;
+}
+
+.product-short-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.product-pill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.product-pill-tag {
+  background: rgba(46, 168, 46, 0.12);
+  border: 1px solid rgba(46, 168, 46, 0.3);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  color: var(--green-lt);
+  letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   GRILLE SÉLECTEUR DE VARIANTES
+   ============================================================ */
+
+.variant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.variant-grid-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 8px;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+  text-align: center;
+}
+
+.variant-grid-btn:hover {
+  border-color: var(--green);
+  background: rgba(46, 168, 46, 0.08);
+}
+
+.variant-grid-btn.is-active {
+  border-color: var(--green);
+  background: rgba(46, 168, 46, 0.15);
+  box-shadow: 0 0 0 1px var(--green) inset;
+}
+
+.variant-grid-qty {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.variant-grid-per-g {
+  font-size: 10px;
+  color: var(--green-lt);
+  line-height: 1;
+}
+
+/* ============================================================
+   BOUTON ATC ENRICHI
+   ============================================================ */
+
+.btn-atc--enriched {
+  gap: 8px;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-height: 54px;
+}
+
+.atc-price-sep {
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0 4px;
+  font-weight: 300;
+}
+
+.atc-price-compare {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+.atc-price-current {
+  font-weight: 700;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* ============================================================
+   ICÔNES PAIEMENT
+   ============================================================ */
+
+.payment-icons {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.payment-icons-label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+
+.payment-icons-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pay-icon {
+  width: 44px;
+  height: 28px;
+  border-radius: 4px;
+  opacity: 0.85;
+  transition: opacity var(--transition);
+}
+
+.pay-icon:hover {
+  opacity: 1;
+}
+
+/* ============================================================
+   BANDE EXPÉDITION
+   ============================================================ */
+
+.shipping-band {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 168, 46, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 16px;
+}
+
+.shipping-dot {
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 0 rgba(46, 168, 46, 0.5);
+  animation: shipping-pulse 2s ease-out infinite;
+}
+
+@keyframes shipping-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(46, 168, 46, 0.5); }
+  70%  { box-shadow: 0 0 0 8px rgba(46, 168, 46, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 168, 46, 0); }
+}
+
+.shipping-band-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shipping-band-main {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.shipping-date-line {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.shipping-date-line strong {
+  color: var(--green-lt);
+}
+
+/* ============================================================
+   STICKY ATC BAR
+   ============================================================ */
+
+.sticky-atc {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  background: rgba(5, 14, 5, 0.96);
+  border-top: 1px solid rgba(46, 168, 46, 0.3);
+  backdrop-filter: blur(12px);
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  padding: 10px 16px;
+}
+
+.sticky-atc--visible {
+  transform: translateY(0);
+}
+
+.sticky-atc-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sticky-atc-product {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sticky-atc-img {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.sticky-atc-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sticky-atc-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sticky-atc-price {
+  font-size: 13px;
+  color: var(--green-lt);
+  font-weight: 700;
+}
+
+.sticky-atc-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-lt) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity var(--transition);
+  flex-shrink: 0;
+}
+
+.sticky-atc-btn:hover { opacity: 0.88; }
+.sticky-atc-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   PROFIL & RESSENTI
+   ============================================================ */
+
+.product-profil {
+  background: var(--bg-mid);
+  border-top: 1px solid rgba(46, 168, 46, 0.12);
+  border-bottom: 1px solid rgba(46, 168, 46, 0.12);
+  padding: 48px 16px;
+}
+
+.product-profil-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.product-profil-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(24px, 4vw, 36px);
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.product-profil-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.profil-item {
+  background: var(--bg-card);
+  border: 1px solid rgba(46, 168, 46, 0.2);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profil-icon {
+  font-size: 22px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.profil-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.profil-value {
+  font-family: 'Oswald', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--green-lt);
+  line-height: 1.3;
+}
+
+.profil-legal {
+  font-size: 11px;
+  color: rgba(168, 200, 168, 0.5);
+  text-align: center;
+  line-height: 1.5;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   GAMME / TUBES ANIMÉS
+   ============================================================ */
+
+.product-gamme {
+  background: var(--bg);
+  padding: 48px 16px;
+  border-top: 1px solid rgba(46, 168, 46, 0.1);
+}
+
+.product-gamme-inner {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.product-gamme-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(22px, 3.5vw, 32px);
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.product-gamme-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+
+.gamme-tubes-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 32px;
+}
+
+.gamme-tube-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.gamme-tube {
+  width: 28px;
+  height: 96px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.gamme-tube-fill {
+  width: 100%;
+  height: 0;
+  border-radius: 12px;
+  transition: height 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gamme-tube-fill--douce {
+  background: linear-gradient(180deg, #3dbe3d 0%, #2ea82e 100%);
+}
+
+.gamme-tube-fill--forte {
+  background: linear-gradient(180deg, #f97316 0%, #c2410c 100%);
+}
+
+.gamme-tube-fill--tres-forte {
+  background: linear-gradient(180deg, #ef4444 0%, #991b1b 100%);
+}
+
+.gamme-tube-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* ============================================================
+   PRODUITS SIMILAIRES
+   ============================================================ */
+
+.product-related {
+  background: var(--bg-mid);
+  padding: 48px 0 48px 16px;
+  border-top: 1px solid rgba(46, 168, 46, 0.12);
+  overflow: hidden;
+}
+
+.product-related-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-related-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(22px, 3.5vw, 32px);
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 20px;
+  padding-right: 16px;
+}
+
+.product-related-scroll {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(46, 168, 46, 0.3) transparent;
+}
+
+.product-related-scroll::-webkit-scrollbar { height: 4px; }
+.product-related-scroll::-webkit-scrollbar-track { background: transparent; }
+.product-related-scroll::-webkit-scrollbar-thumb { background: rgba(46, 168, 46, 0.3); border-radius: 2px; }
+
+.product-related-card {
+  flex: 0 0 160px;
+  scroll-snap-align: start;
+}
+
+.product-related-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-related-img-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-card);
+  margin-bottom: 8px;
+}
+
+.product-related-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.product-related-link:hover .product-related-img-wrap img {
+  transform: scale(1.05);
+}
+
+.product-related-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.product-related-info {
+  padding: 0 2px;
+}
+
+.product-related-name {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 3px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-related-price {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  color: var(--green-lt);
+  font-weight: 600;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .product-related-card { flex: 0 0 190px; }
+}
+
+/* ============================================================
+   BANDE DE RÉASSURANCE PRODUIT
+   ============================================================ */
+
+.product-reassurance {
+  background: var(--bg-card);
+  border-top: 1px solid rgba(46, 168, 46, 0.15);
+  border-bottom: 1px solid rgba(46, 168, 46, 0.15);
+  padding: 28px 16px;
+}
+
+.product-reassurance-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.reassurance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .reassurance-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.reassurance-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.reassurance-icon-wrap {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(46, 168, 46, 0.08);
+  border: 1px solid rgba(46, 168, 46, 0.2);
+  border-radius: 50%;
+}
+
+.reassurance-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* ============================================================
+   BANNIÈRE LÉGALE 18+
+   ============================================================ */
+
+.product-legal-banner {
+  background: var(--bg);
+  padding: 28px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.product-legal-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+}
+
+.legal-age-circle {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.legal-text {
+  font-size: 11px;
+  color: rgba(168, 200, 168, 0.55);
+  line-height: 1.6;
+  margin: 0;
+}

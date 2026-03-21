@@ -1,0 +1,61 @@
+<section class="product-reassurance">
+  <div class="product-reassurance-inner">
+    <div class="reassurance-grid">
+
+      <div class="reassurance-item">
+        <div class="reassurance-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="10" width="36" height="28" rx="4" stroke="#2ea82e" stroke-width="2" fill="rgba(46,168,46,0.1)"/>
+            <path d="M14 24l6 6 14-14" stroke="#2ea82e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="reassurance-label">{{ section.settings.r1_text | default: 'Livraison 24-48h' }}</span>
+      </div>
+
+      <div class="reassurance-item">
+        <div class="reassurance-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="14" width="36" height="22" rx="4" stroke="#2ea82e" stroke-width="2" fill="rgba(46,168,46,0.1)"/>
+            <path d="M6 20h36" stroke="#2ea82e" stroke-width="2"/>
+            <path d="M14 28h10" stroke="#2ea82e" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="reassurance-label">{{ section.settings.r2_text | default: 'Paiement sécurisé' }}</span>
+      </div>
+
+      <div class="reassurance-item">
+        <div class="reassurance-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 8C16 8 8 14 8 22C8 30 14 36 22 38L24 42L26 38C34 36 40 30 40 22C40 14 32 8 24 8Z" stroke="#2ea82e" stroke-width="2" fill="rgba(46,168,46,0.1)"/>
+            <path d="M24 18v4l3 3" stroke="#2ea82e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="reassurance-label">{{ section.settings.r3_text | default: 'Service client réactif' }}</span>
+      </div>
+
+      <div class="reassurance-item">
+        <div class="reassurance-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 6L38 12V26C38 35 30 42 24 44C18 42 10 35 10 26V12Z" stroke="#2ea82e" stroke-width="2" fill="rgba(46,168,46,0.1)"/>
+            <path d="M18 24l4 4 8-8" stroke="#2ea82e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="reassurance-label">{{ section.settings.r4_text | default: 'Traçabilité garantie' }}</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bande de réassurance produit",
+  "settings": [
+    { "type": "text", "id": "r1_text", "label": "Réassurance 1", "default": "Livraison 24-48h" },
+    { "type": "text", "id": "r2_text", "label": "Réassurance 2", "default": "Paiement sécurisé" },
+    { "type": "text", "id": "r3_text", "label": "Réassurance 3", "default": "Service client réactif" },
+    { "type": "text", "id": "r4_text", "label": "Réassurance 4", "default": "Traçabilité garantie" }
+  ],
+  "presets": [{ "name": "Bande de réassurance produit" }]
+}
+{% endschema %}

@@ -1,0 +1,21 @@
+<section class="product-legal-banner">
+  <div class="product-legal-inner">
+    <div class="legal-age-circle" aria-hidden="true">18+</div>
+    <p class="legal-text">{{ section.settings.legal_text }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bannière légale 18+",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "legal_text",
+      "label": "Texte légal",
+      "default": "Ce produit est réservé aux personnes majeures (18 ans et plus). La vente de CBD est interdite aux mineurs. Conformément à la réglementation française, la teneur en THC est inférieure à 0,3 %. Ces produits ne sont pas des médicaments et ne se substituent pas à un traitement médical. Consommez de manière responsable."
+    }
+  ],
+  "presets": [{ "name": "Bannière légale 18+" }]
+}
+{% endschema %}

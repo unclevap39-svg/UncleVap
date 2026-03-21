@@ -1,0 +1,93 @@
+{%- liquid
+  assign title = section.settings.title
+  assign sub   = section.settings.subtitle
+  assign fill1 = section.settings.level1_fill
+  assign fill2 = section.settings.level2_fill
+  assign fill3 = section.settings.level3_fill
+  assign lvl1  = section.settings.level1_label
+  assign lvl2  = section.settings.level2_label
+  assign lvl3  = section.settings.level3_label
+-%}
+
+<section class="product-gamme" id="product-gamme-{{ section.id }}">
+  <div class="product-gamme-inner">
+    {%- if title != blank -%}
+      <h2 class="product-gamme-title">{{ title }}</h2>
+    {%- endif -%}
+    {%- if sub != blank -%}
+      <p class="product-gamme-sub">{{ sub }}</p>
+    {%- endif -%}
+
+    <div class="gamme-tubes-row">
+
+      <div class="gamme-tube-wrap">
+        <div class="gamme-tube" data-fill="{{ fill1 | default: 33 }}">
+          <div class="gamme-tube-fill gamme-tube-fill--douce"></div>
+        </div>
+        <span class="gamme-tube-label">{{ lvl1 | default: 'Douce' }}</span>
+      </div>
+
+      <div class="gamme-tube-wrap">
+        <div class="gamme-tube" data-fill="{{ fill2 | default: 66 }}">
+          <div class="gamme-tube-fill gamme-tube-fill--forte"></div>
+        </div>
+        <span class="gamme-tube-label">{{ lvl2 | default: 'Forte' }}</span>
+      </div>
+
+      <div class="gamme-tube-wrap">
+        <div class="gamme-tube" data-fill="{{ fill3 | default: 95 }}">
+          <div class="gamme-tube-fill gamme-tube-fill--tres-forte"></div>
+        </div>
+        <span class="gamme-tube-label">{{ lvl3 | default: 'Très forte' }}</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var section = document.getElementById('product-gamme-{{ section.id }}');
+  if (!section || !('IntersectionObserver' in window)) {
+    /* Fallback: fill immediately */
+    section && section.querySelectorAll('.gamme-tube').forEach(function(tube) {
+      var f = tube.dataset.fill;
+      var fill = tube.querySelector('.gamme-tube-fill');
+      if (fill) fill.style.height = f + '%';
+    });
+    return;
+  }
+  var animated = false;
+  var io = new IntersectionObserver(function(entries) {
+    if (animated) return;
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      animated = true;
+      section.querySelectorAll('.gamme-tube').forEach(function(tube, idx) {
+        var f    = tube.dataset.fill;
+        var fill = tube.querySelector('.gamme-tube-fill');
+        if (!fill) return;
+        setTimeout(function() { fill.style.height = f + '%'; }, idx * 150);
+      });
+    });
+  }, { threshold: 0.3 });
+  io.observe(section);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Gamme / Niveaux de puissance",
+  "settings": [
+    { "type": "text",  "id": "title",        "label": "Titre",                              "default": "Notre Gamme" },
+    { "type": "text",  "id": "subtitle",      "label": "Sous-titre" },
+    { "type": "text",  "id": "level1_label",  "label": "Niveau 1 — Libellé",                "default": "Douce" },
+    { "type": "range", "id": "level1_fill",   "label": "Niveau 1 — Remplissage (%)", "min": 10, "max": 100, "step": 1, "default": 33 },
+    { "type": "text",  "id": "level2_label",  "label": "Niveau 2 — Libellé",                "default": "Forte" },
+    { "type": "range", "id": "level2_fill",   "label": "Niveau 2 — Remplissage (%)", "min": 10, "max": 100, "step": 1, "default": 66 },
+    { "type": "text",  "id": "level3_label",  "label": "Niveau 3 — Libellé",                "default": "Très forte" },
+    { "type": "range", "id": "level3_fill",   "label": "Niveau 3 — Remplissage (%)", "min": 10, "max": 100, "step": 1, "default": 95 }
+  ],
+  "presets": [{ "name": "Gamme / Niveaux de puissance" }]
+}
+{% endschema %}

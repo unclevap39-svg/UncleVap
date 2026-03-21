@@ -9,6 +9,23 @@
         "tier_badges": ""
       }
     },
+    "profil": {
+      "type": "product-profil",
+      "settings": {}
+    },
+    "gamme": {
+      "type": "product-gamme",
+      "settings": {
+        "title": "Notre Gamme",
+        "subtitle": "Découvrez nos niveaux d'intensité",
+        "level1_label": "Douce",
+        "level1_fill": 33,
+        "level2_label": "Forte",
+        "level2_fill": 66,
+        "level3_label": "Très forte",
+        "level3_fill": 95
+      }
+    },
     "urgency": {
       "type": "product-urgency",
       "settings": {
@@ -74,7 +91,40 @@
         "r3_name": "Marie L.",
         "r3_date": "Il y a 2 semaines"
       }
+    },
+    "related": {
+      "type": "product-related",
+      "settings": {
+        "title": "Découvrez également",
+        "products_limit": 5
+      }
+    },
+    "reassurance": {
+      "type": "product-reassurance",
+      "settings": {
+        "r1_text": "Livraison 24-48h",
+        "r2_text": "Paiement sécurisé",
+        "r3_text": "Service client réactif",
+        "r4_text": "Traçabilité garantie"
+      }
+    },
+    "legal": {
+      "type": "product-legal",
+      "settings": {
+        "legal_text": "Ce produit est réservé aux personnes majeures (18 ans et plus). La vente de CBD est interdite aux mineurs. Conformément à la réglementation française, la teneur en THC est inférieure à 0,3 %. Ces produits ne sont pas des médicaments et ne se substituent pas à un traitement médical. Consommez de manière responsable."
+      }
     }
   },
-  "order": ["main", "urgency", "guarantee", "benefits", "social-proof"]
+  "order": [
+    "main",
+    "profil",
+    "gamme",
+    "urgency",
+    "guarantee",
+    "benefits",
+    "social-proof",
+    "related",
+    "reassurance",
+    "legal"
+  ]
 }
