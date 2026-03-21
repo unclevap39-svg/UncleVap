@@ -28,10 +28,12 @@
   --green: #2ea82e;
   --green-lt: #3dbe3d;
   --green-dk: #1d7a1d;
+  --green-dark: #1d7a1d;
   --green-glow: rgba(0,255,102,0.25);
   --text: #ffffff;
   --text-muted: #a8c8a8;
   --header-h: 70px;
+  --announcement-h: 40px;
   --radius: 12px;
   --transition: 0.25s ease;
 }
@@ -75,9 +77,43 @@ button {
 /* ============================================================
    HEADER
    ============================================================ */
-.site-header {
+/* ── Barre d'annonce ── */
+.announcement-bar {
   position: sticky;
   top: 0;
+  z-index: 200;
+  background: #39FF14;
+  color: #000;
+  height: var(--announcement-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+.announcement-text {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.announcement-text strong {
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+@media (max-width: 480px) {
+  .announcement-text { font-size: 10px; letter-spacing: 0.3px; }
+}
+
+.site-header {
+  position: sticky;
+  top: var(--announcement-h);
   z-index: 100;
   background: rgba(5, 14, 5, 0.95);
   backdrop-filter: blur(12px);
@@ -160,7 +196,7 @@ button {
 /* Nav */
 .header-nav {
   position: fixed;
-  top: var(--header-h);
+  top: calc(var(--announcement-h) + var(--header-h));
   left: 0;
   right: 0;
   background: rgba(5, 14, 5, 0.98);
@@ -2779,7 +2815,7 @@ a.contact-detail-value:hover { color: var(--green); }
 @media (min-width: 768px) {
   .product-gallery {
     position: sticky;
-    top: calc(var(--header-h) + 20px);
+    top: calc(var(--announcement-h) + var(--header-h) + 20px);
   }
 }
 
@@ -3666,3 +3702,100 @@ a.contact-detail-value:hover { color: var(--green); }
   color: var(--green);
 }
 
+
+/* ============================================================
+   PRODUIT — ÉTOILES + BADGE BESTSELLER
+   ============================================================ */
+
+.product-card-stars {
+  color: #FFD700;
+  font-size: 13px;
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.product-badge--bestseller {
+  background: #39FF14;
+  color: #000;
+  font-family: 'Oswald', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 4px 8px;
+  top: 8px;
+  left: 8px;
+}
+
+.product-badge--sale {
+  top: 8px;
+  left: 8px;
+}
+
+/* Quand les deux badges coexistent, SOLDE passe en dessous */
+.product-badge--sale + .product-badge--sale,
+.product-badge--bestseller ~ .product-badge--sale {
+  top: 34px;
+}
+
+/* ============================================================
+   HERO — RÉASSURANCE SOUS LE CTA
+   ============================================================ */
+
+.hero-reassurance {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.5px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 767px) {
+  .hero-reassurance { font-size: 11px; text-align: center; }
+}
+
+/* ============================================================
+   BLOG — GRADIENT RICHE + HAUTEUR 200px
+   ============================================================ */
+
+.blog-card-img-wrap {
+  display: block;
+  min-height: 200px;
+  overflow: hidden;
+  background: #0a2a0f;
+}
+
+.blog-card-img-placeholder--rich {
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a2a0f 0%, #1a4a1f 60%, #0d3312 100%);
+}
+
+.blog-card-img-placeholder--rich svg {
+  width: 56px;
+  height: 56px;
+  opacity: 0.7;
+  filter: drop-shadow(0 0 8px rgba(46,168,46,0.4));
+}
+
+/* ============================================================
+   NEWSLETTER — FOND ALTERNÉ
+   ============================================================ */
+
+.newsletter-section {
+  background: linear-gradient(135deg, #0b2010 0%, #0f2a14 50%, #0b2010 100%);
+  border-top: 1px solid rgba(46, 168, 46, 0.2);
+  border-bottom: 1px solid rgba(46, 168, 46, 0.2);
+}
+
+/* ============================================================
+   BLOG POSTS — FOND ALTERNÉ
+   ============================================================ */
+
+.blog-posts:not(.section--has-bg) {
+  background: linear-gradient(180deg, #0e2410 0%, #112208 100%);
+}

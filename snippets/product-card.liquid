@@ -18,12 +18,14 @@
           </svg>
         </div>
       {%- endif -%}
+      <span class="product-badge product-badge--bestseller">BESTSELLER</span>
       {%- if product.compare_at_price > product.price -%}
         <span class="product-badge product-badge--sale">SOLDE</span>
       {%- endif -%}
     </div>
     <div class="product-card-info">
       <h3 class="product-card-title">{{ product.title }}</h3>
+      <div class="product-card-stars" aria-label="5 étoiles sur 5" role="img">★★★★★</div>
       <div class="product-card-price">
         {%- if product.compare_at_price > product.price -%}
           <span class="price-compare">{{ product.compare_at_price | money }}</span>
