@@ -4,7 +4,8 @@
       "type": "main-product",
       "settings": {
         "review_count": 128,
-        "show_qty": false
+        "show_qty": false,
+        "fallback_weights": "1g,3g,5g,10g,20g"
       }
     },
     "profil": {
